@@ -10,14 +10,16 @@ namespace CarRental.Domain.Entities
         public int Id { get; set; }
         public required int ManufacturerId { get; set; } //fk 
         public required string VehicleModel { get; set; }
-        [MaxLength(4)]
-        public required string AcrissCode { get; set; } = string.Empty; // 4 letter code representing vehicle: category, type, transmission, fuel
+        [MaxLength(4)] // 4 letter code representing vehicle: category, type, transmission, fuel
+        public required string AcrissCode { get; set; } = string.Empty; 
         public required int ManufacturingYear { get; set; }
         public required int KilometersDriven { get; set; }
         public required int EnginePowerInKw { get; set; }
-        public required bool IsAvailable { get; set; } = true;
+        public required string RegistrationPlate { get; set; }
+        public required decimal PricePerDayInEuro { get; set; }
+        public required VehicleColor Color { get; set; } 
 
-        //Not mapped acriss properties - calculated from AcrissCode
+        //Not mapped acriss properties - calculated from AcrissCode 
         [NotMapped]
         public AcrissVehicleCategory Category { get; set; }
         [NotMapped]
@@ -29,7 +31,6 @@ namespace CarRental.Domain.Entities
 
 
         //Navigation properties
-
         public ManufacturerEntity Manufacturer { get; set; } = null!;
     }
 }

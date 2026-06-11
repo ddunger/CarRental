@@ -14,8 +14,6 @@ namespace CarRental.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; } = null;
         [StringLength(50)]
-        public string? TwoFactorSecretKey { get; set; } = string.Empty;
-
-        //TODO navigation properties after establishing relationships
+        public string? TwoFactorSecretKey { get; set; } = string.Empty; 
     }
 }

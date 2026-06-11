@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using CarRental.Application.Identity.Requests;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using CarRental.Application.Identity.Commands;
+using CarRental.API.Extensions;
 
 namespace CarRental.API.Controllers
 {

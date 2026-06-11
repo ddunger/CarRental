@@ -1,23 +1,30 @@
-var builder = WebApplication.CreateBuilder(args);
+using CarRental.API.Extensions;
+using Serilog;
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.MapOpenApi();
+    var builder = WebApplication.CreateBuilder(args);
+
+    Log.Logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(builder.Configuration)
+        .CreateLogger();
+
+    builder.Host.UseSerilog();
+
+    builder.Services.AddApiServices(builder.Configuration, builder.Environment);
+
+    var app = builder.Build();
+
+    await app.ConfigurePipelineAsync();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application startup failed.");
+    throw;
+}
+finally
+{
+    Log.CloseAndFlush();
+}

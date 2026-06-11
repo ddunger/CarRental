@@ -3,7 +3,7 @@ using CarRental.Application.Common.Results;
 using CarRental.Application.Identity.Requests;
 using CarRental.Domain.Entities;
 using MediatR;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 namespace CarRental.Application.Identity.Commands
 {

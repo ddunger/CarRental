@@ -11,16 +11,20 @@ namespace CarRental.Infrastructure.DbContext
                 : IdentityDbContext<UserEntity, IdentityRole, string>(options), IAppDbContext
     {
         public DbSet<VehicleEntity> Vehicles { get; set; }
+        public DbSet<ManufacturerEntity> Manufacturers { get; set; } 
+        public DbSet<PickupLocation> Locations { get; set; }
+        public DbSet<ReservationEntity> Reservations { get; set; }
+        public DbSet<RentalEntity> Rentals { get; set; }
 
-
-
-
-
+        //refactor then include:
+        //public DbSet<ChangelogEntity> Changelog { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+            //individual dbsets/tables are configured within the Configurations folder
         }
     }
 }
