@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace CarRental.Infrastructure.DbContext.Configurations
 {
     public class PickupLocationConfiguration
-     : IEntityTypeConfiguration<PickupLocation>
+     : IEntityTypeConfiguration<PickupLocationEntity>
     {
-        public void Configure(EntityTypeBuilder<PickupLocation> builder)
+        public void Configure(EntityTypeBuilder<PickupLocationEntity> builder)
         {
             builder.Property(p => p.Address)
                    .HasMaxLength(200);

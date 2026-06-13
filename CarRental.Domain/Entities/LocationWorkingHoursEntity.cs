@@ -13,6 +13,6 @@ namespace CarRental.Domain.Entities
         public bool IsClosed { get; set; } = false;    
 
         // Navigation
-        public PickupLocation Location { get; set; } = null!;
+        public PickupLocationEntity Location { get; set; } = null!;
     }
 }

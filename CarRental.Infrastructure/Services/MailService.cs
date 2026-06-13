@@ -16,6 +16,15 @@ namespace CarRental.Infrastructure.Services
             try 
             {
                 var mailSettings = options.Value;
+
+                //TEMP
+                logger.LogInformation("Attempting email. Host: {Host}, Port: {Port}, User: {User}, To: {To}",
+                    mailSettings.Host, mailSettings.Port, mailSettings.UserName, mailData.EmailToId);
+                //END TEMP
+
+
+
+
                 MimeMessage emailMessage = new();
                 MailboxAddress emailTo = new(mailData.EmailToName, mailData.EmailToId);
                 emailMessage.To.Add(emailTo);

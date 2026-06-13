@@ -12,10 +12,11 @@ namespace CarRental.Infrastructure.DbContext
     {
         public DbSet<VehicleEntity> Vehicles { get; set; }
         public DbSet<ManufacturerEntity> Manufacturers { get; set; } 
-        public DbSet<PickupLocation> Locations { get; set; }
+        public DbSet<PickupLocationEntity> Locations { get; set; }
         public DbSet<ReservationEntity> Reservations { get; set; }
         public DbSet<RentalEntity> Rentals { get; set; }
-
+        public DbSet<LocationWorkingHoursEntity> LocationWorkingHours { get; set; }
+        public DbSet<LocationHolidayEntity> LocationHolidays { get; set; }
         //refactor then include:
         //public DbSet<ChangelogEntity> Changelog { get; set; }
 

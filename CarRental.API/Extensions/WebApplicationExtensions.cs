@@ -24,7 +24,7 @@ namespace CarRental.API.Extensions
             }
 
             app.UseHttpsRedirection();
-            app.UseRateLimiter();
+            //app.UseRateLimiter();
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();

@@ -24,7 +24,7 @@ namespace CarRental.Domain.Entities
         //Navigation
         public UserEntity Customer { get; set; } = null!;
         public VehicleEntity Vehicle { get; set; } = null!;
-        public PickupLocation PickupLocation { get; set; } = null!;
-        public PickupLocation DropoffLocation { get; set; } = null!;
+        public PickupLocationEntity PickupLocation { get; set; } = null!;
+        public PickupLocationEntity DropoffLocation { get; set; } = null!;
     }
 }

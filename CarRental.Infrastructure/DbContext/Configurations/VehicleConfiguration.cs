@@ -10,7 +10,7 @@ namespace CarRental.Infrastructure.DbContext.Configurations
         {
             builder.HasOne(v => v.Manufacturer)
                    .WithMany()
-                   .HasForeignKey(v => v.Manufacturer)
+                   .HasForeignKey(v => v.ManufacturerId)
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasIndex(v => v.RegistrationPlate)

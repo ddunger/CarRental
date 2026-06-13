@@ -14,6 +14,6 @@ namespace CarRental.Domain.Entities
         public string? HolidayName { get; set; }           
 
         // Navigation
-        public PickupLocation Location { get; set; } = null!;
+        public PickupLocationEntity Location { get; set; } = null!;
     }
 }

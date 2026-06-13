@@ -1,0 +1,46 @@
+services:
+  postgres-carrental:
+    image: postgres:17
+    container_name: postgres-carrental
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=carrental
+      - POSTGRES_USER=postgres
+    volumes:
+      - postgres_carrental_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - carrentalnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d carrental"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  carrental.api:
+    image: ${DOCKER_REGISTRY-}carrentalapi
+    container_name: carrental.api
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: CarRental.API/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      postgres-carrental:
+        condition: service_healthy
+    networks:
+      - carrentalnet
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres-carrental;Port=5432;Database=carrental;Username=postgres;Password=password
+
+volumes:
+  postgres_carrental_data:
+
+networks:
+  carrentalnet:
+    driver: bridge

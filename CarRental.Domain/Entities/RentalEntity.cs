@@ -22,7 +22,7 @@ namespace CarRental.Domain.Entities
         public ReservationEntity? Reservation { get; set; }
         public UserEntity Customer { get; set; } = null!;
         public VehicleEntity Vehicle { get; set; } = null!;
-        public PickupLocation PickupLocation { get; set; } = null!;
-        public PickupLocation DropoffLocation { get; set; } = null!;
+        public PickupLocationEntity PickupLocation { get; set; } = null!;
+        public PickupLocationEntity DropoffLocation { get; set; } = null!;
     }
 }

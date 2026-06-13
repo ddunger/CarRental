@@ -3,4 +3,7 @@
   <Project Path="CarRental.Application/CarRental.Application.csproj" />
   <Project Path="CarRental.Domain/CarRental.Domain.csproj" />
   <Project Path="CarRental.Infrastructure/CarRental.Infrastructure.csproj" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>

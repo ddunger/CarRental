@@ -1,15 +1,15 @@
 ﻿using CarRental.Domain.Entities;
 using CarRental.Domain.Interfaces.DbContext;
+using CarRental.Domain.Interfaces.Services;
+using CarRental.Infrastructure.Configuration;
 using CarRental.Infrastructure.DbContext;
+using CarRental.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CarRental.Infrastructure
 {
@@ -19,9 +19,16 @@ namespace CarRental.Infrastructure
         {
             services.AddDataProtection();
 
-            var connectionString = "TODO"; //TODO
+            var connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-            services.AddDbContext<AppDbContext>(options => { options.UseNpgsql(connectionString); });
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseNpgsql(connectionString);
+
+                if (environment.IsDevelopment())
+                    options.EnableSensitiveDataLogging(); 
+            });
 
             services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
@@ -35,8 +42,9 @@ namespace CarRental.Infrastructure
                 options.User.RequireUniqueEmail = true;
             });
 
-            //TODO rest
-
+           
+            services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+            services.AddTransient<IMailService, MailService>();
             return services;
         }
 
@@ -62,14 +70,17 @@ namespace CarRental.Infrastructure
 
         public static async Task SeedDatabaseAsync(this IServiceProvider services)
         {
-            //using var scope = services.CreateScope();
-            //var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
-            //var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<UserRoleEntity>>();
-            //var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            using var scope = services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            //await DbSeeder.SeedRolesAsync(roleManager);
-            //await DbSeeder.SeedRolePermissionsAsync(roleManager, dbContext);
-            //await DbSeeder.SeedUsersAsync(userManager, dbContext, roleManager);
+            await DbSeeder.SeedRolesAsync(roleManager);
+            await DbSeeder.SeedUsersAsync(userManager);
+            await DbSeeder.SeedManufacturersAsync(db);
+            await DbSeeder.SeedVehiclesAsync(db);
+            await DbSeeder.SeedPickupLocationsAsync(db);
+            await DbSeeder.SeedLocationWorkingHoursAsync(db);
         }
     }
 }

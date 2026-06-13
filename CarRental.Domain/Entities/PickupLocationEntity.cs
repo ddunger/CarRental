@@ -2,7 +2,7 @@
 
 namespace CarRental.Domain.Entities
 {
-    public class PickupLocation
+    public class PickupLocationEntity
     {
         [Key]
         public int Id { get; set; }

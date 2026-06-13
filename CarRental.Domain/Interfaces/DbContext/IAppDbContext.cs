@@ -8,11 +8,12 @@ namespace CarRental.Domain.Interfaces.DbContext
     {
         DbSet<VehicleEntity> Vehicles { get; }
         DbSet<ManufacturerEntity> Manufacturers { get; }
-        DbSet<PickupLocation> Locations { get; }
+        DbSet<PickupLocationEntity> Locations { get; }
         DbSet<ReservationEntity> Reservations { get; }
         DbSet<RentalEntity> Rentals { get; }
-        
-        
+        DbSet<LocationWorkingHoursEntity> LocationWorkingHours { get; }
+        DbSet<LocationHolidayEntity> LocationHolidays { get; }
+
         // DbSet<ChangelogEntity> Changelog { get; }
 
     }
