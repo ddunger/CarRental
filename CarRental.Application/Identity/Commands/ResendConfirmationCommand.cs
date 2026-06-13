@@ -1,5 +1,5 @@
 ﻿using CarRental.Application.Common.Responses;
-using CarRental.Application.Common.Results;
+using CarRental.Domain.Results;
 using CarRental.Application.Events;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
@@ -12,15 +12,15 @@ using System.ComponentModel.DataAnnotations;
 namespace CarRental.Application.Identity.Commands
 {
     public record ResendConfirmationCommand(ResendConfirmationEmailRequest ResendRequest)
-       : IRequest<Result<StringResponse>>;
+       : IRequest<ApplicationResult<StringResponse>>;
 
     public class ResendConfirmationCommandHandler(
         ILogger<ResendConfirmationCommandHandler> logger,
         IPublisher publisher,
         UserManager<UserEntity> userManager)
-        : IRequestHandler<ResendConfirmationCommand, Result<StringResponse>>
+        : IRequestHandler<ResendConfirmationCommand, ApplicationResult<StringResponse>>
     {
-        public async Task<Result<StringResponse>> Handle(
+        public async Task<ApplicationResult<StringResponse>> Handle(
             ResendConfirmationCommand command, CancellationToken cancellationToken)
         {
             var user = await userManager.FindByEmailAsync(command.ResendRequest.Email);
@@ -30,7 +30,7 @@ namespace CarRental.Application.Identity.Commands
                 await publisher.Publish(new NewUserRegistrationEvent(user), cancellationToken);
             }
 
-            return Result<StringResponse>.Success(
+            return ApplicationResult<StringResponse>.Success(
                 new StringResponse("Thank you for your registration. Please check your email for confirmation code."));
         }
     }

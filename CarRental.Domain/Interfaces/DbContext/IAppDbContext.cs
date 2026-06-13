@@ -17,6 +17,10 @@ namespace CarRental.Domain.Interfaces.DbContext
 
         // DbSet<ChangelogEntity> Changelog { get; }
 
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+     
+
     }
 }
 

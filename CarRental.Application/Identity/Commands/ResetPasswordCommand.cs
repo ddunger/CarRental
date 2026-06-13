@@ -1,5 +1,5 @@
 ﻿using CarRental.Application.Common.Responses;
-using CarRental.Application.Common.Results;
+using CarRental.Domain.Results;
 using CarRental.Application.Identity.Requests;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
@@ -12,14 +12,14 @@ using System.Text;
 namespace CarRental.Application.Identity.Commands
 {
     public record ResetPasswordCommand(ResetPasswordRequest ResetPasswordDto)
-       : IRequest<Result<StringResponse>>;
+       : IRequest<ApplicationResult<StringResponse>>;
 
     public class ResetPasswordCommandHandler(
         ILogger<ResetPasswordCommandHandler> logger,
         UserManager<UserEntity> userManager)
-        : IRequestHandler<ResetPasswordCommand, Result<StringResponse>>
+        : IRequestHandler<ResetPasswordCommand, ApplicationResult<StringResponse>>
     {
-        public async Task<Result<StringResponse>> Handle(ResetPasswordCommand command, CancellationToken cancellationToken)
+        public async Task<ApplicationResult<StringResponse>> Handle(ResetPasswordCommand command, CancellationToken cancellationToken)
         {
             var dto = command.ResetPasswordDto;
 
@@ -27,7 +27,7 @@ namespace CarRental.Application.Identity.Commands
             if (user is null || !await userManager.IsEmailConfirmedAsync(user))
             {
                 logger.LogWarning("Invalid reset password attempt for email {Email}.", dto.Email);
-                return Result<StringResponse>.Failure("Invalid password reset request.", ResultError.Validation);
+                return ApplicationResult<StringResponse>.Failure("Invalid password reset request.", ResultError.Validation);
             }
 
             string decodedToken;
@@ -37,7 +37,7 @@ namespace CarRental.Application.Identity.Commands
             }
             catch (FormatException)
             {
-                return Result<StringResponse>.Failure("Invalid password reset request.", ResultError.Validation);
+                return ApplicationResult<StringResponse>.Failure("Invalid password reset request.", ResultError.Validation);
             }
 
             var result = await userManager.ResetPasswordAsync(user, decodedToken, dto.NewPassword);
@@ -45,10 +45,10 @@ namespace CarRental.Application.Identity.Commands
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
                 logger.LogInformation("Password reset rejected for user {UserId}: {Errors}.", user.Id, errors);
-                return Result<StringResponse>.Failure(errors, ResultError.Validation);
+                return ApplicationResult<StringResponse>.Failure(errors, ResultError.Validation);
             }
 
-            return Result<StringResponse>.Success(
+            return ApplicationResult<StringResponse>.Success(
                 new StringResponse("Your password has been reset successfully."));
         }
     }

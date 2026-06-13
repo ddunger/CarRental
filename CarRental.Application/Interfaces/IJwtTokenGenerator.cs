@@ -1,4 +1,4 @@
-﻿using CarRental.Application.Common.Results;
+﻿using CarRental.Domain.Results;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
 

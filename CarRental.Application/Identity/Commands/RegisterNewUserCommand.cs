@@ -1,5 +1,5 @@
 ﻿using CarRental.Application.Common.Responses;
-using CarRental.Application.Common.Results;
+using CarRental.Domain.Results;
 using CarRental.Application.Events;
 using CarRental.Application.Identity.Requests;
 using CarRental.Domain.Entities;
@@ -9,28 +9,28 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 namespace CarRental.Application.Identity.Commands
 {
-    public record RegisterNewUserCommand(RegisterUserRequest dto) : IRequest<Result<StringResponse>>;
+    public record RegisterNewUserCommand(RegisterUserRequest dto) : IRequest<ApplicationResult<StringResponse>>;
 
 
     public class RegisterNewUserCommandHandler(
         ILogger<RegisterNewUserCommandHandler> logger,
         IPublisher publisher,
         UserManager<UserEntity> userManager)
-        : IRequestHandler<RegisterNewUserCommand, Result<StringResponse>>
+        : IRequestHandler<RegisterNewUserCommand, ApplicationResult<StringResponse>>
     {
-        public async Task<Result<StringResponse>> Handle(RegisterNewUserCommand command, CancellationToken cancellationToken)
+        public async Task<ApplicationResult<StringResponse>> Handle(RegisterNewUserCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.dto.Email) || string.IsNullOrEmpty(command.dto.Password))
             {
                 logger.LogError("Email or password provided are null or empty.");
-                return Result<StringResponse>.Failure("Invalid registration data provided.", ResultError.Validation);
+                return ApplicationResult<StringResponse>.Failure("Invalid registration data provided.", ResultError.Validation);
             }
 
             var existingUser = await userManager.FindByEmailAsync(command.dto.Email);
             if (existingUser is not null)
             {
                 logger.LogError("User with email {Email} already exists.", command.dto.Email);
-                return Result<StringResponse>.Failure($"User with email '{command.dto.Email}' already exists.", ResultError.Conflict);
+                return ApplicationResult<StringResponse>.Failure($"User with email '{command.dto.Email}' already exists.", ResultError.Conflict);
             }
 
             var result = await userManager.CreateAsync(new UserEntity
@@ -46,20 +46,20 @@ namespace CarRental.Application.Identity.Commands
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
                 logger.LogError("Error creating account {Email}: {Errors}", command.dto.Email, errors);
-                return Result<StringResponse>.Failure(errors, ResultError.Validation);
+                return ApplicationResult<StringResponse>.Failure(errors, ResultError.Validation);
             }
 
             var createdUser = await userManager.FindByEmailAsync(command.dto.Email);
             if (createdUser is null)
             {
                 logger.LogError("User not found after creation {Email}.", command.dto.Email);
-                return Result<StringResponse>.Failure("Failed to complete registration.", ResultError.Internal);
+                return ApplicationResult<StringResponse>.Failure("Failed to complete registration.", ResultError.Internal);
             }
 
             logger.LogInformation("Sending confirmation email to {Email}.", command.dto.Email);
             await publisher.Publish(new NewUserRegistrationEvent(createdUser), cancellationToken);
 
-            return Result<StringResponse>.Success(
+            return ApplicationResult<StringResponse>.Success(
                 new StringResponse("Thank you for your registration. Please check your email for confirmation code."));
         }  
     }

@@ -1,10 +1,12 @@
 ﻿using CarRental.Application.Interfaces;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Interfaces.DbContext;
+using CarRental.Domain.Interfaces.Repositories;
 using CarRental.Domain.Interfaces.Services;
 using CarRental.Infrastructure.Authentication;
 using CarRental.Infrastructure.Configuration;
 using CarRental.Infrastructure.DbContext;
+using CarRental.Infrastructure.Repositories;
 using CarRental.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +52,9 @@ namespace CarRental.Infrastructure
             services.AddScoped<ITotp2FAService, Totp2FAService>();
             services.AddScoped<IQRCodeService, QRCodeService>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+
+            services.AddScoped<IManufacturersRepository, ManufacturersRepository>();
 
 
             return services;

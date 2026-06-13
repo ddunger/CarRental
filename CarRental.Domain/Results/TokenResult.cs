@@ -1,4 +1,4 @@
-﻿namespace CarRental.Application.Common.Results
+﻿namespace CarRental.Domain.Results
 {
     public record TokenResult(string AccessToken, string RefreshToken, string? RoleName = null);
 

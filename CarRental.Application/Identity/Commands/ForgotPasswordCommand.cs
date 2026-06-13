@@ -1,5 +1,5 @@
 ﻿using CarRental.Application.Common.Responses;
-using CarRental.Application.Common.Results;
+using CarRental.Domain.Results;
 using CarRental.Application.Events;
 using CarRental.Domain.Entities;
 using MediatR;
@@ -12,15 +12,15 @@ using System.Text;
 namespace CarRental.Application.Identity.Commands
 {
     public record ForgotPasswordCommand(ForgotPasswordRequest ResetRequest)
-       : IRequest<Result<StringResponse>>;
+       : IRequest<ApplicationResult<StringResponse>>;
 
     public class ForgotPasswordCommandHandler(
         ILogger<ForgotPasswordCommandHandler> logger,
         IPublisher publisher,
         UserManager<UserEntity> userManager)
-        : IRequestHandler<ForgotPasswordCommand, Result<StringResponse>>
+        : IRequestHandler<ForgotPasswordCommand, ApplicationResult<StringResponse>>
     {
-        public async Task<Result<StringResponse>> Handle(ForgotPasswordCommand command, CancellationToken cancellationToken)
+        public async Task<ApplicationResult<StringResponse>> Handle(ForgotPasswordCommand command, CancellationToken cancellationToken)
         {
             var user = await userManager.FindByEmailAsync(command.ResetRequest.Email);
             if (user is not null && await userManager.IsEmailConfirmedAsync(user))
@@ -34,7 +34,7 @@ namespace CarRental.Application.Identity.Commands
                 logger.LogWarning("Forgot password requested for non-existing or unconfirmed email {Email}.", command.ResetRequest.Email);
             }
 
-            return Result<StringResponse>.Success(
+            return ApplicationResult<StringResponse>.Success(
                 new StringResponse("Please check your email for instructions on resetting your password."));
         }
     }

@@ -1,12 +1,12 @@
-﻿using CarRental.Application.Common.Results;
-using CarRental.Domain.Enums;
+﻿using CarRental.Domain.Enums;
+using CarRental.Domain.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRental.API.Extensions
 {
     public static class ResultExtensions
     {
-        public static IActionResult ToActionResult<T>(this Result<T> result, ControllerBase controller)
+        public static IActionResult ToActionResult<T>(this ApplicationResult<T> result, ControllerBase controller)
         {
             if (result.IsSuccess)
                 return controller.Ok(new { data = result.Value });
@@ -25,7 +25,7 @@ namespace CarRental.API.Extensions
         }
 
         //Delete actions have nothing to return, so no <T> is required resulgin in 204
-        public static IActionResult ToActionResult(this Result result, ControllerBase controller)
+        public static IActionResult ToActionResult(this ApplicationResult result, ControllerBase controller)
         {
             if (result.IsSuccess)
                 return controller.NoContent();
