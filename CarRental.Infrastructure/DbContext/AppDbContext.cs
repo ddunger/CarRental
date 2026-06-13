@@ -17,6 +17,8 @@ namespace CarRental.Infrastructure.DbContext
         public DbSet<RentalEntity> Rentals { get; set; }
         public DbSet<LocationWorkingHoursEntity> LocationWorkingHours { get; set; }
         public DbSet<LocationHolidayEntity> LocationHolidays { get; set; }
+        public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
+
         //refactor then include:
         //public DbSet<ChangelogEntity> Changelog { get; set; }
 

@@ -13,6 +13,7 @@ namespace CarRental.Domain.Interfaces.DbContext
         DbSet<RentalEntity> Rentals { get; }
         DbSet<LocationWorkingHoursEntity> LocationWorkingHours { get; }
         DbSet<LocationHolidayEntity> LocationHolidays { get; }
+        DbSet<RefreshTokenEntity> RefreshTokens { get;}
 
         // DbSet<ChangelogEntity> Changelog { get; }
 

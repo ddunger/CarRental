@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CarRental.Application.Common.User;
+using CarRental.Domain.Interfaces.Application;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CarRental.Application
@@ -12,9 +14,7 @@ namespace CarRental.Application
 
             services.AddHttpContextAccessor();
 
-            //services.AddScoped<IUserContext, UserContext>();
-
-            //services.AddScoped<ITotp2faService, Totp2faService>();
+            services.AddScoped<IUserContext, UserContext>();            
 
             return services;
         }
