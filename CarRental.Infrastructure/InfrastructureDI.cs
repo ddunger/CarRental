@@ -55,6 +55,7 @@ namespace CarRental.Infrastructure
 
 
             services.AddScoped<IManufacturersRepository, ManufacturersRepository>();
+            services.AddScoped<IPickupLocationRepository, PickupLocationRepository>();
 
 
             return services;
