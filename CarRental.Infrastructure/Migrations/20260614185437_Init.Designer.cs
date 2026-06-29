@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarRental.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260614130901_Init")]
+    [Migration("20260614185437_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -386,10 +386,16 @@ namespace CarRental.Infrastructure.Migrations
                         .HasColumnType("character(4)")
                         .IsFixedLength();
 
+                    b.Property<int>("Category")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Color")
                         .HasColumnType("integer");
 
                     b.Property<int>("EnginePowerInKw")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Fuel")
                         .HasColumnType("integer");
 
                     b.Property<int>("KilometersDriven")
@@ -408,6 +414,12 @@ namespace CarRental.Infrastructure.Migrations
                     b.Property<string>("RegistrationPlate")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("Transmission")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
                     b.Property<string>("VehicleModel")
                         .IsRequired()

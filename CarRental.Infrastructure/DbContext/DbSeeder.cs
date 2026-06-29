@@ -80,22 +80,21 @@ namespace CarRental.Infrastructure.DbContext
             if (await db.Vehicles.AnyAsync())
                 return;
 
-            // Assumes manufacturers are seeded — fetch IDs by name
             var manufacturers = await db.Manufacturers
                 .ToDictionaryAsync(m => m.Name, m => m.Id);
 
             var vehicles = new List<VehicleEntity>
             {
-                new() { ManufacturerId = manufacturers["Toyota"],       VehicleModel = "Corolla",    AcrissCode = "CDMR", ManufacturingYear = 2022, KilometersDriven = 15000, EnginePowerInKw = 103, RegistrationPlate = "ZG-123-AA", PricePerDayInEuro = 45.00m, Color = VehicleColor.White   },
-                new() { ManufacturerId = manufacturers["Volkswagen"],   VehicleModel = "Golf",       AcrissCode = "CDMR", ManufacturingYear = 2023, KilometersDriven = 8000,  EnginePowerInKw = 110, RegistrationPlate = "ZG-456-BB", PricePerDayInEuro = 50.00m, Color = VehicleColor.Black   },
-                new() { ManufacturerId = manufacturers["BMW"],          VehicleModel = "3 Series",   AcrissCode = "SDMR", ManufacturingYear = 2023, KilometersDriven = 12000, EnginePowerInKw = 190, RegistrationPlate = "ZG-789-CC", PricePerDayInEuro = 95.00m, Color = VehicleColor.Blue    },
-                new() { ManufacturerId = manufacturers["Mercedes-Benz"],VehicleModel = "C-Class",    AcrissCode = "SDMR", ManufacturingYear = 2022, KilometersDriven = 20000, EnginePowerInKw = 170, RegistrationPlate = "ZG-111-DD", PricePerDayInEuro = 90.00m, Color = VehicleColor.Silver  },
-                new() { ManufacturerId = manufacturers["Ford"],         VehicleModel = "Kuga",       AcrissCode = "SFMR", ManufacturingYear = 2021, KilometersDriven = 35000, EnginePowerInKw = 150, RegistrationPlate = "ZG-222-EE", PricePerDayInEuro = 65.00m, Color = VehicleColor.Red     },
-                new() { ManufacturerId = manufacturers["Hyundai"],      VehicleModel = "Tucson",     AcrissCode = "SFMR", ManufacturingYear = 2022, KilometersDriven = 18000, EnginePowerInKw = 132, RegistrationPlate = "ZG-333-FF", PricePerDayInEuro = 60.00m, Color = VehicleColor.White   },
-                new() { ManufacturerId = manufacturers["Škoda"],        VehicleModel = "Octavia",    AcrissCode = "CDMR", ManufacturingYear = 2021, KilometersDriven = 42000, EnginePowerInKw = 110, RegistrationPlate = "ZG-444-GG", PricePerDayInEuro = 48.00m, Color = VehicleColor.Gray    },
-                new() { ManufacturerId = manufacturers["Audi"],         VehicleModel = "A4",         AcrissCode = "SDMR", ManufacturingYear = 2023, KilometersDriven = 5000,  EnginePowerInKw = 150, RegistrationPlate = "ZG-555-HH", PricePerDayInEuro = 85.00m, Color = VehicleColor.Black   },
-                new() { ManufacturerId = manufacturers["Renault"],      VehicleModel = "Zoe",        AcrissCode = "ECMR", ManufacturingYear = 2022, KilometersDriven = 22000, EnginePowerInKw = 100, RegistrationPlate = "ZG-666-II", PricePerDayInEuro = 55.00m, Color = VehicleColor.White   },
-                new() { ManufacturerId = manufacturers["Kia"],          VehicleModel = "EV6",        AcrissCode = "PWMR", ManufacturingYear = 2023, KilometersDriven = 9000,  EnginePowerInKw = 228, RegistrationPlate = "ZG-777-JJ", PricePerDayInEuro = 80.00m, Color = VehicleColor.Gray    },
+                new() { ManufacturerId = manufacturers["Toyota"],        VehicleModel = "Corolla",  AcrissCode = "CDMR", Category = AcrissVehicleCategory.C, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 15000, EnginePowerInKw = 103, RegistrationPlate = "ZG-123-AA", PricePerDayInEuro = 45.00m, Color = VehicleColor.White  },
+                new() { ManufacturerId = manufacturers["Volkswagen"],    VehicleModel = "Golf",     AcrissCode = "CDMR", Category = AcrissVehicleCategory.C, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 8000,  EnginePowerInKw = 110, RegistrationPlate = "ZG-456-BB", PricePerDayInEuro = 50.00m, Color = VehicleColor.Black  },
+                new() { ManufacturerId = manufacturers["BMW"],           VehicleModel = "3 Series", AcrissCode = "SDMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 12000, EnginePowerInKw = 190, RegistrationPlate = "ZG-789-CC", PricePerDayInEuro = 95.00m, Color = VehicleColor.Blue   },
+                new() { ManufacturerId = manufacturers["Mercedes-Benz"], VehicleModel = "C-Class",  AcrissCode = "SDMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 20000, EnginePowerInKw = 170, RegistrationPlate = "ZG-111-DD", PricePerDayInEuro = 90.00m, Color = VehicleColor.Silver },
+                new() { ManufacturerId = manufacturers["Ford"],          VehicleModel = "Kuga",     AcrissCode = "SFMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.F, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2021, KilometersDriven = 35000, EnginePowerInKw = 150, RegistrationPlate = "ZG-222-EE", PricePerDayInEuro = 65.00m, Color = VehicleColor.Red    },
+                new() { ManufacturerId = manufacturers["Hyundai"],       VehicleModel = "Tucson",   AcrissCode = "SFMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.F, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 18000, EnginePowerInKw = 132, RegistrationPlate = "ZG-333-FF", PricePerDayInEuro = 60.00m, Color = VehicleColor.White  },
+                new() { ManufacturerId = manufacturers["Škoda"],         VehicleModel = "Octavia",  AcrissCode = "CDMR", Category = AcrissVehicleCategory.C, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2021, KilometersDriven = 42000, EnginePowerInKw = 110, RegistrationPlate = "ZG-444-GG", PricePerDayInEuro = 48.00m, Color = VehicleColor.Gray   },
+                new() { ManufacturerId = manufacturers["Audi"],          VehicleModel = "A4",       AcrissCode = "SDMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 5000,  EnginePowerInKw = 150, RegistrationPlate = "ZG-555-HH", PricePerDayInEuro = 85.00m, Color = VehicleColor.Black  },
+                new() { ManufacturerId = manufacturers["Renault"],       VehicleModel = "Zoe",      AcrissCode = "ECMR", Category = AcrissVehicleCategory.E, Type = AcrissVehicleType.C, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 22000, EnginePowerInKw = 100, RegistrationPlate = "ZG-666-II", PricePerDayInEuro = 55.00m, Color = VehicleColor.White  },
+                new() { ManufacturerId = manufacturers["Kia"],           VehicleModel = "EV6",      AcrissCode = "PWMR", Category = AcrissVehicleCategory.P, Type = AcrissVehicleType.W, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 9000,  EnginePowerInKw = 228, RegistrationPlate = "ZG-777-JJ", PricePerDayInEuro = 80.00m, Color = VehicleColor.Gray   },
             };
 
             await db.Vehicles.AddRangeAsync(vehicles);
@@ -110,10 +109,10 @@ namespace CarRental.Infrastructure.DbContext
 
             var locations = new List<PickupLocationEntity>
             {
-                new() { Name = "Zagreb Airport",       Address = "Ulica Rudolfa Fizira 1, 10150 Zagreb", Latitude = 45.7429, Longitude = 16.0688 },
+                new() { Name = "Zagreb Airport",       Address = "Ulica Rudolfa Fizira 1, 10150 Zagreb",     Latitude = 45.7429, Longitude = 16.0688 },
                 new() { Name = "Zagreb City Centre",   Address = "Trg bana Josipa Jelačića 1, 10000 Zagreb", Latitude = 45.8131, Longitude = 15.9772 },
-                new() { Name = "Split Airport",        Address = "21210 Kaštela, Split",                  Latitude = 43.5389, Longitude = 16.2980 },
-                new() { Name = "Dubrovnik Airport",    Address = "Dr. Ante Starčevića 1, 20213 Čilipi",  Latitude = 42.5614, Longitude = 18.2682 },
+                new() { Name = "Split Airport",        Address = "21210 Kaštela, Split",                     Latitude = 43.5389, Longitude = 16.2980 },
+                new() { Name = "Dubrovnik Airport",    Address = "Dr. Ante Starčevića 1, 20213 Čilipi",      Latitude = 42.5614, Longitude = 18.2682 },
             };
 
             await db.Locations.AddRangeAsync(locations);
