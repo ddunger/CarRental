@@ -1,5 +1,6 @@
 ﻿using CarRental.Application.Rentals.Requests;
 using CarRental.Application.Rentals.Responses;
+using CarRental.Domain.Constants;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
 using CarRental.Domain.Interfaces.Application;
@@ -35,7 +36,7 @@ namespace CarRental.Application.Rentals.Queries
                 return ApplicationResult<IEnumerable<RentalResponse>>.Failure(
                     "Limit must be 1 or greater.", ResultError.Validation);
 
-            var isStaff = currentUser.IsInRole("Admin") || currentUser.IsInRole("Manager");
+            var isStaff = currentUser.IsInRole(Roles.Admin) || currentUser.IsInRole(Roles.Manager);
             var customerId = isStaff ? query.Request.CustomerId : currentUser.Id;
 
             var rentalsResult = await rentalsRepository.GetAllRentalsAsync(

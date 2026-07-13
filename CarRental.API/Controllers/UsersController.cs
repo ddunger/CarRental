@@ -2,6 +2,7 @@
 using CarRental.Application.Users.Commands;
 using CarRental.Application.Users.Queries;
 using CarRental.Application.Users.Requests;
+using CarRental.Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +19,7 @@ namespace CarRental.API.Controllers
         /// Returns a paginated list of all users. Admin and Manager access only.
         /// </remarks>
         [HttpGet]
-        [Authorize(Roles = "Admin,Manager")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager)]
         public async Task<IActionResult> GetAllUsersAsync(
             [FromQuery] int? offset,
             [FromQuery] int? limit)
@@ -31,7 +32,7 @@ namespace CarRental.API.Controllers
         /// Returns a single user by ID. Admin and Manager access only.
         /// </remarks>
         [HttpGet("{userId}")]
-        [Authorize(Roles = "Admin,Manager")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager)]
         public async Task<IActionResult> GetUserByIdAsync(
             [FromRoute] string userId)
         {
@@ -43,7 +44,7 @@ namespace CarRental.API.Controllers
         /// Disables 2FA for a specific user. Admin access only.
         /// </remarks>
         [HttpPatch("disable-2fa/{userId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Disable2FAAsync(
             [FromRoute] string userId)
         {
@@ -56,7 +57,7 @@ namespace CarRental.API.Controllers
         /// Deactivates a user account, preventing further logins. Admin access only.
         /// </remarks>
         [HttpPatch("deactivate/{userId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeactivateUserAsync(
             [FromRoute] string userId)
         {
@@ -69,7 +70,7 @@ namespace CarRental.API.Controllers
         /// Updates users first and last names.
         /// </remarks>
         [HttpPatch("{userId}")]
-        [Authorize]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager)]
         public async Task<IActionResult> UpdateUserAsync(
             [FromRoute] string userId,
             [FromBody] UpdateUserRequest request)

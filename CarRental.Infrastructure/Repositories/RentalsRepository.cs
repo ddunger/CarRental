@@ -143,6 +143,7 @@ namespace CarRental.Infrastructure.Repositories
                 var overdue = await context.Rentals
                     .Include(r => r.Customer)
                     .Include(r => r.Vehicle)
+                    .ThenInclude(v => v.Manufacturer)
                     .Where(r => r.Status == RentalStatus.Active
                         && r.ActualReturnTimeUtc == null
                         && r.ExpectedReturnTimeUtc < asOfUtc)

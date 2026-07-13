@@ -1,6 +1,7 @@
 ﻿using CarRental.Application.Common.Responses;
 using CarRental.Application.Users.Requests;
 using CarRental.Application.Users.Responses;
+using CarRental.Domain.Constants;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
 using CarRental.Domain.Interfaces.Application;
@@ -26,7 +27,7 @@ namespace CarRental.Application.Users.Commands
             if (currentUser is null)
                 return ApplicationResult<UserResponse>.Failure("Unauthorized.", ResultError.Unauthorized);
 
-            if (currentUser.Id != command.UserId && !currentUser.IsInRole("Admin"))
+            if (currentUser.Id != command.UserId && !currentUser.IsInRole(Roles.Admin))
                 return ApplicationResult<UserResponse>.Failure("You can only update your own profile.", ResultError.Unauthorized);
 
             var user = await userManager.FindByIdAsync(command.UserId);

@@ -1,4 +1,5 @@
 ﻿using CarRental.Application.Reservations.Responses;
+using CarRental.Domain.Constants;
 using CarRental.Domain.Enums;
 using CarRental.Domain.Interfaces.Application;
 using CarRental.Domain.Interfaces.Repositories;
@@ -33,7 +34,7 @@ namespace CarRental.Application.Reservations.Queries
 
             var reservation = reservationResult.Value;
 
-            var isStaff = currentUser.IsInRole("Admin") || currentUser.IsInRole("Manager");
+            var isStaff = currentUser.IsInRole(Roles.Admin) || currentUser.IsInRole(Roles.Manager);
             if (reservation is null || (!isStaff && reservation.CustomerId != currentUser.Id))
             {
                 logger.LogInformation("Reservation {ReservationId} not found or not accessible.", query.ReservationId);
@@ -58,7 +59,7 @@ namespace CarRental.Application.Reservations.Queries
                 reservation.ExpectedCostEuro,
                 reservation.Status,
                 reservation.CreatedAtUtc,
-                reservation.CancelledAtUtc)));
+                reservation.CancelledAtUtc));
         }
     }
 }

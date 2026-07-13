@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="../CarRental.Web/CarRental.Web.csproj" Id="7db42d00-1854-4ca7-a315-b9372f6c5215" />
   <Project Path="CarRental.API/CarRental.API.csproj" />
   <Project Path="CarRental.Application/CarRental.Application.csproj" />
   <Project Path="CarRental.Domain/CarRental.Domain.csproj" />

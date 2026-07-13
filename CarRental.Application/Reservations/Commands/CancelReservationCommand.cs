@@ -1,9 +1,11 @@
 ﻿using CarRental.Application.Common.Responses;
+using CarRental.Domain.Constants;
 using CarRental.Domain.Enums;
 using CarRental.Domain.Interfaces.Application;
 using CarRental.Domain.Interfaces.Repositories;
 using CarRental.Domain.Results;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace CarRental.Application.Reservations.Commands
@@ -32,7 +34,7 @@ namespace CarRental.Application.Reservations.Commands
 
             var reservation = reservationResult.Value;
 
-            var isStaff = currentUser.IsInRole("Admin") || currentUser.IsInRole("Manager");
+            var isStaff = currentUser.IsInRole(Roles.Admin) || currentUser.IsInRole(Roles.Manager);
             if (reservation is null || (!isStaff && reservation.CustomerId != currentUser.Id))
                 return ApplicationResult<StringResponse>.Failure(
                     "Reservation not found.", ResultError.NotFound);

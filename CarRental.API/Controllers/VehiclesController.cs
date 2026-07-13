@@ -2,6 +2,7 @@
 using CarRental.Application.Vehicles.Commands;
 using CarRental.Application.Vehicles.Queries;
 using CarRental.Application.Vehicles.Requests;
+using CarRental.Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +19,7 @@ namespace CarRental.API.Controllers
         /// Returns a paginated list of all vehicles. Use <c>offset</c> and <c>limit</c> query parameters for pagination.
         /// </remarks>
         [HttpGet]
-        [Authorize(Roles = "Admin, Manager, Customer")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager + "," + Roles.Customer)]
 
         public async Task<IActionResult> GetAllVehiclesAsync(
             [FromBody] GetVehiclesRequest request,
@@ -33,7 +34,7 @@ namespace CarRental.API.Controllers
         /// Returns a single vehicle by their ID.
         /// </remarks>
         [HttpGet("{vehicleId:int}")]
-        [Authorize(Roles = "Admin, Manager, Customer")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager + "," + Roles.Customer)]
         public async Task<IActionResult> GetVehicleByIdAsync([FromRoute] int vehicleId)
         {
             var result = await sender.Send(new GetVehicleByIdQuery(vehicleId));
@@ -45,7 +46,7 @@ namespace CarRental.API.Controllers
         /// Creates a new vehicle. Returns 201 with the created resource location on success.
         /// </remarks>
         [HttpPost]
-        [Authorize(Roles = "Admin, Manager")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager)]
         public async Task<IActionResult> CreateVehicleAsync(
             [FromBody] CreateVehicleRequest request)
         {
@@ -61,7 +62,7 @@ namespace CarRental.API.Controllers
         /// Updates an existing vehicle.
         /// </remarks>
         [HttpPatch("{vehicleId:int}")]
-        [Authorize(Roles = "Admin, Manager")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager)]
         public async Task<IActionResult> UpdateVehicleAsync(
             [FromRoute] int vehicleId,
             [FromBody] UpdateVehicleRequest request)
@@ -74,7 +75,7 @@ namespace CarRental.API.Controllers
         /// Permanently deletes a vehicle by ID.
         /// </remarks>
         [HttpDelete("{vehicleId:int}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteVehicleAsync(
             [FromRoute] int vehicleId)
         {

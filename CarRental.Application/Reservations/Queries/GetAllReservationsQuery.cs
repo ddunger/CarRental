@@ -1,5 +1,6 @@
 ﻿using CarRental.Application.Reservations.Requests;
 using CarRental.Application.Reservations.Responses;
+using CarRental.Domain.Constants;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
 using CarRental.Domain.Interfaces.Application;
@@ -36,7 +37,7 @@ namespace CarRental.Application.Reservations.Queries
                     "Limit must be 1 or greater.", ResultError.Validation);
 
             // Customers are always scoped to their own reservations
-            var isStaff = currentUser.IsInRole("Admin") || currentUser.IsInRole("Manager");
+            var isStaff = currentUser.IsInRole(Roles.Admin) || currentUser.IsInRole(Roles.Manager);
             var customerId = isStaff ? query.Request.CustomerId : currentUser.Id;
 
             var reservationsResult = await reservationsRepository.GetAllReservationsAsync(

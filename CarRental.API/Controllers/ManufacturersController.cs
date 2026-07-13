@@ -2,9 +2,11 @@
 using CarRental.Application.Manufacturers.Commands;
 using CarRental.Application.Manufacturers.Queries;
 using CarRental.Application.Manufacturers.Requests;
+using CarRental.Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRental.API.Controllers
@@ -18,7 +20,7 @@ namespace CarRental.API.Controllers
         /// Returns a paginated list of all manufacturers. Use <c>offset</c> and <c>limit</c> query parameters for pagination.
         /// </remarks>
         [HttpGet]
-        [Authorize(Roles = "Admin, Manager, Customer")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager + "," + Roles.Customer)]
 
         public async Task<IActionResult> GetAllManufacturersAsync(
             [FromQuery] int? offset,
@@ -32,7 +34,7 @@ namespace CarRental.API.Controllers
         /// Returns a single manufacturer by their ID.
         /// </remarks>
         [HttpGet("{manufacturerId:int}")]
-        [Authorize(Roles = "Admin, Manager, Customer")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager + "," + Roles.Customer)]
         public async Task<IActionResult> GetManufacturerByIdAsync([FromRoute] int manufacturerId)
         {
             var result = await sender.Send(new GetManufacturerByIdQuery(manufacturerId));
@@ -43,7 +45,7 @@ namespace CarRental.API.Controllers
         /// Creates a new manufacturer. Returns 201 with the created resource location on success.
         /// </remarks>
         [HttpPost]
-        [Authorize(Roles = "Admin, Manager")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager)]
         public async Task<IActionResult> CreateManufacturerAsync(
             [FromBody] CreateManufacturerRequest request)
         {
@@ -59,7 +61,7 @@ namespace CarRental.API.Controllers
         /// Updates the name of an existing manufacturer.
         /// </remarks>
         [HttpPatch("{manufacturerId:int}")]
-        [Authorize(Roles = "Admin, Manager")]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Manager + "," + Roles.Customer)]
         public async Task<IActionResult> UpdateManufacturerAsync(
             [FromRoute] int manufacturerId,
             [FromBody] UpdateManufacturerRequest request)
@@ -72,7 +74,7 @@ namespace CarRental.API.Controllers
         /// Permanently deletes a manufacturer by ID.
         /// </remarks>
         [HttpDelete("{manufacturerId:int}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteManufacturerAsync(
             [FromRoute] int manufacturerId)
         {

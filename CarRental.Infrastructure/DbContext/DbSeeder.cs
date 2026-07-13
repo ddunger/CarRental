@@ -1,4 +1,5 @@
-﻿using CarRental.Domain.Entities;
+﻿using CarRental.Domain.Constants;
+using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ namespace CarRental.Infrastructure.DbContext
     {
         public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
         {
-            string[] roles = ["Admin", "Manager", "Customer"];
+            string[] roles = [Roles.Admin, Roles.Manager, Roles.Customer];
 
             foreach (var role in roles)
             {
@@ -22,9 +23,9 @@ namespace CarRental.Infrastructure.DbContext
         {
             var users = new[]
             {
-                new { Email = "admin@carrental.com",    First = "Admin",   Last = "User",    Role = "Admin"    },
-                new { Email = "manager@carrental.com",  First = "Manager", Last = "User",    Role = "Manager"  },
-                new { Email = "customer@carrental.com", First = "John",    Last = "Doe",     Role = "Customer" },
+                new { Email = "admin@carrental.com",    First = "Administrator",   Last = "User",    Role = Roles.Admin    },
+                new { Email = "manager@carrental.com",  First = "Manager",         Last = "User",    Role = Roles.Manager  },
+                new { Email = "customer@carrental.com", First = "Customer",        Last = "User",    Role = Roles.Customer },
             };
 
             foreach (var u in users)

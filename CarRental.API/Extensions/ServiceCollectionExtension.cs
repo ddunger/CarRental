@@ -1,9 +1,12 @@
-﻿using CarRental.Application;
+﻿using CarRental.API.Hubs;
+using CarRental.Application;
+using CarRental.Application.SignalR;
 using CarRental.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace CarRental.API.Extensions
 {
@@ -11,7 +14,8 @@ namespace CarRental.API.Extensions
     {
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>  options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddOpenApi(options =>
             {
@@ -39,25 +43,28 @@ namespace CarRental.API.Extensions
                         NameClaimType = JwtRegisteredClaimNames.Sub
                     };
 
-                    //options.Events = new JwtBearerEvents //singnalR configuration
-                    //{
-                    //    OnMessageReceived = context =>
-                    //    {
-                    //        var accessToken = context.Request.Query["access_token"];
-                    //        var path = context.HttpContext.Request.Path;
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
 
-                    //        if (!string.IsNullOrEmpty(accessToken) &&
-                    //            path.StartsWithSegments("/notifications"))
-                    //        {
-                    //            context.Token = accessToken;
-                    //        }
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                path.StartsWithSegments("/notifications"))
+                            {
+                                context.Token = accessToken;
+                            }
 
-                    //        return Task.CompletedTask;
-                    //    }
-                    //};
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
-            //services.AddSignalR();
+            services.AddSignalR();
+            services.AddSingleton<IStaffNotificationPublisher, SignalRStaffNotificationPublisher>();
+            services.AddHostedService<OverdueRentalsBackgroundService>();
+
 
 
             //basic rate limiting configuration - max 100 requests in 1 minute
