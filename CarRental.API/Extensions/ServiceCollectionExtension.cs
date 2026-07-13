@@ -2,6 +2,7 @@
 using CarRental.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.JsonWebTokens;
 using System.Text;
 
 namespace CarRental.API.Extensions
@@ -23,6 +24,7 @@ namespace CarRental.API.Extensions
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
+                    options.MapInboundClaims = false;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -32,8 +34,9 @@ namespace CarRental.API.Extensions
                         ValidIssuer = configuration["Jwt:Issuer"],
                         ValidAudience = configuration["Jwt:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
-
+                            Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)),              
+                        RoleClaimType = "role",
+                        NameClaimType = JwtRegisteredClaimNames.Sub
                     };
 
                     //options.Events = new JwtBearerEvents //singnalR configuration

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarRental.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260614185437_Init")]
+    [Migration("20260713100642_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace CarRental.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.8")
+                .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -227,9 +227,10 @@ namespace CarRental.Infrastructure.Migrations
 
                     b.HasIndex("PickupLocationId");
 
-                    b.HasIndex("ReservationId");
+                    b.HasIndex("ReservationId")
+                        .IsUnique();
 
-                    b.HasIndex("VehicleId");
+                    b.HasIndex("VehicleId", "Status");
 
                     b.ToTable("Rentals");
                 });
@@ -282,7 +283,7 @@ namespace CarRental.Infrastructure.Migrations
 
                     b.HasIndex("PickupLocationId");
 
-                    b.HasIndex("VehicleId");
+                    b.HasIndex("VehicleId", "Status");
 
                     b.ToTable("Reservations");
                 });

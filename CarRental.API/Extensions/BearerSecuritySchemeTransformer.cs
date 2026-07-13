@@ -20,18 +20,23 @@ namespace CarRental.API.Extensions
                 return;
 
             document.Components ??= new OpenApiComponents();
-            document.AddComponent("Bearer", new OpenApiSecurityScheme
+            document.AddComponent("OAuth2Password", new OpenApiSecurityScheme
             {
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header,
-                Description = "Enter your JWT access token"
+                Type = SecuritySchemeType.OAuth2,
+                Description = "Login with username and password",
+                Flows = new OpenApiOAuthFlows
+                {
+                    Password = new OpenApiOAuthFlow
+                    {
+                        TokenUrl = new Uri("/api/identity/token", UriKind.Relative),
+                        Scopes = new Dictionary<string, string>()
+                    }
+                }
             });
 
             var securityRequirement = new OpenApiSecurityRequirement
             {
-                [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+                [new OpenApiSecuritySchemeReference("OAuth2Password", document)] = []
             };
 
             foreach (var (path, pathItem) in document.Paths)

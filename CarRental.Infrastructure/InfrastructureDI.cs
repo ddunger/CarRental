@@ -56,8 +56,12 @@ namespace CarRental.Infrastructure
 
             services.AddScoped<IManufacturersRepository, ManufacturersRepository>();
             services.AddScoped<IPickupLocationRepository, PickupLocationRepository>();
+            services.AddScoped<IVehiclesRepository, VehiclesRepository>();
+            services.AddScoped<IReservationsRepository, ReservationsRepository>();
+            services.AddScoped<IRentalsRepository, RentalsRepository>();
 
 
+            
             return services;
         }
 

@@ -6,7 +6,7 @@ namespace CarRental.Domain.Interfaces.Repositories
 {
     public interface IVehiclesRepository
     {
-        Task<RepositoryResult<IEnumerable<VehicleEntity>>> GetAllAsync(
+        Task<RepositoryResult<IEnumerable<VehicleEntity>>> GetAllVehiclesAsync(
             int? manufacturerId,
             int? yearFrom,
             int? yearTo,
@@ -21,15 +21,15 @@ namespace CarRental.Domain.Interfaces.Repositories
             int? offset,
             int? limit,
             CancellationToken cancellationToken);
-        Task<RepositoryResult<VehicleEntity?>> GetByIdAsync(
+        Task<RepositoryResult<VehicleEntity?>> GetVehicleByIdAsync(
             int vehicleId, CancellationToken cancellationToken);
 
-        Task<RepositoryResult<VehicleEntity>> AddAsync(
+        Task<RepositoryResult<VehicleEntity>> AddVehicleAsync(
             VehicleEntity vehicle, CancellationToken cancellationToken);
 
-        Task<RepositoryResult<VehicleEntity>> UpdateAsync(
+        Task<RepositoryResult<VehicleEntity>> UpdateVehicleAsync(
           VehicleEntity vehicle, CancellationToken cancellationToken);
-        Task<RepositoryResult<bool>> DeleteAsync(
+        Task<RepositoryResult<bool>> DeleteVehicleAsync(
             int vehicleId, CancellationToken cancellationToken);
     }
 }

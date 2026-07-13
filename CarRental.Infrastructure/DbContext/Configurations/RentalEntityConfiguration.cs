@@ -1,9 +1,6 @@
 ﻿using CarRental.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CarRental.Infrastructure.DbContext.Configurations
 {
@@ -41,7 +38,15 @@ namespace CarRental.Infrastructure.DbContext.Configurations
             builder.Property(r => r.TotalCostEuro)
                    .HasPrecision(10, 2);
 
-        }
+            // Active-rental availability check: filter by vehicle + status
+            builder.HasIndex(r => new { r.VehicleId, r.Status });
 
+            // Customer-scoped listing ("my rentals")
+            builder.HasIndex(r => r.CustomerId);
+
+            // One rental per reservation (allows multiple NULLs for walk-ins)
+            builder.HasIndex(r => r.ReservationId)
+                   .IsUnique();
+        }
     }
 }

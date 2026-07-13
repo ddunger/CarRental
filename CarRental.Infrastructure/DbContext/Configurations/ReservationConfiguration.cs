@@ -31,6 +31,11 @@ namespace CarRental.Infrastructure.DbContext.Configurations
             builder.Property(r => r.ExpectedCostEuro)
                    .HasPrecision(10, 2);
 
+            // Overlap/availability check: filter by vehicle + status, then time range
+            builder.HasIndex(r => new { r.VehicleId, r.Status });
+
+            // Customer-scoped listing ("my reservations")
+            builder.HasIndex(r => r.CustomerId);
         }
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -66,13 +66,7 @@ namespace CarRental.Infrastructure.Authentication
 
         // --- Private helpers ---
 
-        private string GenerateAccessToken(UserEntity user, IList<string> roles)
-        {
-            var signingCredentials = GetSigningCredentials();
-            var claims = GetClaims(user, roles);
-            var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
-            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-        }
+      
 
         private async Task<string> CreateAndStoreRefreshTokenAsync(UserEntity user, ClientType clientType)
         {
@@ -105,29 +99,35 @@ namespace CarRental.Infrastructure.Authentication
 
         private static List<Claim> GetClaims(UserEntity user, IList<string> roles)
         {
-            var claims = new List<Claim>
-            {
-                new(JwtRegisteredClaimNames.Sub, user.Id),
-                new(ClaimTypes.NameIdentifier, user.Id),
-                new(JwtRegisteredClaimNames.Email, user.Email!),
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
+           var claims = new List<Claim>
+           {
+               new(JwtRegisteredClaimNames.Sub, user.Id),
+               new(JwtRegisteredClaimNames.Email, user.Email!),
+               new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+               new(JwtRegisteredClaimNames.GivenName, user.FirstName ?? string.Empty),
+               new(JwtRegisteredClaimNames.FamilyName, user.LastName ?? string.Empty),
+           };
 
-            foreach (var role in roles)
-                claims.Add(new Claim(ClaimTypes.Role, role));
+            var role = roles.FirstOrDefault();
+            if (role is not null)
+                claims.Add(new Claim("role", role));
 
             return claims;
         }
 
-        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
+        private string GenerateAccessToken(UserEntity user, IList<string> roles)
         {
-            return new JwtSecurityToken(
-                issuer: _jwtSettings["Issuer"],
-                audience: _jwtSettings["Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_jwtSettings["ExpiryInMinutes"])),
-                signingCredentials: signingCredentials
-            );
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _jwtSettings["Issuer"],
+                Audience = _jwtSettings["Audience"],
+                Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_jwtSettings["ExpiryInMinutes"])),
+                SigningCredentials = GetSigningCredentials(),
+                Subject = new ClaimsIdentity(GetClaims(user, roles))
+            };
+
+            return new JsonWebTokenHandler().CreateToken(tokenDescriptor);
         }
+
     }
 }

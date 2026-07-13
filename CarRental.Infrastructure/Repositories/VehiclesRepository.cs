@@ -12,21 +12,21 @@ namespace CarRental.Infrastructure.Repositories
         ILogger<VehiclesRepository> logger,
         IAppDbContext context) : IVehiclesRepository
     {
-        public async Task<RepositoryResult<IEnumerable<VehicleEntity>>> GetAllAsync(
-     int? manufacturerId,
-     int? yearFrom,
-     int? yearTo,
-     decimal? priceFrom,
-     decimal? priceTo,
-     int? maxKilometers,
-     VehicleColor? color,
-     AcrissVehicleCategory? category,
-     AcrissVehicleType? type,
-     AcrissVehicleTransmission? transmission,
-     AcrissVehicleFuel? fuel,
-     int? offset,
-     int? limit,
-     CancellationToken cancellationToken)
+        public async Task<RepositoryResult<IEnumerable<VehicleEntity>>> GetAllVehiclesAsync(
+            int? manufacturerId,
+            int? yearFrom,
+            int? yearTo,
+            decimal? priceFrom,
+            decimal? priceTo,
+            int? maxKilometers,
+            VehicleColor? color,
+            AcrissVehicleCategory? category,
+            AcrissVehicleType? type,
+            AcrissVehicleTransmission? transmission,
+            AcrissVehicleFuel? fuel,
+            int? offset,
+            int? limit,
+            CancellationToken cancellationToken)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace CarRental.Infrastructure.Repositories
             }
         }
 
-        public async Task<RepositoryResult<VehicleEntity?>> GetByIdAsync(
+        public async Task<RepositoryResult<VehicleEntity?>> GetVehicleByIdAsync(
             int vehicleId, CancellationToken cancellationToken)
         {
             try
@@ -86,7 +86,7 @@ namespace CarRental.Infrastructure.Repositories
             }
         }
 
-        public async Task<RepositoryResult<VehicleEntity>> AddAsync(
+        public async Task<RepositoryResult<VehicleEntity>> AddVehicleAsync(
             VehicleEntity vehicle, CancellationToken cancellationToken)
         {
             try
@@ -102,7 +102,7 @@ namespace CarRental.Infrastructure.Repositories
             }
         }
 
-        public async Task<RepositoryResult<VehicleEntity>> UpdateAsync(
+        public async Task<RepositoryResult<VehicleEntity>> UpdateVehicleAsync(
             VehicleEntity vehicle, CancellationToken cancellationToken)
         {
             try
@@ -118,7 +118,7 @@ namespace CarRental.Infrastructure.Repositories
             }
         }
 
-        public async Task<RepositoryResult<bool>> DeleteAsync(
+        public async Task<RepositoryResult<bool>> DeleteVehicleAsync(
             int vehicleId, CancellationToken cancellationToken)
         {
             try

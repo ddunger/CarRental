@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using ResetPasswordRequest = CarRental.Application.Identity.Requests.ResetPasswordRequest;
+using CarRental.Application.Identity.Responses;
 
 namespace CarRental.API.Controllers
 {
@@ -251,6 +252,45 @@ namespace CarRental.API.Controllers
         {
             var result = await sender.Send(new LogoutCommand(ClientType.Mobile));
             return result.ToActionResult(this);
+        }
+
+
+
+
+
+
+
+        /// <remarks>
+        /// OAuth2 password-grant token endpoint used by the Scalar API reference UI.
+        /// Accepts form-encoded username/password and returns an OAuth2-shaped token response.
+        /// Not intended for application clients — use <c>login/web</c> or <c>login/mobile</c> instead.
+        /// Does not support accounts with 2FA enabled.
+        /// </remarks>
+
+        [HttpPost("token")]
+        [AllowAnonymous]
+        [ApiExplorerSettings(IgnoreApi = true)] // keeps it out of the docs
+        public async Task<IActionResult> Token(
+            [FromForm(Name = "username")] string username,
+            [FromForm(Name = "password")] string password,
+            [FromServices] IWebHostEnvironment environment)
+        {
+            if (!environment.IsDevelopment())
+                return NotFound();
+
+            var request = new LoginUserRequest { Email = username, Password = password };
+            var result = await sender.Send(new LoginWebCommand(request, ClientType.Web));
+
+            if (!result.IsSuccess || result.Value is null)
+                return Unauthorized(new { error = "invalid_grant" });
+
+            return Ok(new
+            {
+                access_token = result.Value.AccessToken,
+                token_type = "Bearer",
+                expires_in = 3600
+            });
+
         }
     }
 }

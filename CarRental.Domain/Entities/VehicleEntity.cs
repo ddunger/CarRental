@@ -26,3 +26,5 @@ namespace CarRental.Domain.Entities
         public ManufacturerEntity Manufacturer { get; set; } = null!;
     }
 }
+
+//TODO maintenance vehicle - vidi kako to dodati isto

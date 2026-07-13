@@ -18,7 +18,7 @@ namespace CarRental.API.Extensions
                     options.Title = "CarRental API";
                     options.Authentication = new ScalarAuthenticationOptions
                     {
-                        PreferredSecuritySchemes = new[] { "Bearer"}
+                        PreferredSecuritySchemes = new[] { "OAuth2Password" }
                     };
                 });
             }

@@ -470,12 +470,13 @@ namespace CarRental.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Rentals_ReservationId",
                 table: "Rentals",
-                column: "ReservationId");
+                column: "ReservationId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rentals_VehicleId",
+                name: "IX_Rentals_VehicleId_Status",
                 table: "Rentals",
-                column: "VehicleId");
+                columns: new[] { "VehicleId", "Status" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_CustomerId",
@@ -493,9 +494,9 @@ namespace CarRental.Infrastructure.Migrations
                 column: "PickupLocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_VehicleId",
+                name: "IX_Reservations_VehicleId_Status",
                 table: "Reservations",
-                column: "VehicleId");
+                columns: new[] { "VehicleId", "Status" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vehicles_ManufacturerId",
