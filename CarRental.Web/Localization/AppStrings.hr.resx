@@ -1,0 +1,732 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Category_C" xml:space="preserve">
+    <value>Compact</value>
+  </data>
+  <data name="Category_D" xml:space="preserve">
+    <value>Compact Elite</value>
+  </data>
+  <data name="Category_E" xml:space="preserve">
+    <value>Economy</value>
+  </data>
+  <data name="Category_F" xml:space="preserve">
+    <value>Fullsize</value>
+  </data>
+  <data name="Category_G" xml:space="preserve">
+    <value>Fullsize Elite</value>
+  </data>
+  <data name="Category_H" xml:space="preserve">
+    <value>Economy Elite</value>
+  </data>
+  <data name="Category_I" xml:space="preserve">
+    <value>Intermediate</value>
+  </data>
+  <data name="Category_J" xml:space="preserve">
+    <value>Intermediate Elite</value>
+  </data>
+  <data name="Category_L" xml:space="preserve">
+    <value>Luxury</value>
+  </data>
+  <data name="Category_M" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="Category_N" xml:space="preserve">
+    <value>Mini Elite</value>
+  </data>
+  <data name="Category_O" xml:space="preserve">
+    <value>Oversize</value>
+  </data>
+  <data name="Category_P" xml:space="preserve">
+    <value>Premium</value>
+  </data>
+  <data name="Category_R" xml:space="preserve">
+    <value>Standard Elite</value>
+  </data>
+  <data name="Category_S" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Category_U" xml:space="preserve">
+    <value>Premium Elite</value>
+  </data>
+  <data name="Category_W" xml:space="preserve">
+    <value>Luxury Elite</value>
+  </data>
+  <data name="Category_X" xml:space="preserve">
+    <value>Special</value>
+  </data>
+  <data name="Color_Beige" xml:space="preserve">
+    <value>Bež</value>
+  </data>
+  <data name="Color_Black" xml:space="preserve">
+    <value>Crna</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>Plava</value>
+  </data>
+  <data name="Color_Brown" xml:space="preserve">
+    <value>Smeđa</value>
+  </data>
+  <data name="Color_Gold" xml:space="preserve">
+    <value>Zlatna</value>
+  </data>
+  <data name="Color_Gray" xml:space="preserve">
+    <value>Siva</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>Zelena</value>
+  </data>
+  <data name="Color_Orange" xml:space="preserve">
+    <value>Narančasta</value>
+  </data>
+  <data name="Color_Purple" xml:space="preserve">
+    <value>Ljubičasta</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>Crvena</value>
+  </data>
+  <data name="Color_Silver" xml:space="preserve">
+    <value>Srebrna</value>
+  </data>
+  <data name="Color_White" xml:space="preserve">
+    <value>Bijela</value>
+  </data>
+  <data name="Color_Yellow" xml:space="preserve">
+    <value>Žuta</value>
+  </data>
+  <data name="Common_Add" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="Common_Apply" xml:space="preserve">
+    <value>Primijeni</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Odustani</value>
+  </data>
+  <data name="Common_Clear" xml:space="preserve">
+    <value>Očisti</value>
+  </data>
+  <data name="Common_Header_Actions" xml:space="preserve">
+    <value>Radnje</value>
+  </data>
+  <data name="Common_OperationFailed" xml:space="preserve">
+    <value>Radnja nije uspjela.</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Spremi</value>
+  </data>
+  <data name="Day_Friday" xml:space="preserve">
+    <value>Petak</value>
+  </data>
+  <data name="Day_Monday" xml:space="preserve">
+    <value>Ponedjeljak</value>
+  </data>
+  <data name="Day_Saturday" xml:space="preserve">
+    <value>Subota</value>
+  </data>
+  <data name="Day_Sunday" xml:space="preserve">
+    <value>Nedjelja</value>
+  </data>
+  <data name="Day_Thursday" xml:space="preserve">
+    <value>Četvrtak</value>
+  </data>
+  <data name="Day_Tuesday" xml:space="preserve">
+    <value>Utorak</value>
+  </data>
+  <data name="Day_Wednesday" xml:space="preserve">
+    <value>Srijeda</value>
+  </data>
+  <data name="Fuel_A" xml:space="preserve">
+    <value>Vodik, klima</value>
+  </data>
+  <data name="Fuel_B" xml:space="preserve">
+    <value>Vodik, bez klime</value>
+  </data>
+  <data name="Fuel_C" xml:space="preserve">
+    <value>Električno</value>
+  </data>
+  <data name="Fuel_D" xml:space="preserve">
+    <value>Dizel, klima</value>
+  </data>
+  <data name="Fuel_E" xml:space="preserve">
+    <value>Električno</value>
+  </data>
+  <data name="Fuel_F" xml:space="preserve">
+    <value>Višegorivno, bez klime</value>
+  </data>
+  <data name="Fuel_H" xml:space="preserve">
+    <value>Hibrid</value>
+  </data>
+  <data name="Fuel_I" xml:space="preserve">
+    <value>Plug-in hibrid</value>
+  </data>
+  <data name="Fuel_L" xml:space="preserve">
+    <value>Plin (LPG/CNG), klima</value>
+  </data>
+  <data name="Fuel_M" xml:space="preserve">
+    <value>Višegorivno, klima</value>
+  </data>
+  <data name="Fuel_N" xml:space="preserve">
+    <value>Neodređeno, bez klime</value>
+  </data>
+  <data name="Fuel_Q" xml:space="preserve">
+    <value>Dizel, bez klime</value>
+  </data>
+  <data name="Fuel_R" xml:space="preserve">
+    <value>Neodređeno, klima</value>
+  </data>
+  <data name="Fuel_S" xml:space="preserve">
+    <value>Plin (LPG/CNG), bez klime</value>
+  </data>
+  <data name="Fuel_U" xml:space="preserve">
+    <value>Etanol, klima</value>
+  </data>
+  <data name="Fuel_V" xml:space="preserve">
+    <value>Višegorivno, bez klime</value>
+  </data>
+  <data name="Fuel_X" xml:space="preserve">
+    <value>Etanol, bez klime</value>
+  </data>
+  <data name="Fuel_Z" xml:space="preserve">
+    <value>Benzin, bez klime</value>
+  </data>
+  <data name="Locations_Add" xml:space="preserve">
+    <value>Dodaj lokaciju</value>
+  </data>
+  <data name="Locations_Closed" xml:space="preserve">
+    <value>Zatvoreno</value>
+  </data>
+  <data name="Locations_Created" xml:space="preserve">
+    <value>Lokacija je dodana.</value>
+  </data>
+  <data name="Locations_DeleteConfirm" xml:space="preserve">
+    <value>Obrisati lokaciju "{0}"? Ova radnja je nepovratna.</value>
+  </data>
+  <data name="Locations_Deleted" xml:space="preserve">
+    <value>Lokacija je obrisana.</value>
+  </data>
+  <data name="Locations_DeleteHolidayConfirm" xml:space="preserve">
+    <value>Obrisati praznik {0} ({1})?</value>
+  </data>
+  <data name="Locations_DeleteLocation" xml:space="preserve">
+    <value>Obriši lokaciju</value>
+  </data>
+  <data name="Locations_DialogTitle_Add" xml:space="preserve">
+    <value>Dodaj lokaciju</value>
+  </data>
+  <data name="Locations_DialogTitle_AddHoliday" xml:space="preserve">
+    <value>Dodaj praznik</value>
+  </data>
+  <data name="Locations_DialogTitle_Delete" xml:space="preserve">
+    <value>Obriši lokaciju</value>
+  </data>
+  <data name="Locations_DialogTitle_DeleteHoliday" xml:space="preserve">
+    <value>Obriši praznik</value>
+  </data>
+  <data name="Locations_DialogTitle_Edit" xml:space="preserve">
+    <value>Uredi lokaciju</value>
+  </data>
+  <data name="Locations_EditLocation" xml:space="preserve">
+    <value>Uredi lokaciju</value>
+  </data>
+  <data name="Locations_Field_Address" xml:space="preserve">
+    <value>Adresa</value>
+  </data>
+  <data name="Locations_Field_ClosedAllDay" xml:space="preserve">
+    <value>Zatvoreno cijeli dan</value>
+  </data>
+  <data name="Locations_Field_ClosedThisDay" xml:space="preserve">
+    <value>Zatvoreno na taj dan</value>
+  </data>
+  <data name="Locations_Field_Closes" xml:space="preserve">
+    <value>Zatvara se</value>
+  </data>
+  <data name="Locations_Field_Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="Locations_Field_HolidayName" xml:space="preserve">
+    <value>Naziv praznika</value>
+  </data>
+  <data name="Locations_Field_Latitude" xml:space="preserve">
+    <value>Zemljopisna širina</value>
+  </data>
+  <data name="Locations_Field_Longitude" xml:space="preserve">
+    <value>Zemljopisna dužina</value>
+  </data>
+  <data name="Locations_Field_Name" xml:space="preserve">
+    <value>Naziv</value>
+  </data>
+  <data name="Locations_Field_Opens" xml:space="preserve">
+    <value>Otvara se</value>
+  </data>
+  <data name="Locations_HolidayAdded" xml:space="preserve">
+    <value>Praznik je dodan.</value>
+  </data>
+  <data name="Locations_HolidayDeleted" xml:space="preserve">
+    <value>Praznik je obrisan.</value>
+  </data>
+  <data name="Locations_Holidays" xml:space="preserve">
+    <value>Praznici</value>
+  </data>
+  <data name="Locations_HoursUpdated" xml:space="preserve">
+    <value>Radno vrijeme je ažurirano.</value>
+  </data>
+  <data name="Locations_Inactive" xml:space="preserve">
+    <value>Neaktivna</value>
+  </data>
+  <data name="Locations_NoHolidays" xml:space="preserve">
+    <value>Nema navedenih praznika.</value>
+  </data>
+  <data name="Locations_Title" xml:space="preserve">
+    <value>Lokacije za preuzimanje</value>
+  </data>
+  <data name="Locations_Updated" xml:space="preserve">
+    <value>Lokacija je ažurirana.</value>
+  </data>
+  <data name="Locations_WorkingHours" xml:space="preserve">
+    <value>Radno vrijeme</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Početna</value>
+  </data>
+  <data name="Nav_Locations" xml:space="preserve">
+    <value>Lokacije</value>
+  </data>
+  <data name="Nav_Login" xml:space="preserve">
+    <value>Prijava</value>
+  </data>
+  <data name="Nav_Logout" xml:space="preserve">
+    <value>Odjava</value>
+  </data>
+  <data name="Nav_Manufacturers" xml:space="preserve">
+    <value>Proizvođači</value>
+  </data>
+  <data name="Nav_Rentals" xml:space="preserve">
+    <value>Najmovi</value>
+  </data>
+  <data name="Nav_Reservations" xml:space="preserve">
+    <value>Rezervacije</value>
+  </data>
+  <data name="Nav_Vehicles" xml:space="preserve">
+    <value>Vozila</value>
+  </data>
+  <data name="Reservations_Action_Cancel" xml:space="preserve">
+    <value>Otkaži rezervaciju</value>
+  </data>
+  <data name="Reservations_Action_Confirm" xml:space="preserve">
+    <value>Potvrdi</value>
+  </data>
+  <data name="Reservations_Action_NoShow" xml:space="preserve">
+    <value>Označi nedolazak</value>
+  </data>
+  <data name="Reservations_Add" xml:space="preserve">
+    <value>Nova rezervacija</value>
+  </data>
+  <data name="Reservations_CancelConfirm" xml:space="preserve">
+    <value>Otkazati rezervaciju #{0}?</value>
+  </data>
+  <data name="Reservations_Cancelled" xml:space="preserve">
+    <value>Rezervacija je otkazana.</value>
+  </data>
+  <data name="Reservations_Confirmed" xml:space="preserve">
+    <value>Rezervacija je potvrđena.</value>
+  </data>
+  <data name="Reservations_Created" xml:space="preserve">
+    <value>Rezervacija je stvorena.</value>
+  </data>
+  <data name="Reservations_Field_Customer" xml:space="preserve">
+    <value>ID korisnika (samo osoblje, neobavezno)</value>
+  </data>
+  <data name="Reservations_Field_DropoffLocation" xml:space="preserve">
+    <value>Lokacija povrata</value>
+  </data>
+  <data name="Reservations_Field_PickupLocation" xml:space="preserve">
+    <value>Lokacija preuzimanja</value>
+  </data>
+  <data name="Reservations_Field_PickupTime" xml:space="preserve">
+    <value>Vrijeme preuzimanja</value>
+  </data>
+  <data name="Reservations_Field_ReturnTime" xml:space="preserve">
+    <value>Vrijeme povrata</value>
+  </data>
+  <data name="Reservations_Field_Vehicle" xml:space="preserve">
+    <value>Vozilo</value>
+  </data>
+  <data name="Reservations_Filter_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Reservations_Filter_Vehicle" xml:space="preserve">
+    <value>Vozilo</value>
+  </data>
+  <data name="Reservations_Header_Cost" xml:space="preserve">
+    <value>Cijena (€)</value>
+  </data>
+  <data name="Reservations_Header_Customer" xml:space="preserve">
+    <value>Korisnik</value>
+  </data>
+  <data name="Reservations_Header_Locations" xml:space="preserve">
+    <value>Lokacije</value>
+  </data>
+  <data name="Reservations_Header_Pickup" xml:space="preserve">
+    <value>Preuzimanje</value>
+  </data>
+  <data name="Reservations_Header_Return" xml:space="preserve">
+    <value>Povrat</value>
+  </data>
+  <data name="Reservations_Header_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Reservations_Header_Vehicle" xml:space="preserve">
+    <value>Vozilo</value>
+  </data>
+  <data name="Reservations_MarkedNoShow" xml:space="preserve">
+    <value>Rezervacija je označena kao nedolazak.</value>
+  </data>
+  <data name="Reservations_NoData" xml:space="preserve">
+    <value>Nema pronađenih rezervacija.</value>
+  </data>
+  <data name="Reservations_NoShowConfirm" xml:space="preserve">
+    <value>Označiti rezervaciju #{0} kao nedolazak?</value>
+  </data>
+  <data name="Reservations_Title" xml:space="preserve">
+    <value>Rezervacije</value>
+  </data>
+  <data name="Status_Cancelled" xml:space="preserve">
+    <value>Otkazana</value>
+  </data>
+  <data name="Status_Confirmed" xml:space="preserve">
+    <value>Potvrđena</value>
+  </data>
+  <data name="Status_Converted" xml:space="preserve">
+    <value>Realizirana</value>
+  </data>
+  <data name="Status_NoShow" xml:space="preserve">
+    <value>Nedolazak</value>
+  </data>
+  <data name="Status_Pending" xml:space="preserve">
+    <value>Na čekanju</value>
+  </data>
+  <data name="Transmission_A" xml:space="preserve">
+    <value>Automatski</value>
+  </data>
+  <data name="Transmission_B" xml:space="preserve">
+    <value>Automatski 4WD</value>
+  </data>
+  <data name="Transmission_C" xml:space="preserve">
+    <value>Ručni 4WD</value>
+  </data>
+  <data name="Transmission_D" xml:space="preserve">
+    <value>Automatski AWD</value>
+  </data>
+  <data name="Transmission_F" xml:space="preserve">
+    <value>Potpuna automatizacija (L5)</value>
+  </data>
+  <data name="Transmission_H" xml:space="preserve">
+    <value>Visoka automatizacija (L4)</value>
+  </data>
+  <data name="Transmission_M" xml:space="preserve">
+    <value>Ručni</value>
+  </data>
+  <data name="Transmission_N" xml:space="preserve">
+    <value>Ručni AWD</value>
+  </data>
+  <data name="Transmission_Q" xml:space="preserve">
+    <value>Uvjetna automatizacija (L3)</value>
+  </data>
+  <data name="Type_B" xml:space="preserve">
+    <value>2-3 vrata</value>
+  </data>
+  <data name="Type_C" xml:space="preserve">
+    <value>2/4 vrata</value>
+  </data>
+  <data name="Type_D" xml:space="preserve">
+    <value>4-5 vrata</value>
+  </data>
+  <data name="Type_E" xml:space="preserve">
+    <value>Kupe</value>
+  </data>
+  <data name="Type_F" xml:space="preserve">
+    <value>SUV</value>
+  </data>
+  <data name="Type_G" xml:space="preserve">
+    <value>Crossover</value>
+  </data>
+  <data name="Type_H" xml:space="preserve">
+    <value>Autodom</value>
+  </data>
+  <data name="Type_J" xml:space="preserve">
+    <value>Terenac (otvoreni)</value>
+  </data>
+  <data name="Type_K" xml:space="preserve">
+    <value>Dostavno vozilo/kamion</value>
+  </data>
+  <data name="Type_L" xml:space="preserve">
+    <value>Limuzina</value>
+  </data>
+  <data name="Type_M" xml:space="preserve">
+    <value>Monovolumen</value>
+  </data>
+  <data name="Type_N" xml:space="preserve">
+    <value>Roadster</value>
+  </data>
+  <data name="Type_P" xml:space="preserve">
+    <value>Pickup (2 vrata)</value>
+  </data>
+  <data name="Type_Q" xml:space="preserve">
+    <value>Pickup (4 vrata)</value>
+  </data>
+  <data name="Type_R" xml:space="preserve">
+    <value>Rekreacijsko vozilo</value>
+  </data>
+  <data name="Type_S" xml:space="preserve">
+    <value>Sportski</value>
+  </data>
+  <data name="Type_T" xml:space="preserve">
+    <value>Kabriolet</value>
+  </data>
+  <data name="Type_V" xml:space="preserve">
+    <value>Putnički kombi</value>
+  </data>
+  <data name="Type_W" xml:space="preserve">
+    <value>Karavan</value>
+  </data>
+  <data name="Type_X" xml:space="preserve">
+    <value>Poseban</value>
+  </data>
+  <data name="Type_Y" xml:space="preserve">
+    <value>Vozilo na 2 kotača</value>
+  </data>
+  <data name="Type_Z" xml:space="preserve">
+    <value>Posebna ponuda</value>
+  </data>
+  <data name="Vehicles_Add" xml:space="preserve">
+    <value>Dodaj vozilo</value>
+  </data>
+  <data name="Vehicles_Created" xml:space="preserve">
+    <value>Vozilo je dodano.</value>
+  </data>
+  <data name="Vehicles_DeleteConfirm" xml:space="preserve">
+    <value>Obrisati {0} ({1})? Ova radnja je nepovratna.</value>
+  </data>
+  <data name="Vehicles_Deleted" xml:space="preserve">
+    <value>Vozilo je obrisano.</value>
+  </data>
+  <data name="Vehicles_DialogTitle_Add" xml:space="preserve">
+    <value>Dodaj vozilo</value>
+  </data>
+  <data name="Vehicles_DialogTitle_Delete" xml:space="preserve">
+    <value>Obriši vozilo</value>
+  </data>
+  <data name="Vehicles_DialogTitle_Edit" xml:space="preserve">
+    <value>Uredi vozilo</value>
+  </data>
+  <data name="Vehicles_Field_Category" xml:space="preserve">
+    <value>Kategorija</value>
+  </data>
+  <data name="Vehicles_Field_Color" xml:space="preserve">
+    <value>Boja</value>
+  </data>
+  <data name="Vehicles_Field_Fuel" xml:space="preserve">
+    <value>Gorivo</value>
+  </data>
+  <data name="Vehicles_Field_Kilometers" xml:space="preserve">
+    <value>Kilometraža</value>
+  </data>
+  <data name="Vehicles_Field_Manufacturer" xml:space="preserve">
+    <value>Proizvođač</value>
+  </data>
+  <data name="Vehicles_Field_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Vehicles_Field_Plate" xml:space="preserve">
+    <value>Registarska oznaka</value>
+  </data>
+  <data name="Vehicles_Field_Power" xml:space="preserve">
+    <value>Snaga (kW)</value>
+  </data>
+  <data name="Vehicles_Field_PricePerDay" xml:space="preserve">
+    <value>Cijena €/dan</value>
+  </data>
+  <data name="Vehicles_Field_SelectManufacturer" xml:space="preserve">
+    <value>Odaberite proizvođača</value>
+  </data>
+  <data name="Vehicles_Field_Transmission" xml:space="preserve">
+    <value>Mjenjač</value>
+  </data>
+  <data name="Vehicles_Field_Type" xml:space="preserve">
+    <value>Tip</value>
+  </data>
+  <data name="Vehicles_Field_Year" xml:space="preserve">
+    <value>Godina</value>
+  </data>
+  <data name="Vehicles_Filters" xml:space="preserve">
+    <value>Filtri</value>
+  </data>
+  <data name="Vehicles_Filter_Categories" xml:space="preserve">
+    <value>Kategorije</value>
+  </data>
+  <data name="Vehicles_Filter_Manufacturers" xml:space="preserve">
+    <value>Proizvođači</value>
+  </data>
+  <data name="Vehicles_Filter_MaxKm" xml:space="preserve">
+    <value>Maks. kilometraža</value>
+  </data>
+  <data name="Vehicles_Filter_MaxPrice" xml:space="preserve">
+    <value>Maks. €/dan</value>
+  </data>
+  <data name="Vehicles_Filter_PriceFrom" xml:space="preserve">
+    <value>Cijena od (€/dan)</value>
+  </data>
+  <data name="Vehicles_Filter_PriceTo" xml:space="preserve">
+    <value>Cijena do (€/dan)</value>
+  </data>
+  <data name="Vehicles_Filter_YearFrom" xml:space="preserve">
+    <value>Godina od</value>
+  </data>
+  <data name="Vehicles_Filter_YearTo" xml:space="preserve">
+    <value>Godina do</value>
+  </data>
+  <data name="Vehicles_Header_Color" xml:space="preserve">
+    <value>Boja</value>
+  </data>
+  <data name="Vehicles_Header_Km" xml:space="preserve">
+    <value>Km</value>
+  </data>
+  <data name="Vehicles_Header_Plate" xml:space="preserve">
+    <value>Registracija</value>
+  </data>
+  <data name="Vehicles_Header_Power" xml:space="preserve">
+    <value>kW</value>
+  </data>
+  <data name="Vehicles_Header_PricePerDay" xml:space="preserve">
+    <value>€/dan</value>
+  </data>
+  <data name="Vehicles_Header_Vehicle" xml:space="preserve">
+    <value>Vozilo</value>
+  </data>
+  <data name="Vehicles_Header_Year" xml:space="preserve">
+    <value>Godina</value>
+  </data>
+  <data name="Vehicles_Title" xml:space="preserve">
+    <value>Vozila</value>
+  </data>
+  <data name="Vehicles_Updated" xml:space="preserve">
+    <value>Vozilo je ažurirano.</value>
+  </data>
+</root>

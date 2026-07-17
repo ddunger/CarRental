@@ -1,0 +1,115 @@
+﻿@inject NotificationStateService NotificationState
+@inject NotificationHubService NotificationHub
+@inject IdentityApiService IdentityApi
+@inject JwtAuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@implements IDisposable
+
+<nav style="padding:0.75rem 1rem; background:#0077b6; display:flex; align-items:center;">
+    <a href="/" style="color:white; margin-right:1rem;">Home</a>
+
+    <AuthorizeView>
+        <Authorized>
+            <a href="/vehicles" style="color:white; margin-right:1rem;">@AppStrings.Nav_Vehicles</a>
+            <a href="/manufacturers" style="color:white; margin-right:1rem;">Manufacturers</a>
+            <a href="/locations" style="color:white; margin-right:1rem;">Locations</a>
+            <a href="/reservations" style="color:white; margin-right:1rem;">Reservations</a>
+            <a href="/rentals" style="color:white; margin-right:1rem;">Rentals</a>
+
+            <div style="margin-left:auto; display:flex; align-items:center; gap:1rem;">
+
+                @* --- Language switcher --- *@
+                <MudMenu Icon="@Icons.Material.Filled.Language" Class="white-menu-icon" Dense="true">
+                    <MudMenuItem OnClick="@(() => SetCultureAsync("en"))">English</MudMenuItem>
+                    <MudMenuItem OnClick="@(() => SetCultureAsync("hr"))">Hrvatski</MudMenuItem>
+                </MudMenu>
+
+                 @* --- Notifications bell --- *@
+                <MudBadge Content="@NotificationState.UnreadCount" Color="Color.Error"
+                          Overlap="true" Visible="@(NotificationState.UnreadCount > 0)">
+                    <MudMenu Icon="@Icons.Material.Filled.Notifications"
+                             Class="white-menu-icon"
+                             Dense="true"
+                             AnchorOrigin="Origin.BottomRight"
+                             TransformOrigin="Origin.TopRight"
+                             OnOpenChanged="OnNotificationsOpenChanged">
+                        <div style="width:320px; max-height:400px; overflow-y:auto;">
+                            @if (NotificationState.Notifications.Count == 0)
+                            {
+                                <MudText Typo="Typo.body2" Class="pa-3" Color="Color.Secondary">No notifications.</MudText>
+                            }
+                            else
+                            {
+                                @foreach (var n in NotificationState.Notifications)
+                                {
+                                    <div class="px-3 py-2" style="border-bottom:1px solid var(--mud-palette-lines-default);">
+                                        <MudText Typo="Typo.body2"><b>Rental #@n.RentalId overdue</b></MudText>
+                                        <MudText Typo="Typo.caption">
+                                            @n.VehicleName (@n.RegistrationPlate) — @n.CustomerFullName,
+                                            @n.HoursOverdue h late
+                                        </MudText>
+                                    </div>
+                                }
+                                <MudButton Size="Size.Small" Class="ma-2"
+                                           OnClick="() => NotificationState.Clear()">
+                                    Clear all
+                                </MudButton>
+                            }
+                        </div>
+                    </MudMenu>
+                </MudBadge>
+
+                @* --- Profile / logout --- *@
+                <span style="color:#ffffff; font-size:0.9rem;">@context.User.GetEmail()</span>
+                <button @onclick="HandleLogoutAsync"
+                        style="background:#03045e; border:none; color:white; padding:0.35rem 0.8rem;
+                    border-radius:4px; cursor:pointer;">
+                    Logout
+                </button>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div style="margin-left:auto; display:flex; align-items:center; gap:1rem;">
+                <MudMenu Icon="@Icons.Material.Filled.Language" Color="Color.Inherit" Dense="true">
+                    <MudMenuItem OnClick="@(() => SetCultureAsync("en"))">English</MudMenuItem>
+                    <MudMenuItem OnClick="@(() => SetCultureAsync("hr"))">Hrvatski</MudMenuItem>
+                </MudMenu>
+                <a href="/login" style="color:white;">Login</a>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+</nav>
+
+@code {
+ 
+    protected override void OnInitialized() =>
+        NotificationState.Changed += OnNotificationsChanged;
+
+    private void OnNotificationsChanged() =>
+        InvokeAsync(StateHasChanged);
+
+    private void OnNotificationsOpenChanged(bool open)
+    {
+        if (open)
+            NotificationState.MarkAllRead();
+    }
+
+    private async Task SetCultureAsync(string culture)
+    {
+        await JS.InvokeVoidAsync("localStorage.setItem", "carrental_culture", culture);
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+
+    private async Task HandleLogoutAsync()
+    {
+        await NotificationHub.StopAsync();
+        await IdentityApi.LogoutAsync();
+        NotificationState.Clear();
+        AuthStateProvider.NotifyUserLogout();
+        Navigation.NavigateTo("/login");
+    }
+
+    public void Dispose() =>
+        NotificationState.Changed -= OnNotificationsChanged;
+}

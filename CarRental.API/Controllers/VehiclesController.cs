@@ -16,12 +16,11 @@ namespace CarRental.API.Controllers
     public class VehiclesController(ISender sender) : ControllerBase
     {
         /// <remarks>
-        /// Returns a paginated list of all vehicles. Use <c>offset</c> and <c>limit</c> query parameters for pagination.
+        /// Returns a paginated list of vehicles. Use <c>offset</c> and <c>limit</c> query parameters for pagination.
         /// </remarks>
-        [HttpGet]
+        [HttpPost("search")]
         [Authorize(Roles = Roles.Admin + "," + Roles.Manager + "," + Roles.Customer)]
-
-        public async Task<IActionResult> GetAllVehiclesAsync(
+        public async Task<IActionResult> SearchVehiclesAsync(
             [FromBody] GetVehiclesRequest request,
             [FromQuery] int? offset,
             [FromQuery] int? limit)

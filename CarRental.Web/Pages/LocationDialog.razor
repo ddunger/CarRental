@@ -1,0 +1,51 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="_name" Label="Name" Variant="Variant.Outlined" Class="mb-3" />
+        <MudTextField @bind-Value="_address" Label="Address" Variant="Variant.Outlined" Class="mb-3" />
+        <MudGrid Spacing="2">
+            <MudItem xs="6">
+                <MudNumericField @bind-Value="_latitude" Label="Latitude" Variant="Variant.Outlined"
+                                 Min="-90" Max="90" Format="F6" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudNumericField @bind-Value="_longitude" Label="Longitude" Variant="Variant.Outlined"
+                                 Min="-180" Max="180" Format="F6" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary"
+                   Disabled="@(string.IsNullOrWhiteSpace(_name) || string.IsNullOrWhiteSpace(_address))"
+                   OnClick="Submit">
+            Save
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public LocationResponse? Existing { get; set; }
+
+    private string _name = string.Empty;
+    private string _address = string.Empty;
+    private double _latitude = 45.8150;
+    private double _longitude = 15.9819;
+
+    protected override void OnInitialized()
+    {
+        if (Existing is null) return;
+        _name = Existing.Name;
+        _address = Existing.Address;
+        _latitude = Existing.Latitude;
+        _longitude = Existing.Longitude;
+    }
+
+    private void Submit() =>
+        MudDialog.Close(DialogResult.Ok(new CreateLocationRequest(
+            _name.Trim(), _address.Trim(), _latitude, _longitude)));
+
+    private void Cancel() => MudDialog.Cancel();
+}

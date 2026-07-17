@@ -1,0 +1,121 @@
+﻿@page "/manufacturers"
+@attribute [Authorize]
+@inject ManufacturerApiService ManufacturerApi
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<PageTitle>Manufacturers — CarRental</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6">
+    <div class="d-flex align-center mb-4">
+        <MudText Typo="Typo.h4">Manufacturers</MudText>
+        <MudSpacer />
+        <AuthorizeView Roles="Admin,Manager">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="OpenCreateDialogAsync">
+                Add manufacturer
+            </MudButton>
+        </AuthorizeView>
+    </div>
+
+    @if (_loading)
+    {
+        <MudProgressLinear Indeterminate="true" />
+    }
+    else
+    {
+        <MudTable Items="_manufacturers" Hover="true" Dense="true" Elevation="2">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh Style="width:140px; text-align:right;">Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd Style="text-align:right;">
+                    <AuthorizeView Roles="Admin,Manager" Context="auth">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                       Size="Size.Small"
+                                       OnClick="() => OpenEditDialogAsync(context)" />
+                    </AuthorizeView>
+                    <AuthorizeView Roles="Admin" Context="auth">
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                       Size="Size.Small"
+                                       Color="Color.Error"
+                                       OnClick="() => ConfirmDeleteAsync(context)" />
+                    </AuthorizeView>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</MudContainer>
+
+@code {
+    private List<Dtos.Manufacturers.ManufacturerResponse> _manufacturers = [];
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        _loading = true;
+        _manufacturers = await ManufacturerApi.GetAllAsync();
+        _loading = false;
+    }
+
+    private async Task OpenCreateDialogAsync()
+    {
+        var dialog = await DialogService.ShowAsync<ManufacturerDialog>("Add manufacturer");
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: string name })
+        {
+            var (success, error) = await ManufacturerApi.CreateAsync(name);
+            await HandleResultAsync(success, error, "Manufacturer created.");
+        }
+    }
+
+    private async Task OpenEditDialogAsync(Dtos.Manufacturers.ManufacturerResponse manufacturer)
+    {
+        var parameters = new DialogParameters<ManufacturerDialog>
+        {
+            { d => d.Name, manufacturer.Name }
+        };
+
+        var dialog = await DialogService.ShowAsync<ManufacturerDialog>("Edit manufacturer", parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: string name })
+        {
+            var (success, error) = await ManufacturerApi.UpdateAsync(manufacturer.Id, name);
+            await HandleResultAsync(success, error, "Manufacturer updated.");
+        }
+    }
+
+    private async Task ConfirmDeleteAsync(Dtos.Manufacturers.ManufacturerResponse manufacturer)
+    {
+        var confirmed = await DialogService.ShowMessageBoxAsync(
+      "Delete manufacturer",
+      $"Delete \"{manufacturer.Name}\"? This cannot be undone.",
+      yesText: "Delete", cancelText: "Cancel");
+
+        if (confirmed == true)
+        {
+            var (success, error) = await ManufacturerApi.DeleteAsync(manufacturer.Id);
+            await HandleResultAsync(success, error, "Manufacturer deleted.");
+        }
+    }
+
+    private async Task HandleResultAsync(bool success, string? error, string successMessage)
+    {
+        if (success)
+        {
+            Snackbar.Add(successMessage, Severity.Success);
+            await LoadAsync();
+        }
+        else
+        {
+            Snackbar.Add(error ?? "Operation failed.", Severity.Error);
+        }
+    }
+}

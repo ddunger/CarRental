@@ -1,0 +1,308 @@
+﻿@page "/vehicles"
+@attribute [Authorize]
+@inject VehicleApiService VehicleApi
+@inject ManufacturerApiService ManufacturerApi
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<PageTitle>@AppStrings.Vehicles_Title — CarRental</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-6">
+    <div class="d-flex align-center mb-4">
+        <MudText Typo="Typo.h4">@AppStrings.Vehicles_Title</MudText>
+        <MudSpacer />
+        <AuthorizeView Roles="Admin,Manager">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="OpenCreateDialogAsync">
+                @AppStrings.Vehicles_Add
+            </MudButton>
+        </AuthorizeView>
+    </div>
+
+    <MudGrid Spacing="3">
+
+        @* ================= Filter sidebar ================= *@
+        <MudItem xs="12" md="3" lg="2">
+            <MudPaper Class="pa-4" Elevation="1">
+                <div class="d-flex align-center mb-3">
+                    <MudText Typo="Typo.subtitle1">@AppStrings.Vehicles_Filters</MudText>
+                    <MudSpacer />
+                    <MudTooltip Text="@AppStrings.Common_Clear">
+                        <MudIconButton Icon="@Icons.Material.Filled.FilterAltOff"
+                                       Size="Size.Small"
+                                       OnClick="ClearFiltersAsync" />
+                    </MudTooltip>
+                </div>
+
+                <MudStack Spacing="3">
+                    <MudSelect T="int" MultiSelection="true" @bind-SelectedValues="_filterManufacturerIds"
+                               Label="@AppStrings.Vehicles_Filter_Manufacturers" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(id => _manufacturers.FirstOrDefault(m => m.Id == id)?.Name ?? id.ToString())">
+                        @foreach (var m in _manufacturers)
+                        {
+                            <MudSelectItem T="int" Value="@m.Id">@m.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="AcrissVehicleCategory" MultiSelection="true" @bind-SelectedValues="_filterCategories"
+                               Label="@AppStrings.Vehicles_Field_Category" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(v => v.Display())">
+                        @foreach (var v in Enum.GetValues<AcrissVehicleCategory>())
+                        {
+                            <MudSelectItem T="AcrissVehicleCategory" Value="@v">@v.Display()</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="AcrissVehicleType" MultiSelection="true" @bind-SelectedValues="_filterTypes"
+                               Label="@AppStrings.Vehicles_Field_Type" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(v => v.Display())">
+                        @foreach (var v in Enum.GetValues<AcrissVehicleType>())
+                        {
+                            <MudSelectItem T="AcrissVehicleType" Value="@v">@v.Display()</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="AcrissVehicleTransmission" MultiSelection="true" @bind-SelectedValues="_filterTransmissions"
+                               Label="@AppStrings.Vehicles_Field_Transmission" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(v => v.Display())">
+                        @foreach (var v in Enum.GetValues<AcrissVehicleTransmission>())
+                        {
+                            <MudSelectItem T="AcrissVehicleTransmission" Value="@v">@v.Display()</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="AcrissVehicleFuel" MultiSelection="true" @bind-SelectedValues="_filterFuels"
+                               Label="@AppStrings.Vehicles_Field_Fuel" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(v => v.Display())">
+                        @foreach (var v in Enum.GetValues<AcrissVehicleFuel>())
+                        {
+                            <MudSelectItem T="AcrissVehicleFuel" Value="@v">@v.Display()</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="VehicleColor" MultiSelection="true" @bind-SelectedValues="_filterColors"
+                               Label="@AppStrings.Vehicles_Field_Color" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(v => v.Display())">
+                        @foreach (var v in Enum.GetValues<VehicleColor>())
+                        {
+                            <MudSelectItem T="VehicleColor" Value="@v">@v.Display()</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudNumericField T="int?" @bind-Value="_filterYearFrom" Label="@AppStrings.Vehicles_Filter_YearFrom"
+                                     Dense="true" Variant="Variant.Outlined" Min="1950" Max="2100" />
+                    <MudNumericField T="int?" @bind-Value="_filterYearTo" Label="@AppStrings.Vehicles_Filter_YearTo"
+                                     Dense="true" Variant="Variant.Outlined" Min="1950" Max="2100" />
+
+                    <MudNumericField T="decimal?" @bind-Value="_filterPriceFrom" Label="@AppStrings.Vehicles_Filter_PriceFrom"
+                                     Dense="true" Variant="Variant.Outlined" Min="0" />
+                    <MudNumericField T="decimal?" @bind-Value="_filterPriceTo" Label="@AppStrings.Vehicles_Filter_PriceTo"
+                                     Dense="true" Variant="Variant.Outlined" Min="0" />
+
+                    <MudNumericField T="int?" @bind-Value="_filterMaxKilometers" Label="@AppStrings.Vehicles_Filter_MaxKm"
+                                     Dense="true" Variant="Variant.Outlined" Min="0" />
+
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadAsync" FullWidth="true">
+                        @AppStrings.Common_Apply
+                    </MudButton>
+                    <MudButton Variant="Variant.Text" OnClick="ClearFiltersAsync" FullWidth="true">
+                        @AppStrings.Common_Clear
+                    </MudButton>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+
+        @* ================= Table ================= *@
+        <MudItem xs="12" md="9" lg="10">
+            @if (_loading)
+            {
+                <MudProgressLinear Indeterminate="true" />
+            }
+            else
+            {
+                <MudTable Items="_vehicles" Hover="true" Dense="true" Elevation="2" HorizontalScrollbar="true">
+                    <HeaderContent>
+                        <MudTh>@AppStrings.Vehicles_Header_Vehicle</MudTh>
+                        <MudTh>ACRISS</MudTh>
+                        <MudTh>@AppStrings.Vehicles_Field_Category</MudTh>
+                        <MudTh>@AppStrings.Vehicles_Field_Type</MudTh>
+                        <MudTh>@AppStrings.Vehicles_Field_Transmission</MudTh>
+                        <MudTh>@AppStrings.Vehicles_Field_Fuel</MudTh>
+                        <MudTh>@AppStrings.Vehicles_Header_Year</MudTh>
+                        <MudTh>@AppStrings.Vehicles_Header_Km</MudTh>
+                        <MudTh>@AppStrings.Vehicles_Header_Power</MudTh>
+                        <MudTh>@AppStrings.Vehicles_Header_Plate</MudTh>
+                        <MudTh>@AppStrings.Vehicles_Header_PricePerDay</MudTh>
+                        <MudTh>@AppStrings.Vehicles_Header_Color</MudTh>
+                        <MudTh Style="width:140px; text-align:right;">@AppStrings.Common_Header_Actions</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Header_Vehicle" Style="white-space:nowrap;">@context.ManufacturerName @context.VehicleModel</MudTd>
+                        <MudTd DataLabel="ACRISS">@context.AcrissCode</MudTd>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Field_Category" Style="white-space:nowrap;">@context.Category.Display()</MudTd>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Field_Type" Style="white-space:nowrap;">@context.Type.Display()</MudTd>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Field_Transmission" Style="white-space:nowrap;">@context.Transmission.Display()</MudTd>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Field_Fuel" Style="white-space:nowrap;">@context.Fuel.Display()</MudTd>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Header_Year">@context.ManufacturingYear</MudTd>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Header_Km">@context.KilometersDriven.ToString("N0")</MudTd>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Header_Power">@context.EnginePowerInKw</MudTd>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Header_Plate" Style="white-space:nowrap;">@context.RegistrationPlate</MudTd>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Header_PricePerDay">@context.PricePerDayInEuro.ToString("F2")</MudTd>
+                        <MudTd DataLabel="@AppStrings.Vehicles_Header_Color">@context.Color.Display()</MudTd>
+                        <MudTd Style="text-align:right;">
+                            <AuthorizeView Roles="Admin,Manager" Context="auth">
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                               Size="Size.Small"
+                                               OnClick="() => OpenEditDialogAsync(context)" />
+                            </AuthorizeView>
+                            <AuthorizeView Roles="Admin" Context="auth">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                               Size="Size.Small"
+                                               Color="Color.Error"
+                                               OnClick="() => ConfirmDeleteAsync(context)" />
+                            </AuthorizeView>
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+            }
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private List<VehicleResponse> _vehicles = [];
+    private List<Dtos.Manufacturers.ManufacturerResponse> _manufacturers = [];
+    private bool _loading = true;
+
+    private IReadOnlyCollection<int> _filterManufacturerIds = [];
+    private IReadOnlyCollection<AcrissVehicleCategory> _filterCategories = [];
+    private IReadOnlyCollection<AcrissVehicleType> _filterTypes = [];
+    private IReadOnlyCollection<AcrissVehicleTransmission> _filterTransmissions = [];
+    private IReadOnlyCollection<AcrissVehicleFuel> _filterFuels = [];
+    private IReadOnlyCollection<VehicleColor> _filterColors = [];
+    private int? _filterYearFrom;
+    private int? _filterYearTo;
+    private decimal? _filterPriceFrom;
+    private decimal? _filterPriceTo;
+    private int? _filterMaxKilometers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _manufacturers = await ManufacturerApi.GetAllAsync();
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _loading = true;
+
+        var filter = new GetVehiclesRequest(
+            ManufacturerIds: _filterManufacturerIds.Any() ? _filterManufacturerIds.ToList() : null,
+            YearFrom: _filterYearFrom,
+            YearTo: _filterYearTo,
+            PriceFrom: _filterPriceFrom,
+            PriceTo: _filterPriceTo,
+            MaxKilometers: _filterMaxKilometers,
+            Colors: _filterColors.Any() ? _filterColors.ToList() : null,
+            Categories: _filterCategories.Any() ? _filterCategories.ToList() : null,
+            Types: _filterTypes.Any() ? _filterTypes.ToList() : null,
+            Transmissions: _filterTransmissions.Any() ? _filterTransmissions.ToList() : null,
+            Fuels: _filterFuels.Any() ? _filterFuels.ToList() : null);
+
+        _vehicles = await VehicleApi.SearchAsync(filter);
+        _loading = false;
+    }
+
+    private async Task ClearFiltersAsync()
+    {
+        _filterManufacturerIds = [];
+        _filterCategories = [];
+        _filterTypes = [];
+        _filterTransmissions = [];
+        _filterFuels = [];
+        _filterColors = [];
+        _filterYearFrom = null;
+        _filterYearTo = null;
+        _filterPriceFrom = null;
+        _filterPriceTo = null;
+        _filterMaxKilometers = null;
+
+        await LoadAsync();
+    }
+
+    private async Task OpenCreateDialogAsync()
+    {
+        var parameters = new DialogParameters<VehicleDialog>
+        {
+            { d => d.Manufacturers, _manufacturers }
+        };
+
+        var dialog = await DialogService.ShowAsync<VehicleDialog>(AppStrings.Vehicles_DialogTitle_Add, parameters,
+            new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true });
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: CreateVehicleRequest request })
+        {
+            var (success, error) = await VehicleApi.CreateAsync(request);
+            await HandleResultAsync(success, error, AppStrings.Vehicles_Created);
+        }
+    }
+
+    private async Task OpenEditDialogAsync(VehicleResponse vehicle)
+    {
+        var parameters = new DialogParameters<VehicleDialog>
+        {
+            { d => d.Manufacturers, _manufacturers },
+            { d => d.Existing, vehicle }
+        };
+
+        var dialog = await DialogService.ShowAsync<VehicleDialog>(AppStrings.Vehicles_DialogTitle_Edit, parameters,
+            new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true });
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: CreateVehicleRequest request })
+        {
+            // Full-object PATCH: every field sent; API treats non-null as "set"
+            var update = new UpdateVehicleRequest(
+                request.ManufacturerId, request.VehicleModel, request.Category, request.Type,
+                request.Transmission, request.Fuel, request.ManufacturingYear,
+                request.KilometersDriven, request.EnginePowerInKw, request.RegistrationPlate,
+                request.PricePerDayInEuro, request.Color);
+
+            var (success, error) = await VehicleApi.UpdateAsync(vehicle.Id, update);
+            await HandleResultAsync(success, error, AppStrings.Vehicles_Updated);
+        }
+    }
+
+    private async Task ConfirmDeleteAsync(VehicleResponse vehicle)
+    {
+        var parameters = new DialogParameters<ConfirmDialog>
+        {
+            { d => d.Message, string.Format(AppStrings.Vehicles_DeleteConfirm,
+                $"{vehicle.ManufacturerName} {vehicle.VehicleModel}", vehicle.RegistrationPlate) }
+        };
+
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(AppStrings.Vehicles_DialogTitle_Delete, parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            var (success, error) = await VehicleApi.DeleteAsync(vehicle.Id);
+            await HandleResultAsync(success, error, AppStrings.Vehicles_Deleted);
+        }
+    }
+
+    private async Task HandleResultAsync(bool success, string? error, string successMessage)
+    {
+        if (success)
+        {
+            Snackbar.Add(successMessage, Severity.Success);
+            await LoadAsync();
+        }
+        else
+        {
+            Snackbar.Add(error ?? AppStrings.Common_OperationFailed, Severity.Error);
+        }
+    }
+}

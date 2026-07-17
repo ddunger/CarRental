@@ -1,0 +1,51 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudDatePicker @bind-Date="_date" Label="@AppStrings.Locations_Field_Date" Variant="Variant.Outlined" Class="mb-3" />
+        <MudTextField @bind-Value="_name" Label="@AppStrings.Locations_Field_HolidayName" Variant="Variant.Outlined" Class="mb-3" />
+        <MudSwitch T="bool" @bind-Value="_isClosed" Label="@AppStrings.Locations_Field_ClosedAllDay" Color="Color.Primary" Class="mb-3" />
+        @if (!_isClosed)
+        {
+            <MudGrid Spacing="2">
+                <MudItem xs="6">
+                    <MudTimePicker @bind-Time="_openTime" Label="@AppStrings.Locations_Field_Opens" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTimePicker @bind-Time="_closeTime" Label="@AppStrings.Locations_Field_Closes" Variant="Variant.Outlined" />
+                </MudItem>
+            </MudGrid>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@AppStrings.Common_Cancel</MudButton>
+        <MudButton Color="Color.Primary" Disabled="@(!IsValid)" OnClick="Submit">@AppStrings.Common_Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    private DateTime? _date = DateTime.Today;
+    private string? _name;
+    private bool _isClosed = true;
+    private TimeSpan? _openTime;
+    private TimeSpan? _closeTime;
+
+    private bool IsValid =>
+        _date.HasValue &&
+        (_isClosed || (_openTime.HasValue && _closeTime.HasValue && _openTime < _closeTime));
+
+    private void Submit()
+    {
+        var request = new AddHolidayRequest(
+            DateOnly.FromDateTime(_date!.Value),
+            _isClosed ? null : TimeOnly.FromTimeSpan(_openTime!.Value),
+            _isClosed ? null : TimeOnly.FromTimeSpan(_closeTime!.Value),
+            _isClosed,
+            string.IsNullOrWhiteSpace(_name) ? null : _name.Trim());
+
+        MudDialog.Close(DialogResult.Ok(request));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

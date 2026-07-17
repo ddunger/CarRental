@@ -25,7 +25,12 @@ namespace CarRental.API.Extensions
             services.AddApplicationDI(configuration);
             services.AddInfrastructureDI(configuration, environment);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
                 .AddJwtBearer(options =>
                 {
                     options.MapInboundClaims = false;
@@ -85,33 +90,33 @@ namespace CarRental.API.Extensions
 
 
 
-            //CORS POLICY 
-            //if (environment.IsDevelopment())
-            //{
-            //    services.AddCors(options =>
-            //    {
-            //        options.AddDefaultPolicy(policy =>
-            //        {
-            //            policy.SetIsOriginAllowed(_ => true)
-            //                  .AllowAnyHeader()
-            //                  .AllowAnyMethod()
-            //                  .AllowCredentials();
-            //        });
-            //    });
-            //}
-            //else
-            //{
-            //    services.AddCors(options =>
-            //    {
-            //        options.AddDefaultPolicy(policy =>
-            //        {
-            //            policy.WithOrigins("https://sentinemapp.blazor") //ovdje će ići url stvarne stranice, pogotovo ako ćemo Blazor isto dodati u Docker
-            //                  .AllowAnyHeader()
-            //                  .AllowAnyMethod()
-            //                  .AllowCredentials();
-            //        });
-            //    });
-            //}
+            //CORS POLICY
+            if (environment.IsDevelopment())
+            {
+                services.AddCors(options =>
+                {
+                    options.AddDefaultPolicy(policy =>
+                    {
+                        policy.SetIsOriginAllowed(_ => true)
+                              .AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials();
+                    });
+                });
+            }
+            else
+            {
+                services.AddCors(options =>
+                {
+                    options.AddDefaultPolicy(policy =>
+                    {
+                        policy.WithOrigins("https://sentinemapp.blazor") //ovdje će ići url stvarne stranice, pogotovo ako ćemo Blazor isto dodati u Docker
+                              .AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials();
+                    });
+                });
+            }
 
             return services;
         }

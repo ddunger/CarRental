@@ -3,15 +3,15 @@
 namespace CarRental.Application.Vehicles.Requests
 {
     public record GetVehiclesRequest(
-         int? ManufacturerId,
-         int? YearFrom,
-         int? YearTo,
-         decimal? PriceFrom,
-         decimal? PriceTo,
-         int? MaxKilometers,
-         VehicleColor? Color,
-         AcrissVehicleCategory? Category,
-         AcrissVehicleType? Type,
-         AcrissVehicleTransmission? Transmission,
-         AcrissVehicleFuel? Fuel);
+        List<int>? ManufacturerIds,
+        int? YearFrom,
+        int? YearTo,
+        decimal? PriceFrom,
+        decimal? PriceTo,
+        int? MaxKilometers,
+        List<VehicleColor>? Colors,
+        List<AcrissVehicleCategory>? Categories,
+        List<AcrissVehicleType>? Types,
+        List<AcrissVehicleTransmission>? Transmissions,
+        List<AcrissVehicleFuel>? Fuels);
 }

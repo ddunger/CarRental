@@ -1,0 +1,55 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudSwitch T="bool" @bind-Value="_isClosed" Label="@AppStrings.Locations_Field_ClosedThisDay" Color="Color.Primary" Class="mb-3" />
+        @if (!_isClosed)
+        {
+            <MudGrid Spacing="2">
+                <MudItem xs="6">
+                    <MudTimePicker @bind-Time="_openTime" Label="@AppStrings.Locations_Field_Opens" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTimePicker @bind-Time="_closeTime" Label="@AppStrings.Locations_Field_Closes" Variant="Variant.Outlined" />
+                </MudItem>
+            </MudGrid>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@AppStrings.Common_Cancel</MudButton>
+        <MudButton Color="Color.Primary" Disabled="@(!IsValid)" OnClick="Submit">@AppStrings.Common_Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public WorkingHoursResponse? Existing { get; set; }
+
+    private bool _isClosed;
+    private TimeSpan? _openTime;
+    private TimeSpan? _closeTime;
+
+    private bool IsValid => _isClosed || (_openTime.HasValue && _closeTime.HasValue && _openTime < _closeTime);
+
+    protected override void OnInitialized()
+    {
+        if (Existing is null) return;
+        _isClosed = Existing.IsClosed;
+        _openTime = Existing.OpenTime.ToTimeSpan();
+        _closeTime = Existing.CloseTime.ToTimeSpan();
+    }
+
+    private void Submit()
+    {
+        var request = _isClosed
+            ? new UpdateWorkingHoursRequest(null, null, true)
+            : new UpdateWorkingHoursRequest(
+                TimeOnly.FromTimeSpan(_openTime!.Value),
+                TimeOnly.FromTimeSpan(_closeTime!.Value),
+                false);
+
+        MudDialog.Close(DialogResult.Ok(request));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

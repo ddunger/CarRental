@@ -27,18 +27,28 @@ namespace CarRental.Application.Vehicles.Queries
                 return ApplicationResult<IEnumerable<VehicleResponse>>.Failure(
                     "Limit must be 1 or greater.", ResultError.Validation);
 
+            if (query.Request.YearFrom.HasValue && query.Request.YearTo.HasValue &&
+          query.Request.YearFrom > query.Request.YearTo)
+                return ApplicationResult<IEnumerable<VehicleResponse>>.Failure(
+                    "YearFrom must not be greater than YearTo.", ResultError.Validation);
+
+            if (query.Request.PriceFrom.HasValue && query.Request.PriceTo.HasValue &&
+                query.Request.PriceFrom > query.Request.PriceTo)
+                return ApplicationResult<IEnumerable<VehicleResponse>>.Failure(
+                    "PriceFrom must not be greater than PriceTo.", ResultError.Validation);
+
             var vehiclesResult = await vehiclesRepository.GetAllVehiclesAsync(
-                query.Request.ManufacturerId,
+                query.Request.ManufacturerIds,
                 query.Request.YearFrom,
                 query.Request.YearTo,
                 query.Request.PriceFrom,
                 query.Request.PriceTo,
                 query.Request.MaxKilometers,
-                query.Request.Color,
-                query.Request.Category,
-                query.Request.Type,
-                query.Request.Transmission,
-                query.Request.Fuel,
+                query.Request.Colors,
+                query.Request.Categories,
+                query.Request.Types,
+                query.Request.Transmissions,
+                query.Request.Fuels,
                 query.Offset,
                 query.Limit,
                 cancellationToken);

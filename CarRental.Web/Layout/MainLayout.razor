@@ -1,0 +1,81 @@
+﻿@inherits LayoutComponentBase
+@inject NotificationHubService NotificationHub
+@inject TokenStorageService TokenStorage
+@inject NotificationStateService NotificationState
+@implements IDisposable
+
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<NavMenu />
+
+<main>
+    <article class="content px-4">
+        @Body
+    </article>
+</main>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+@if (_overdueToasts.Count > 0)
+{
+    <div style="position:fixed; bottom:1rem; right:1rem; z-index:1000;">
+        @foreach (var n in _overdueToasts)
+        {
+            <div style="background:#b91c1c; color:white; padding:0.75rem 1rem; margin-top:0.5rem; border-radius:6px;">
+                <strong>Rental #@n.RentalId overdue</strong><br />
+                @n.VehicleName (@n.RegistrationPlate) — @n.CustomerFullName,
+                @n.HoursOverdue h late
+                <button style="margin-left:1rem" @onclick="() => Dismiss(n)">✕</button>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private readonly List<RentalOverdueNotification> _overdueToasts = [];
+
+    protected override void OnInitialized() =>
+        NotificationHub.RentalOverdueReceived += OnRentalOverdue;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        var token = await TokenStorage.GetAccessTokenAsync();
+        if (!string.IsNullOrWhiteSpace(token))
+        {
+            try
+            {
+                await NotificationHub.StartAsync();
+            }
+            catch
+            {
+                // API down or token expired — page functionality unaffected,
+                // connection re-established on next login
+            }
+        }
+    }
+
+    private void OnRentalOverdue(RentalOverdueNotification notification)
+    {
+        NotificationState.Add(notification);
+        _overdueToasts.Add(notification);       // keep the toast as the "live" alert
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void Dismiss(RentalOverdueNotification n)
+    {
+        _overdueToasts.Remove(n);
+    }
+
+    public void Dispose() =>
+        NotificationHub.RentalOverdueReceived -= OnRentalOverdue;
+}

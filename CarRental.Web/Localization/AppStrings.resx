@@ -1,0 +1,732 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Category_C" xml:space="preserve">
+    <value>Compact</value>
+  </data>
+  <data name="Category_D" xml:space="preserve">
+    <value>Compact Elite</value>
+  </data>
+  <data name="Category_E" xml:space="preserve">
+    <value>Economy</value>
+  </data>
+  <data name="Category_F" xml:space="preserve">
+    <value>Fullsize</value>
+  </data>
+  <data name="Category_G" xml:space="preserve">
+    <value>Fullsize Elite</value>
+  </data>
+  <data name="Category_H" xml:space="preserve">
+    <value>Economy Elite</value>
+  </data>
+  <data name="Category_I" xml:space="preserve">
+    <value>Intermediate</value>
+  </data>
+  <data name="Category_J" xml:space="preserve">
+    <value>Intermediate Elite</value>
+  </data>
+  <data name="Category_L" xml:space="preserve">
+    <value>Luxury</value>
+  </data>
+  <data name="Category_M" xml:space="preserve">
+    <value>Mini</value>
+  </data>
+  <data name="Category_N" xml:space="preserve">
+    <value>Mini Elite</value>
+  </data>
+  <data name="Category_O" xml:space="preserve">
+    <value>Oversize</value>
+  </data>
+  <data name="Category_P" xml:space="preserve">
+    <value>Premium</value>
+  </data>
+  <data name="Category_R" xml:space="preserve">
+    <value>Standard Elite</value>
+  </data>
+  <data name="Category_S" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Category_U" xml:space="preserve">
+    <value>Premium Elite</value>
+  </data>
+  <data name="Category_W" xml:space="preserve">
+    <value>Luxury Elite</value>
+  </data>
+  <data name="Category_X" xml:space="preserve">
+    <value>Special</value>
+  </data>
+  <data name="Color_Beige" xml:space="preserve">
+    <value>Beige</value>
+  </data>
+  <data name="Color_Black" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="Color_Blue" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="Color_Brown" xml:space="preserve">
+    <value>Brown</value>
+  </data>
+  <data name="Color_Gold" xml:space="preserve">
+    <value>Gold</value>
+  </data>
+  <data name="Color_Gray" xml:space="preserve">
+    <value>Gray</value>
+  </data>
+  <data name="Color_Green" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="Color_Orange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
+  <data name="Color_Purple" xml:space="preserve">
+    <value>Purple</value>
+  </data>
+  <data name="Color_Red" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="Color_Silver" xml:space="preserve">
+    <value>Silver</value>
+  </data>
+  <data name="Color_White" xml:space="preserve">
+    <value>White</value>
+  </data>
+  <data name="Color_Yellow" xml:space="preserve">
+    <value>Yellow</value>
+  </data>
+  <data name="Common_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Common_Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Common_Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Common_Header_Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Common_OperationFailed" xml:space="preserve">
+    <value>Operation failed.</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Day_Friday" xml:space="preserve">
+    <value>Friday</value>
+  </data>
+  <data name="Day_Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Day_Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="Day_Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="Day_Thursday" xml:space="preserve">
+    <value>Thursday</value>
+  </data>
+  <data name="Day_Tuesday" xml:space="preserve">
+    <value>Tuesday</value>
+  </data>
+  <data name="Day_Wednesday" xml:space="preserve">
+    <value>Wednesday</value>
+  </data>
+  <data name="Fuel_A" xml:space="preserve">
+    <value>Hydrogen, A/C</value>
+  </data>
+  <data name="Fuel_B" xml:space="preserve">
+    <value>Hydrogen, no A/C</value>
+  </data>
+  <data name="Fuel_C" xml:space="preserve">
+    <value>Electric</value>
+  </data>
+  <data name="Fuel_D" xml:space="preserve">
+    <value>Diesel, A/C</value>
+  </data>
+  <data name="Fuel_E" xml:space="preserve">
+    <value>Electric</value>
+  </data>
+  <data name="Fuel_F" xml:space="preserve">
+    <value>Multi-fuel, no A/C</value>
+  </data>
+  <data name="Fuel_H" xml:space="preserve">
+    <value>Hybrid</value>
+  </data>
+  <data name="Fuel_I" xml:space="preserve">
+    <value>Plug-in Hybrid</value>
+  </data>
+  <data name="Fuel_L" xml:space="preserve">
+    <value>LPG/CNG, A/C</value>
+  </data>
+  <data name="Fuel_M" xml:space="preserve">
+    <value>Multi-fuel, A/C</value>
+  </data>
+  <data name="Fuel_N" xml:space="preserve">
+    <value>Unspecified, no A/C</value>
+  </data>
+  <data name="Fuel_Q" xml:space="preserve">
+    <value>Diesel, no A/C</value>
+  </data>
+  <data name="Fuel_R" xml:space="preserve">
+    <value>Unspecified, A/C</value>
+  </data>
+  <data name="Fuel_S" xml:space="preserve">
+    <value>LPG/CNG, no A/C</value>
+  </data>
+  <data name="Fuel_U" xml:space="preserve">
+    <value>Ethanol, A/C</value>
+  </data>
+  <data name="Fuel_V" xml:space="preserve">
+    <value>Petrol, A/C</value>
+  </data>
+  <data name="Fuel_X" xml:space="preserve">
+    <value>Ethanol, no A/C</value>
+  </data>
+  <data name="Fuel_Z" xml:space="preserve">
+    <value>Petrol, no A/C</value>
+  </data>
+  <data name="Locations_Add" xml:space="preserve">
+    <value>Add location</value>
+  </data>
+  <data name="Locations_Closed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
+  <data name="Locations_Created" xml:space="preserve">
+    <value>Location created.</value>
+  </data>
+  <data name="Locations_DeleteConfirm" xml:space="preserve">
+    <value>Delete location "{0}"? This cannot be undone.</value>
+  </data>
+  <data name="Locations_Deleted" xml:space="preserve">
+    <value>Location deleted.</value>
+  </data>
+  <data name="Locations_DeleteHolidayConfirm" xml:space="preserve">
+    <value>Delete holiday {0} ({1})?</value>
+  </data>
+  <data name="Locations_DeleteLocation" xml:space="preserve">
+    <value>Delete location</value>
+  </data>
+  <data name="Locations_DialogTitle_Add" xml:space="preserve">
+    <value>Add location</value>
+  </data>
+  <data name="Locations_DialogTitle_AddHoliday" xml:space="preserve">
+    <value>Add holiday</value>
+  </data>
+  <data name="Locations_DialogTitle_Delete" xml:space="preserve">
+    <value>Delete location</value>
+  </data>
+  <data name="Locations_DialogTitle_DeleteHoliday" xml:space="preserve">
+    <value>Delete holiday</value>
+  </data>
+  <data name="Locations_DialogTitle_Edit" xml:space="preserve">
+    <value>Edit location</value>
+  </data>
+  <data name="Locations_EditLocation" xml:space="preserve">
+    <value>Edit location</value>
+  </data>
+  <data name="Locations_Field_Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="Locations_Field_ClosedAllDay" xml:space="preserve">
+    <value>Closed all day</value>
+  </data>
+  <data name="Locations_Field_ClosedThisDay" xml:space="preserve">
+    <value>Closed on this day</value>
+  </data>
+  <data name="Locations_Field_Closes" xml:space="preserve">
+    <value>Closes</value>
+  </data>
+  <data name="Locations_Field_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Locations_Field_HolidayName" xml:space="preserve">
+    <value>Holiday name (optional)</value>
+  </data>
+  <data name="Locations_Field_Latitude" xml:space="preserve">
+    <value>Latitude</value>
+  </data>
+  <data name="Locations_Field_Longitude" xml:space="preserve">
+    <value>Longitude</value>
+  </data>
+  <data name="Locations_Field_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Locations_Field_Opens" xml:space="preserve">
+    <value>Opens</value>
+  </data>
+  <data name="Locations_HolidayAdded" xml:space="preserve">
+    <value>Holiday added.</value>
+  </data>
+  <data name="Locations_HolidayDeleted" xml:space="preserve">
+    <value>Holiday deleted.</value>
+  </data>
+  <data name="Locations_Holidays" xml:space="preserve">
+    <value>Holidays</value>
+  </data>
+  <data name="Locations_HoursUpdated" xml:space="preserve">
+    <value>Working hours updated.</value>
+  </data>
+  <data name="Locations_Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Locations_NoHolidays" xml:space="preserve">
+    <value>No holidays defined.</value>
+  </data>
+  <data name="Locations_Title" xml:space="preserve">
+    <value>Pickup locations</value>
+  </data>
+  <data name="Locations_Updated" xml:space="preserve">
+    <value>Location updated.</value>
+  </data>
+  <data name="Locations_WorkingHours" xml:space="preserve">
+    <value>Working hours</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Nav_Locations" xml:space="preserve">
+    <value>Locations</value>
+  </data>
+  <data name="Nav_Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Nav_Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Nav_Manufacturers" xml:space="preserve">
+    <value>Manufacturers</value>
+  </data>
+  <data name="Nav_Rentals" xml:space="preserve">
+    <value>Rentals</value>
+  </data>
+  <data name="Nav_Reservations" xml:space="preserve">
+    <value>Reservations</value>
+  </data>
+  <data name="Nav_Vehicles" xml:space="preserve">
+    <value>Vehicles</value>
+  </data>
+  <data name="Reservations_Action_Cancel" xml:space="preserve">
+    <value>Cancel reservation</value>
+  </data>
+  <data name="Reservations_Action_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Reservations_Action_NoShow" xml:space="preserve">
+    <value>Mark no-show</value>
+  </data>
+  <data name="Reservations_Add" xml:space="preserve">
+    <value>New reservation</value>
+  </data>
+  <data name="Reservations_CancelConfirm" xml:space="preserve">
+    <value>Cancel reservation #{0}?</value>
+  </data>
+  <data name="Reservations_Cancelled" xml:space="preserve">
+    <value>Reservation cancelled.</value>
+  </data>
+  <data name="Reservations_Confirmed" xml:space="preserve">
+    <value>Reservation confirmed.</value>
+  </data>
+  <data name="Reservations_Created" xml:space="preserve">
+    <value>Reservation created.</value>
+  </data>
+  <data name="Reservations_Field_Customer" xml:space="preserve">
+    <value>Customer ID (staff only, optional)</value>
+  </data>
+  <data name="Reservations_Field_DropoffLocation" xml:space="preserve">
+    <value>Dropoff location</value>
+  </data>
+  <data name="Reservations_Field_PickupLocation" xml:space="preserve">
+    <value>Pickup location</value>
+  </data>
+  <data name="Reservations_Field_PickupTime" xml:space="preserve">
+    <value>Pickup time</value>
+  </data>
+  <data name="Reservations_Field_ReturnTime" xml:space="preserve">
+    <value>Return time</value>
+  </data>
+  <data name="Reservations_Field_Vehicle" xml:space="preserve">
+    <value>Vehicle</value>
+  </data>
+  <data name="Reservations_Filter_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Reservations_Filter_Vehicle" xml:space="preserve">
+    <value>Vehicle</value>
+  </data>
+  <data name="Reservations_Header_Cost" xml:space="preserve">
+    <value>Cost (€)</value>
+  </data>
+  <data name="Reservations_Header_Customer" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="Reservations_Header_Locations" xml:space="preserve">
+    <value>Locations</value>
+  </data>
+  <data name="Reservations_Header_Pickup" xml:space="preserve">
+    <value>Pickup</value>
+  </data>
+  <data name="Reservations_Header_Return" xml:space="preserve">
+    <value>Return</value>
+  </data>
+  <data name="Reservations_Header_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Reservations_Header_Vehicle" xml:space="preserve">
+    <value>Vehicle</value>
+  </data>
+  <data name="Reservations_MarkedNoShow" xml:space="preserve">
+    <value>Reservation marked as no-show.</value>
+  </data>
+  <data name="Reservations_NoData" xml:space="preserve">
+    <value>No reservations found.</value>
+  </data>
+  <data name="Reservations_NoShowConfirm" xml:space="preserve">
+    <value>Mark reservation #{0} as no-show?</value>
+  </data>
+  <data name="Reservations_Title" xml:space="preserve">
+    <value>Reservations</value>
+  </data>
+  <data name="Status_Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="Status_Confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+  </data>
+  <data name="Status_Converted" xml:space="preserve">
+    <value>Converted</value>
+  </data>
+  <data name="Status_NoShow" xml:space="preserve">
+    <value>No-show</value>
+  </data>
+  <data name="Status_Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="Transmission_A" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="Transmission_B" xml:space="preserve">
+    <value>Automatic 4WD</value>
+  </data>
+  <data name="Transmission_C" xml:space="preserve">
+    <value>Manual AWD</value>
+  </data>
+  <data name="Transmission_D" xml:space="preserve">
+    <value>Automatic AWD</value>
+  </data>
+  <data name="Transmission_F" xml:space="preserve">
+    <value>Full Automation (L5)</value>
+  </data>
+  <data name="Transmission_H" xml:space="preserve">
+    <value>High Automation (L4)</value>
+  </data>
+  <data name="Transmission_M" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="Transmission_N" xml:space="preserve">
+    <value>Manual 4WD</value>
+  </data>
+  <data name="Transmission_Q" xml:space="preserve">
+    <value>Conditional Automation (L3)</value>
+  </data>
+  <data name="Type_B" xml:space="preserve">
+    <value>2-3 Door</value>
+  </data>
+  <data name="Type_C" xml:space="preserve">
+    <value>2/4 Door</value>
+  </data>
+  <data name="Type_D" xml:space="preserve">
+    <value>4-5 Door</value>
+  </data>
+  <data name="Type_E" xml:space="preserve">
+    <value>Coupe</value>
+  </data>
+  <data name="Type_F" xml:space="preserve">
+    <value>SUV</value>
+  </data>
+  <data name="Type_G" xml:space="preserve">
+    <value>Crossover</value>
+  </data>
+  <data name="Type_H" xml:space="preserve">
+    <value>Motor Home</value>
+  </data>
+  <data name="Type_J" xml:space="preserve">
+    <value>Open Air All Terrain</value>
+  </data>
+  <data name="Type_K" xml:space="preserve">
+    <value>Commercial Van/Truck</value>
+  </data>
+  <data name="Type_L" xml:space="preserve">
+    <value>Limousine/Sedan</value>
+  </data>
+  <data name="Type_M" xml:space="preserve">
+    <value>Minivan</value>
+  </data>
+  <data name="Type_N" xml:space="preserve">
+    <value>Roadster</value>
+  </data>
+  <data name="Type_P" xml:space="preserve">
+    <value>Pickup (2-door)</value>
+  </data>
+  <data name="Type_Q" xml:space="preserve">
+    <value>Pickup (4-door)</value>
+  </data>
+  <data name="Type_R" xml:space="preserve">
+    <value>Recreational Vehicle</value>
+  </data>
+  <data name="Type_S" xml:space="preserve">
+    <value>Sport</value>
+  </data>
+  <data name="Type_T" xml:space="preserve">
+    <value>Convertible</value>
+  </data>
+  <data name="Type_V" xml:space="preserve">
+    <value>Passenger Van</value>
+  </data>
+  <data name="Type_W" xml:space="preserve">
+    <value>Wagon/Estate</value>
+  </data>
+  <data name="Type_X" xml:space="preserve">
+    <value>Special</value>
+  </data>
+  <data name="Type_Y" xml:space="preserve">
+    <value>2-Wheel Vehicle</value>
+  </data>
+  <data name="Type_Z" xml:space="preserve">
+    <value>Special Offer Car</value>
+  </data>
+  <data name="Vehicles_Add" xml:space="preserve">
+    <value>Add vehicle</value>
+  </data>
+  <data name="Vehicles_Created" xml:space="preserve">
+    <value>Vehicle created.</value>
+  </data>
+  <data name="Vehicles_DeleteConfirm" xml:space="preserve">
+    <value>Delete {0} ({1})? This cannot be undone.</value>
+  </data>
+  <data name="Vehicles_Deleted" xml:space="preserve">
+    <value>Vehicle deleted.</value>
+  </data>
+  <data name="Vehicles_DialogTitle_Add" xml:space="preserve">
+    <value>Add vehicle</value>
+  </data>
+  <data name="Vehicles_DialogTitle_Delete" xml:space="preserve">
+    <value>Delete vehicle</value>
+  </data>
+  <data name="Vehicles_DialogTitle_Edit" xml:space="preserve">
+    <value>Edit vehicle</value>
+  </data>
+  <data name="Vehicles_Field_Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Vehicles_Field_Color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="Vehicles_Field_Fuel" xml:space="preserve">
+    <value>Fuel</value>
+  </data>
+  <data name="Vehicles_Field_Kilometers" xml:space="preserve">
+    <value>Kilometers</value>
+  </data>
+  <data name="Vehicles_Field_Manufacturer" xml:space="preserve">
+    <value>Manufacturer</value>
+  </data>
+  <data name="Vehicles_Field_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Vehicles_Field_Plate" xml:space="preserve">
+    <value>Registration plate</value>
+  </data>
+  <data name="Vehicles_Field_Power" xml:space="preserve">
+    <value>Power (kW)</value>
+  </data>
+  <data name="Vehicles_Field_PricePerDay" xml:space="preserve">
+    <value>Price €/day</value>
+  </data>
+  <data name="Vehicles_Field_SelectManufacturer" xml:space="preserve">
+    <value>Select manufacturer</value>
+  </data>
+  <data name="Vehicles_Field_Transmission" xml:space="preserve">
+    <value>Transmission</value>
+  </data>
+  <data name="Vehicles_Field_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Vehicles_Field_Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="Vehicles_Filters" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="Vehicles_Filter_Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="Vehicles_Filter_Manufacturers" xml:space="preserve">
+    <value>Manufacturers</value>
+  </data>
+  <data name="Vehicles_Filter_MaxKm" xml:space="preserve">
+    <value>Max kilometers</value>
+  </data>
+  <data name="Vehicles_Filter_MaxPrice" xml:space="preserve">
+    <value>Max €/day</value>
+  </data>
+  <data name="Vehicles_Filter_PriceFrom" xml:space="preserve">
+    <value>Price from (€/day)</value>
+  </data>
+  <data name="Vehicles_Filter_PriceTo" xml:space="preserve">
+    <value>Price to (€/day)</value>
+  </data>
+  <data name="Vehicles_Filter_YearFrom" xml:space="preserve">
+    <value>Year from</value>
+  </data>
+  <data name="Vehicles_Filter_YearTo" xml:space="preserve">
+    <value>Year to</value>
+  </data>
+  <data name="Vehicles_Header_Color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="Vehicles_Header_Km" xml:space="preserve">
+    <value>Km</value>
+  </data>
+  <data name="Vehicles_Header_Plate" xml:space="preserve">
+    <value>Plate</value>
+  </data>
+  <data name="Vehicles_Header_Power" xml:space="preserve">
+    <value>kW</value>
+  </data>
+  <data name="Vehicles_Header_PricePerDay" xml:space="preserve">
+    <value>€/day</value>
+  </data>
+  <data name="Vehicles_Header_Vehicle" xml:space="preserve">
+    <value>Vehicle</value>
+  </data>
+  <data name="Vehicles_Header_Year" xml:space="preserve">
+    <value>Year</value>
+  </data>
+  <data name="Vehicles_Title" xml:space="preserve">
+    <value>Vehicles</value>
+  </data>
+  <data name="Vehicles_Updated" xml:space="preserve">
+    <value>Vehicle updated.</value>
+  </data>
+</root>

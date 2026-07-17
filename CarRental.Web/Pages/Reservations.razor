@@ -1,0 +1,273 @@
+﻿@page "/reservations"
+@attribute [Authorize]
+@inject ReservationApiService ReservationApi
+@inject VehicleApiService VehicleApi
+@inject LocationApiService LocationApi
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<PageTitle>@AppStrings.Reservations_Title — CarRental</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-6">
+    <div class="d-flex align-center mb-4">
+        <MudText Typo="Typo.h4">@AppStrings.Reservations_Title</MudText>
+        <MudSpacer />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   OnClick="OpenCreateDialogAsync">
+            @AppStrings.Reservations_Add
+        </MudButton>
+    </div>
+
+    @* --- Staff filter row --- *@
+    <AuthorizeView Roles="Admin,Manager">
+        <MudPaper Class="pa-4 mb-4" Elevation="1">
+            <MudGrid Spacing="2">
+                <MudItem xs="12" sm="4">
+                    <MudSelect T="ReservationStatus?" @bind-Value="_filterStatus"
+                               Label="@AppStrings.Reservations_Filter_Status" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(s => s?.Display() ?? "")">
+                        @foreach (var s in Enum.GetValues<ReservationStatus>())
+                        {
+                            <MudSelectItem T="ReservationStatus?" Value="@((ReservationStatus?)s)">@s.Display()</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <MudSelect T="int?" @bind-Value="_filterVehicleId"
+                               Label="@AppStrings.Reservations_Filter_Vehicle" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(id => id.HasValue ? _vehicles.FirstOrDefault(v => v.Id == id.Value)?.RegistrationPlate ?? "" : "")">
+                        @foreach (var v in _vehicles)
+                        {
+                            <MudSelectItem T="int?" Value="@((int?)v.Id)">@v.ManufacturerName @v.VehicleModel (@v.RegistrationPlate)</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" sm="4" Class="d-flex align-center" Style="gap:0.5rem;">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadAsync">@AppStrings.Common_Apply</MudButton>
+                    <MudButton Variant="Variant.Text" OnClick="ClearFiltersAsync">@AppStrings.Common_Clear</MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </AuthorizeView>
+
+    @if (_loading)
+    {
+        <MudProgressLinear Indeterminate="true" />
+    }
+    else if (_reservations.Count == 0)
+    {
+        <MudText Typo="Typo.body1" Color="Color.Secondary" Class="mt-4">@AppStrings.Reservations_NoData</MudText>
+    }
+    else
+    {
+        <MudTable Items="_reservations" Hover="true" Dense="true" Elevation="2" HorizontalScrollbar="true">
+            <HeaderContent>
+                <MudTh>#</MudTh>
+                <AuthorizeView Roles="Admin,Manager" Context="auth">
+                    <MudTh>@AppStrings.Reservations_Header_Customer</MudTh>
+                </AuthorizeView>
+                <MudTh>@AppStrings.Reservations_Header_Vehicle</MudTh>
+                <MudTh>@AppStrings.Reservations_Header_Pickup</MudTh>
+                <MudTh>@AppStrings.Reservations_Header_Return</MudTh>
+                <MudTh>@AppStrings.Reservations_Header_Locations</MudTh>
+                <MudTh>@AppStrings.Reservations_Header_Cost</MudTh>
+                <MudTh>@AppStrings.Reservations_Header_Status</MudTh>
+                <MudTh Style="width:160px; text-align:right;">@AppStrings.Common_Header_Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="#">@context.Id</MudTd>
+                <AuthorizeView Roles="Admin,Manager" Context="auth">
+                    <MudTd DataLabel="@AppStrings.Reservations_Header_Customer" Style="white-space:nowrap;">
+                        @context.CustomerFullName<br />
+                        <small style="color:var(--mud-palette-text-secondary);">@context.CustomerEmail</small>
+                    </MudTd>
+                </AuthorizeView>
+                <MudTd DataLabel="@AppStrings.Reservations_Header_Vehicle" Style="white-space:nowrap;">
+                    @context.VehicleName (@context.RegistrationPlate)
+                </MudTd>
+                <MudTd DataLabel="@AppStrings.Reservations_Header_Pickup" Style="white-space:nowrap;">
+                    @context.PickupTimeUtc.LocalDateTime.ToString("g")
+                </MudTd>
+                <MudTd DataLabel="@AppStrings.Reservations_Header_Return" Style="white-space:nowrap;">
+                    @context.ExpectedReturnTimeUtc.LocalDateTime.ToString("g")
+                </MudTd>
+                <MudTd DataLabel="@AppStrings.Reservations_Header_Locations" Style="white-space:nowrap;">
+                    @context.PickupLocationName
+                    @if (context.DropoffLocationId != context.PickupLocationId)
+                    {
+                        <span> → @context.DropoffLocationName</span>
+                    }
+                </MudTd>
+                <MudTd DataLabel="@AppStrings.Reservations_Header_Cost">@context.ExpectedCostEuro.ToString("F2")</MudTd>
+                <MudTd DataLabel="@AppStrings.Reservations_Header_Status">
+                    <MudChip T="string" Size="Size.Small" Color="@StatusColor(context.Status)">
+                        @context.Status.Display()
+                    </MudChip>
+                </MudTd>
+                <MudTd Style="text-align:right; white-space:nowrap;">
+                    <AuthorizeView Roles="Admin,Manager" Context="auth">
+                        @if (context.Status == ReservationStatus.Pending)
+                        {
+                            <MudTooltip Text="@AppStrings.Reservations_Action_Confirm">
+                                <MudIconButton Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small"
+                                               Color="Color.Success"
+                                               OnClick="() => ConfirmReservationAsync(context)" />
+                            </MudTooltip>
+                        }
+                        @if (context.Status is ReservationStatus.Pending or ReservationStatus.Confirmed
+                             && context.PickupTimeUtc <= DateTimeOffset.UtcNow)
+                        {
+                            <MudTooltip Text="@AppStrings.Reservations_Action_NoShow">
+                                <MudIconButton Icon="@Icons.Material.Filled.PersonOff" Size="Size.Small"
+                                               Color="Color.Warning"
+                                               OnClick="() => MarkNoShowAsync(context)" />
+                            </MudTooltip>
+                        }
+                    </AuthorizeView>
+                    @if (context.Status is ReservationStatus.Pending or ReservationStatus.Confirmed)
+                    {
+                        <MudTooltip Text="@AppStrings.Reservations_Action_Cancel">
+                            <MudIconButton Icon="@Icons.Material.Filled.Cancel" Size="Size.Small"
+                                           Color="Color.Error"
+                                           OnClick="() => CancelReservationAsync(context)" />
+                        </MudTooltip>
+                    }
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</MudContainer>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
+    private List<ReservationResponse> _reservations = [];
+    private List<Dtos.Vehicles.VehicleResponse> _vehicles = [];
+    private List<Dtos.Locations.LocationResponse> _locations = [];
+    private bool _loading = true;
+    private bool _isStaff;
+
+    private ReservationStatus? _filterStatus;
+    private int? _filterVehicleId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthState is not null)
+        {
+            var state = await AuthState;
+            var role = state.User.GetRole();
+            _isStaff = role is "Admin" or "Manager";
+        }
+
+        // Vehicles + locations needed for the create dialog (and staff filter)
+        _vehicles = await VehicleApi.SearchAsync(new Dtos.Vehicles.GetVehiclesRequest(
+            null, null, null, null, null, null, null, null, null, null, null));
+        _locations = await LocationApi.GetAllAsync();
+
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _loading = true;
+
+        _reservations = _isStaff
+            ? await ReservationApi.GetAllAsync(new GetReservationsRequest(
+                null, _filterVehicleId, null, _filterStatus, null, null))
+            : await ReservationApi.GetMyAsync();
+
+        _loading = false;
+    }
+
+    private async Task ClearFiltersAsync()
+    {
+        _filterStatus = null;
+        _filterVehicleId = null;
+        await LoadAsync();
+    }
+
+    private static Color StatusColor(ReservationStatus status) => status switch
+    {
+        ReservationStatus.Pending => Color.Warning,
+        ReservationStatus.Confirmed => Color.Info,
+        ReservationStatus.Converted => Color.Success,
+        ReservationStatus.Cancelled => Color.Default,
+        ReservationStatus.NoShow => Color.Error,
+        _ => Color.Default
+    };
+
+    private async Task OpenCreateDialogAsync()
+    {
+        var parameters = new DialogParameters<ReservationDialog>
+        {
+            { d => d.Vehicles, _vehicles },
+            { d => d.Locations, _locations.Where(l => l.IsActive).ToList() },
+            { d => d.IsStaff, _isStaff }
+        };
+
+        var dialog = await DialogService.ShowAsync<ReservationDialog>(AppStrings.Reservations_Add, parameters,
+            new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true });
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: CreateReservationRequest request })
+        {
+            var (success, error) = await ReservationApi.CreateAsync(request);
+            await HandleResultAsync(success, error, AppStrings.Reservations_Created);
+        }
+    }
+
+    private async Task ConfirmReservationAsync(ReservationResponse reservation)
+    {
+        var (success, error) = await ReservationApi.ConfirmAsync(reservation.Id);
+        await HandleResultAsync(success, error, AppStrings.Reservations_Confirmed);
+    }
+
+    private async Task CancelReservationAsync(ReservationResponse reservation)
+    {
+        var parameters = new DialogParameters<ConfirmDialog>
+        {
+            { d => d.Message, string.Format(AppStrings.Reservations_CancelConfirm, reservation.Id) }
+        };
+
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(AppStrings.Reservations_Action_Cancel, parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            var (success, error) = await ReservationApi.CancelAsync(reservation.Id);
+            await HandleResultAsync(success, error, AppStrings.Reservations_Cancelled);
+        }
+    }
+
+    private async Task MarkNoShowAsync(ReservationResponse reservation)
+    {
+        var parameters = new DialogParameters<ConfirmDialog>
+        {
+            { d => d.Message, string.Format(AppStrings.Reservations_NoShowConfirm, reservation.Id) }
+        };
+
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(AppStrings.Reservations_Action_NoShow, parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false })
+        {
+            var (success, error) = await ReservationApi.MarkNoShowAsync(reservation.Id);
+            await HandleResultAsync(success, error, AppStrings.Reservations_MarkedNoShow);
+        }
+    }
+
+    private async Task HandleResultAsync(bool success, string? error, string successMessage)
+    {
+        if (success)
+        {
+            Snackbar.Add(successMessage, Severity.Success);
+            await LoadAsync();
+        }
+        else
+        {
+            Snackbar.Add(error ?? AppStrings.Common_OperationFailed, Severity.Error);
+        }
+    }
+}

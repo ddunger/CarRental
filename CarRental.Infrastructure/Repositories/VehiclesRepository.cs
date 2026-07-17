@@ -13,17 +13,17 @@ namespace CarRental.Infrastructure.Repositories
         IAppDbContext context) : IVehiclesRepository
     {
         public async Task<RepositoryResult<IEnumerable<VehicleEntity>>> GetAllVehiclesAsync(
-            int? manufacturerId,
+            List<int>? manufacturerIds,
             int? yearFrom,
             int? yearTo,
             decimal? priceFrom,
             decimal? priceTo,
             int? maxKilometers,
-            VehicleColor? color,
-            AcrissVehicleCategory? category,
-            AcrissVehicleType? type,
-            AcrissVehicleTransmission? transmission,
-            AcrissVehicleFuel? fuel,
+            List<VehicleColor>? colors,
+            List<AcrissVehicleCategory>? categories,
+            List<AcrissVehicleType>? types,
+            List<AcrissVehicleTransmission>? transmissions,
+            List<AcrissVehicleFuel>? fuels,
             int? offset,
             int? limit,
             CancellationToken cancellationToken)
@@ -34,8 +34,8 @@ namespace CarRental.Infrastructure.Repositories
                     .Include(v => v.Manufacturer)
                     .AsQueryable();
 
-                if (manufacturerId.HasValue)
-                    query = query.Where(v => v.ManufacturerId == manufacturerId.Value);
+                if (manufacturerIds is { Count: > 0 })
+                    query = query.Where(v => manufacturerIds.Contains(v.ManufacturerId));
                 if (yearFrom.HasValue)
                     query = query.Where(v => v.ManufacturingYear >= yearFrom.Value);
                 if (yearTo.HasValue)
@@ -46,18 +46,21 @@ namespace CarRental.Infrastructure.Repositories
                     query = query.Where(v => v.PricePerDayInEuro <= priceTo.Value);
                 if (maxKilometers.HasValue)
                     query = query.Where(v => v.KilometersDriven <= maxKilometers.Value);
-                if (color.HasValue)
-                    query = query.Where(v => v.Color == color.Value);
-                if (category.HasValue)
-                    query = query.Where(v => v.Category == category.Value);
-                if (type.HasValue)
-                    query = query.Where(v => v.Type == type.Value);
-                if (transmission.HasValue)
-                    query = query.Where(v => v.Transmission == transmission.Value);
-                if (fuel.HasValue)
-                    query = query.Where(v => v.Fuel == fuel.Value);
-                if (offset.HasValue && limit.HasValue)
-                    query = query.Skip(offset.Value).Take(limit.Value);
+                if (colors is { Count: > 0 })
+                    query = query.Where(v => colors.Contains(v.Color));
+                if (categories is { Count: > 0 })
+                    query = query.Where(v => categories.Contains(v.Category));
+                if (types is { Count: > 0 })
+                    query = query.Where(v => types.Contains(v.Type));
+                if (transmissions is { Count: > 0 })
+                    query = query.Where(v => transmissions.Contains(v.Transmission));
+                if (fuels is { Count: > 0 })
+                    query = query.Where(v => fuels.Contains(v.Fuel));
+
+                query = query.OrderBy(v => v.Id);
+
+                if (offset.HasValue || limit.HasValue)
+                    query = query.Skip(offset ?? 0).Take(limit ?? 50);
 
                 var vehicles = await query.ToListAsync(cancellationToken);
                 return RepositoryResult<IEnumerable<VehicleEntity>>.Success(vehicles);

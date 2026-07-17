@@ -1,0 +1,157 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudGrid Spacing="2">
+
+            @* --- Identity: manufacturer + model --- *@
+            <MudItem xs="12" sm="6">
+                <MudSelect T="int?" @bind-Value="_manufacturerId" Label="@AppStrings.Vehicles_Field_Manufacturer"
+                           Variant="Variant.Outlined" Dense="true"
+                           Placeholder="@AppStrings.Vehicles_Field_SelectManufacturer">
+                    @foreach (var m in Manufacturers)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)m.Id)">@m.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField @bind-Value="_model" Label="@AppStrings.Vehicles_Field_Model"
+                              Variant="Variant.Outlined" MaxLength="100" />
+            </MudItem>
+
+            @* --- ACRISS classification: 2 per row, full names need the width --- *@
+            <MudItem xs="12" sm="6">
+                <MudSelect T="AcrissVehicleCategory" @bind-Value="_category" Label="@AppStrings.Vehicles_Field_Category"
+                           Variant="Variant.Outlined" Dense="true"
+                           ToStringFunc="@(v => v.Display())">
+                    @foreach (var v in Enum.GetValues<AcrissVehicleCategory>())
+                    {
+                        <MudSelectItem Value="@v">@v.Display()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudSelect T="AcrissVehicleType" @bind-Value="_type" Label="@AppStrings.Vehicles_Field_Type"
+                           Variant="Variant.Outlined" Dense="true"
+                           ToStringFunc="@(v => v.Display())">
+                    @foreach (var v in Enum.GetValues<AcrissVehicleType>())
+                    {
+                        <MudSelectItem Value="@v">@v.Display()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudSelect T="AcrissVehicleTransmission" @bind-Value="_transmission" Label="@AppStrings.Vehicles_Field_Transmission"
+                           Variant="Variant.Outlined" Dense="true"
+                           ToStringFunc="@(v => v.Display())">
+                    @foreach (var v in Enum.GetValues<AcrissVehicleTransmission>())
+                    {
+                        <MudSelectItem Value="@v">@v.Display()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudSelect T="AcrissVehicleFuel" @bind-Value="_fuel" Label="@AppStrings.Vehicles_Field_Fuel"
+                           Variant="Variant.Outlined" Dense="true"
+                           ToStringFunc="@(v => v.Display())">
+                    @foreach (var v in Enum.GetValues<AcrissVehicleFuel>())
+                    {
+                        <MudSelectItem Value="@v">@v.Display()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            @* --- Numbers: three compact fields share a row --- *@
+            <MudItem xs="12" sm="4">
+                <MudNumericField @bind-Value="_year" Label="@AppStrings.Vehicles_Field_Year"
+                                 Variant="Variant.Outlined" Min="1950" Max="2100" />
+            </MudItem>
+            <MudItem xs="12" sm="4">
+                <MudNumericField @bind-Value="_kilometers" Label="@AppStrings.Vehicles_Field_Kilometers"
+                                 Variant="Variant.Outlined" Min="0" />
+            </MudItem>
+            <MudItem xs="12" sm="4">
+                <MudNumericField @bind-Value="_powerKw" Label="@AppStrings.Vehicles_Field_Power"
+                                 Variant="Variant.Outlined" Min="1" Max="2000" />
+            </MudItem>
+
+            @* --- Plate, price, color --- *@
+            <MudItem xs="12" sm="4">
+                <MudTextField @bind-Value="_plate" Label="@AppStrings.Vehicles_Field_Plate"
+                              Variant="Variant.Outlined" MaxLength="20" />
+            </MudItem>
+            <MudItem xs="12" sm="4">
+                <MudNumericField @bind-Value="_pricePerDay" Label="@AppStrings.Vehicles_Field_PricePerDay"
+                                 Variant="Variant.Outlined" Min="0.01m" Format="F2" />
+            </MudItem>
+            <MudItem xs="12" sm="4">
+                <MudSelect T="VehicleColor" @bind-Value="_color" Label="@AppStrings.Vehicles_Field_Color"
+                           Variant="Variant.Outlined" Dense="true"
+                           ToStringFunc="@(v => v.Display())">
+                    @foreach (var v in Enum.GetValues<VehicleColor>())
+                    {
+                        <MudSelectItem Value="@v">@v.Display()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@AppStrings.Common_Cancel</MudButton>
+        <MudButton Color="Color.Primary" Disabled="@(!IsValid)" OnClick="Submit">@AppStrings.Common_Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public List<Dtos.Manufacturers.ManufacturerResponse> Manufacturers { get; set; } = [];
+    [Parameter] public VehicleResponse? Existing { get; set; }
+
+    private int? _manufacturerId;
+    private string _model = string.Empty;
+    private AcrissVehicleCategory _category;
+    private AcrissVehicleType _type;
+    private AcrissVehicleTransmission _transmission;
+    private AcrissVehicleFuel _fuel;
+    private int _year = DateTime.UtcNow.Year;
+    private int _kilometers;
+    private int _powerKw = 100;
+    private string _plate = string.Empty;
+    private decimal _pricePerDay = 50m;
+    private VehicleColor _color;
+
+    private bool IsValid =>
+      _manufacturerId is > 0 &&
+      !string.IsNullOrWhiteSpace(_model) &&
+      !string.IsNullOrWhiteSpace(_plate) &&
+      _pricePerDay > 0;
+
+    protected override void OnInitialized()
+    {
+        if (Existing is null)
+            return;
+
+        _manufacturerId = Existing.ManufacturerId;
+        _model = Existing.VehicleModel;
+        _category = Existing.Category;
+        _type = Existing.Type;
+        _transmission = Existing.Transmission;
+        _fuel = Existing.Fuel;
+        _year = Existing.ManufacturingYear;
+        _kilometers = Existing.KilometersDriven;
+        _powerKw = Existing.EnginePowerInKw;
+        _plate = Existing.RegistrationPlate;
+        _pricePerDay = Existing.PricePerDayInEuro;
+        _color = Existing.Color;
+    }
+
+    private void Submit() =>
+        MudDialog.Close(DialogResult.Ok(new CreateVehicleRequest(
+            _manufacturerId!.Value, _model.Trim(), _category, _type, _transmission, _fuel,
+            _year, _kilometers, _powerKw, _plate.Trim(), _pricePerDay, _color)));
+
+    private void Cancel() => MudDialog.Cancel();
+}

@@ -1,0 +1,29 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="Name"
+                      Label="Name"
+                      Variant="Variant.Outlined"
+                      MaxLength="100"
+                      Immediate="true"
+                      AutoFocus="true" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary"
+                   Disabled="@string.IsNullOrWhiteSpace(Name)"
+                   OnClick="Submit">
+            Save
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public string Name { get; set; } = string.Empty;
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(Name.Trim()));
+    private void Cancel() => MudDialog.Cancel();
+}

@@ -1,4 +1,5 @@
-﻿using CarRental.Infrastructure;
+﻿using CarRental.API.Hubs;
+using CarRental.Infrastructure;
 using Scalar.AspNetCore;
 
 namespace CarRental.API.Extensions
@@ -29,6 +30,8 @@ namespace CarRental.API.Extensions
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
+
+            app.MapHub<NotificationsHub>("/notifications");
 
             return app;
         }

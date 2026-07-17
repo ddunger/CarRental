@@ -1,0 +1,128 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="3">
+            @if (IsStaff)
+            {
+                <MudTextField @bind-Value="_customerId" Label="@AppStrings.Reservations_Field_Customer"
+                              Variant="Variant.Outlined" />
+            }
+
+            <MudSelect T="int?" @bind-Value="_vehicleId" Label="@AppStrings.Reservations_Field_Vehicle"
+                       Variant="Variant.Outlined" Dense="true"
+                       ToStringFunc="@(id => id.HasValue ? VehicleLabel(id.Value) : "")">
+                @foreach (var v in Vehicles)
+                {
+                    <MudSelectItem T="int?" Value="@((int?)v.Id)">@VehicleLabel(v.Id) — @v.PricePerDayInEuro.ToString("F2") €/d</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="int?" @bind-Value="_pickupLocationId" Label="@AppStrings.Reservations_Field_PickupLocation"
+                       Variant="Variant.Outlined" Dense="true"
+                       ToStringFunc="@(id => id.HasValue ? Locations.FirstOrDefault(l => l.Id == id.Value)?.Name ?? "" : "")">
+                @foreach (var l in Locations)
+                {
+                    <MudSelectItem T="int?" Value="@((int?)l.Id)">@l.Name</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="int?" @bind-Value="_dropoffLocationId" Label="@AppStrings.Reservations_Field_DropoffLocation"
+                       Variant="Variant.Outlined" Dense="true"
+                       ToStringFunc="@(id => id.HasValue ? Locations.FirstOrDefault(l => l.Id == id.Value)?.Name ?? "" : "")">
+                @foreach (var l in Locations)
+                {
+                    <MudSelectItem T="int?" Value="@((int?)l.Id)">@l.Name</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudGrid Spacing="2">
+                <MudItem xs="12" sm="6">
+                    <MudDatePicker @bind-Date="_pickupDate" Label="@AppStrings.Reservations_Field_PickupTime"
+                                   Variant="Variant.Outlined" MinDate="DateTime.Today" />
+                    <MudTimePicker @bind-Time="_pickupTime" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudDatePicker @bind-Date="_returnDate" Label="@AppStrings.Reservations_Field_ReturnTime"
+                                   Variant="Variant.Outlined" MinDate="DateTime.Today" />
+                    <MudTimePicker @bind-Time="_returnTime" Variant="Variant.Outlined" />
+                </MudItem>
+            </MudGrid>
+
+            @if (EstimatedCost is not null)
+            {
+                <MudText Typo="Typo.body2" Color="Color.Secondary">
+                    ≈ @EstimatedCost.Value.ToString("F2") €
+                </MudText>
+            }
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@AppStrings.Common_Cancel</MudButton>
+        <MudButton Color="Color.Primary" Disabled="@(!IsValid)" OnClick="Submit">@AppStrings.Common_Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public List<Dtos.Vehicles.VehicleResponse> Vehicles { get; set; } = [];
+    [Parameter] public List<Dtos.Locations.LocationResponse> Locations { get; set; } = [];
+    [Parameter] public bool IsStaff { get; set; }
+
+    private string? _customerId;
+    private int? _vehicleId;
+    private int? _pickupLocationId;
+    private int? _dropoffLocationId;
+    private DateTime? _pickupDate = DateTime.Today.AddDays(1);
+    private TimeSpan? _pickupTime = new(9, 0, 0);
+    private DateTime? _returnDate = DateTime.Today.AddDays(2);
+    private TimeSpan? _returnTime = new(9, 0, 0);
+
+    private DateTimeOffset? PickupUtc =>
+        _pickupDate.HasValue && _pickupTime.HasValue
+            ? new DateTimeOffset(_pickupDate.Value.Date + _pickupTime.Value, TimeZoneInfo.Local.GetUtcOffset(_pickupDate.Value)).ToUniversalTime()
+            : null;
+
+    private DateTimeOffset? ReturnUtc =>
+        _returnDate.HasValue && _returnTime.HasValue
+            ? new DateTimeOffset(_returnDate.Value.Date + _returnTime.Value, TimeZoneInfo.Local.GetUtcOffset(_returnDate.Value)).ToUniversalTime()
+            : null;
+
+    private decimal? EstimatedCost
+    {
+        get
+        {
+            if (_vehicleId is null || PickupUtc is null || ReturnUtc is null || ReturnUtc <= PickupUtc)
+                return null;
+            var price = Vehicles.FirstOrDefault(v => v.Id == _vehicleId.Value)?.PricePerDayInEuro;
+            if (price is null) return null;
+            var days = (int)Math.Ceiling((ReturnUtc.Value - PickupUtc.Value).TotalDays);
+            return days * price.Value;
+        }
+    }
+
+    private bool IsValid =>
+        _vehicleId.HasValue &&
+        _pickupLocationId.HasValue &&
+        _dropoffLocationId.HasValue &&
+        PickupUtc.HasValue && ReturnUtc.HasValue &&
+        PickupUtc < ReturnUtc &&
+        PickupUtc > DateTimeOffset.UtcNow;
+
+    private string VehicleLabel(int id)
+    {
+        var v = Vehicles.FirstOrDefault(x => x.Id == id);
+        return v is null ? "" : $"{v.ManufacturerName} {v.VehicleModel} ({v.RegistrationPlate})";
+    }
+
+    private void Submit() =>
+        MudDialog.Close(DialogResult.Ok(new CreateReservationRequest(
+            string.IsNullOrWhiteSpace(_customerId) ? null : _customerId.Trim(),
+            _vehicleId!.Value,
+            _pickupLocationId!.Value,
+            _dropoffLocationId!.Value,
+            PickupUtc!.Value,
+            ReturnUtc!.Value)));
+
+    private void Cancel() => MudDialog.Cancel();
+}

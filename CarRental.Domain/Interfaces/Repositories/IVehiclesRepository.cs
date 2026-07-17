@@ -7,17 +7,17 @@ namespace CarRental.Domain.Interfaces.Repositories
     public interface IVehiclesRepository
     {
         Task<RepositoryResult<IEnumerable<VehicleEntity>>> GetAllVehiclesAsync(
-            int? manufacturerId,
+            List<int>? manufacturerIds,
             int? yearFrom,
             int? yearTo,
             decimal? priceFrom,
             decimal? priceTo,
             int? maxKilometers,
-            VehicleColor? color,
-            AcrissVehicleCategory? category,
-            AcrissVehicleType? type,
-            AcrissVehicleTransmission? transmission,
-            AcrissVehicleFuel? fuel,
+            List<VehicleColor>? colors,
+            List<AcrissVehicleCategory>? categories,
+            List<AcrissVehicleType>? types,
+            List<AcrissVehicleTransmission>? transmissions,
+            List<AcrissVehicleFuel>? fuels,
             int? offset,
             int? limit,
             CancellationToken cancellationToken);
@@ -33,3 +33,4 @@ namespace CarRental.Domain.Interfaces.Repositories
             int vehicleId, CancellationToken cancellationToken);
     }
 }
+ 
