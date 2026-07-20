@@ -4,6 +4,7 @@ using CarRental.Domain.Enums;
 using CarRental.Domain.Interfaces.Repositories;
 using CarRental.Domain.Results;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Logging;
 
 namespace CarRental.Application.Vehicles.Commands
@@ -98,7 +99,9 @@ namespace CarRental.Application.Vehicles.Commands
                 updated.EnginePowerInKw,
                 updated.RegistrationPlate,
                 updated.PricePerDayInEuro,
-                updated.Color));
+                updated.Color,
+                updated.ImageData,
+                updated.ImageContentType));
         }
     }
 }

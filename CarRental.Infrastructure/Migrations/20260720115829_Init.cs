@@ -281,7 +281,9 @@ namespace CarRental.Infrastructure.Migrations
                     EnginePowerInKw = table.Column<int>(type: "integer", nullable: false),
                     RegistrationPlate = table.Column<string>(type: "text", nullable: false),
                     PricePerDayInEuro = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
-                    Color = table.Column<int>(type: "integer", nullable: false)
+                    Color = table.Column<int>(type: "integer", nullable: false),
+                    ImageData = table.Column<byte[]>(type: "bytea", nullable: true),
+                    ImageContentType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {

@@ -20,7 +20,7 @@ namespace CarRental.API.Controllers
         /// Returns a paginated list of all manufacturers. Use <c>offset</c> and <c>limit</c> query parameters for pagination.
         /// </remarks>
         [HttpGet]
-        [Authorize(Roles = Roles.Admin + "," + Roles.Manager + "," + Roles.Customer)]
+        [AllowAnonymous]
 
         public async Task<IActionResult> GetAllManufacturersAsync(
             [FromQuery] int? offset,

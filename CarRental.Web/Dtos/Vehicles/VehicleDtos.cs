@@ -29,7 +29,9 @@
         int EnginePowerInKw,
         string RegistrationPlate,
         decimal PricePerDayInEuro,
-        VehicleColor Color);
+        VehicleColor Color,
+        byte[]? ImageData,
+        string? ImageContentType);
 
     public record CreateVehicleRequest(
         int ManufacturerId,
@@ -43,7 +45,9 @@
         int EnginePowerInKw,
         string RegistrationPlate,
         decimal PricePerDayInEuro,
-        VehicleColor Color);
+        VehicleColor Color,
+        byte[]? ImageData,
+        string? ImageContentType);
 
     public record UpdateVehicleRequest(
         int? ManufacturerId,
@@ -57,5 +61,8 @@
         int? EnginePowerInKw,
         string? RegistrationPlate,
         decimal? PricePerDayInEuro,
-        VehicleColor? Color);
+        VehicleColor? Color,
+        byte[]? ImageData,
+        string? ImageContentType);
 }
+

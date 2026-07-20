@@ -73,7 +73,9 @@ namespace CarRental.Application.Vehicles.Commands
                 created.EnginePowerInKw,
                 created.RegistrationPlate,
                 created.PricePerDayInEuro,
-                created.Color));
+                created.Color,
+                created.ImageData,
+                created.ImageContentType));
         }
     }
 }

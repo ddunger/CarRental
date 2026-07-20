@@ -46,7 +46,9 @@ namespace CarRental.Application.Vehicles.Queries
                 vehicle.EnginePowerInKw,
                 vehicle.RegistrationPlate,
                 vehicle.PricePerDayInEuro,
-                vehicle.Color));
+                vehicle.Color,
+                vehicle.ImageData,
+                vehicle.ImageContentType));
         }
     }
 }

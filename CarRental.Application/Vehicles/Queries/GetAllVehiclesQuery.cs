@@ -6,6 +6,7 @@ using CarRental.Domain.Interfaces.Repositories;
 using CarRental.Domain.Results;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CarRental.Application.Vehicles.Queries
 {
@@ -79,7 +80,10 @@ namespace CarRental.Application.Vehicles.Queries
                     v.EnginePowerInKw,
                     v.RegistrationPlate,
                     v.PricePerDayInEuro,
-                    v.Color)));
+                    v.Color,
+                    v.ImageData,
+                    v.ImageContentType)));
         }
     }
 }
+

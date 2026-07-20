@@ -268,7 +268,7 @@
                 request.ManufacturerId, request.VehicleModel, request.Category, request.Type,
                 request.Transmission, request.Fuel, request.ManufacturingYear,
                 request.KilometersDriven, request.EnginePowerInKw, request.RegistrationPlate,
-                request.PricePerDayInEuro, request.Color);
+                request.PricePerDayInEuro, request.Color, null, null);
 
             var (success, error) = await VehicleApi.UpdateAsync(vehicle.Id, update);
             await HandleResultAsync(success, error, AppStrings.Vehicles_Updated);

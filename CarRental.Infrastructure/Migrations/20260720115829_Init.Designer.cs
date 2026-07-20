@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarRental.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260720064255_Init")]
+    [Migration("20260720115829_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -442,6 +442,13 @@ namespace CarRental.Infrastructure.Migrations
 
                     b.Property<int>("Fuel")
                         .HasColumnType("integer");
+
+                    b.Property<string>("ImageContentType")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("bytea");
 
                     b.Property<int>("KilometersDriven")
                         .HasColumnType("integer");

@@ -20,7 +20,11 @@ namespace CarRental.Domain.Entities
         public required int EnginePowerInKw { get; set; }
         public required string RegistrationPlate { get; set; }
         public required decimal PricePerDayInEuro { get; set; }
-        public required VehicleColor Color { get; set; } 
+        public required VehicleColor Color { get; set; }
+        public byte[]? ImageData { get; set; }
+
+        [StringLength(50)]
+        public string? ImageContentType { get; set; }
 
         //Navigation properties
         public ManufacturerEntity Manufacturer { get; set; } = null!;

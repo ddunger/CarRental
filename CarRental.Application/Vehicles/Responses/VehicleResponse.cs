@@ -17,5 +17,8 @@ namespace CarRental.Application.Vehicles.Responses
        int EnginePowerInKw,
        string RegistrationPlate,
        decimal PricePerDayInEuro,
-       VehicleColor Color);
+       VehicleColor Color,
+       byte[]? ImageData,
+       string? ImageContentType
+       );
 }

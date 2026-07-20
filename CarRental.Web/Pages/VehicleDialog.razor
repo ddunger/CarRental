@@ -151,7 +151,7 @@
     private void Submit() =>
         MudDialog.Close(DialogResult.Ok(new CreateVehicleRequest(
             _manufacturerId!.Value, _model.Trim(), _category, _type, _transmission, _fuel,
-            _year, _kilometers, _powerKw, _plate.Trim(), _pricePerDay, _color)));
+            _year, _kilometers, _powerKw, _plate.Trim(), _pricePerDay, _color, null, null)));
 
     private void Cancel() => MudDialog.Cancel();
 }

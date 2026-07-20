@@ -1,8 +1,13 @@
 ﻿using CarRental.Domain.Constants;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
+using CarRental.Infrastructure.DbContext.Resources;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace CarRental.Infrastructure.DbContext
 {
@@ -84,18 +89,29 @@ namespace CarRental.Infrastructure.DbContext
             var manufacturers = await db.Manufacturers
                 .ToDictionaryAsync(m => m.Name, m => m.Id);
 
+            var toyotaImage = GetImage("toyotacorolla.png");
+            var volkswagenImage = GetImage("volkswagengolf.png");
+            var bmwImage = GetImage("bmw3series.png");
+            var mercedesImage = GetImage("mercedesbenzcclass.png");
+            var fordImage = GetImage("fordkuga.png");
+            var hyundaiImage = GetImage("hyundaitucson.png");
+            var skodaImage = GetImage("skodaoctavia.png");
+            var audiImage = GetImage("audia4.png");
+            var renaultImage = GetImage("renaultzoe.png");
+            var kiaImage = GetImage("kiaev6.png");
+
             var vehicles = new List<VehicleEntity>
             {
-                new() { ManufacturerId = manufacturers["Toyota"],        VehicleModel = "Corolla",  AcrissCode = "CDMR", Category = AcrissVehicleCategory.C, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 15000, EnginePowerInKw = 103, RegistrationPlate = "ZG-123-AA", PricePerDayInEuro = 45.00m, Color = VehicleColor.White  },
-                new() { ManufacturerId = manufacturers["Volkswagen"],    VehicleModel = "Golf",     AcrissCode = "CDMR", Category = AcrissVehicleCategory.C, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 8000,  EnginePowerInKw = 110, RegistrationPlate = "ZG-456-BB", PricePerDayInEuro = 50.00m, Color = VehicleColor.Black  },
-                new() { ManufacturerId = manufacturers["BMW"],           VehicleModel = "3 Series", AcrissCode = "SDMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 12000, EnginePowerInKw = 190, RegistrationPlate = "ZG-789-CC", PricePerDayInEuro = 95.00m, Color = VehicleColor.Blue   },
-                new() { ManufacturerId = manufacturers["Mercedes-Benz"], VehicleModel = "C-Class",  AcrissCode = "SDMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 20000, EnginePowerInKw = 170, RegistrationPlate = "ZG-111-DD", PricePerDayInEuro = 90.00m, Color = VehicleColor.Silver },
-                new() { ManufacturerId = manufacturers["Ford"],          VehicleModel = "Kuga",     AcrissCode = "SFMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.F, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2021, KilometersDriven = 35000, EnginePowerInKw = 150, RegistrationPlate = "ZG-222-EE", PricePerDayInEuro = 65.00m, Color = VehicleColor.Red    },
-                new() { ManufacturerId = manufacturers["Hyundai"],       VehicleModel = "Tucson",   AcrissCode = "SFMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.F, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 18000, EnginePowerInKw = 132, RegistrationPlate = "ZG-333-FF", PricePerDayInEuro = 60.00m, Color = VehicleColor.White  },
-                new() { ManufacturerId = manufacturers["Škoda"],         VehicleModel = "Octavia",  AcrissCode = "CDMR", Category = AcrissVehicleCategory.C, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2021, KilometersDriven = 42000, EnginePowerInKw = 110, RegistrationPlate = "ZG-444-GG", PricePerDayInEuro = 48.00m, Color = VehicleColor.Gray   },
-                new() { ManufacturerId = manufacturers["Audi"],          VehicleModel = "A4",       AcrissCode = "SDMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 5000,  EnginePowerInKw = 150, RegistrationPlate = "ZG-555-HH", PricePerDayInEuro = 85.00m, Color = VehicleColor.Black  },
-                new() { ManufacturerId = manufacturers["Renault"],       VehicleModel = "Zoe",      AcrissCode = "ECMR", Category = AcrissVehicleCategory.E, Type = AcrissVehicleType.C, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 22000, EnginePowerInKw = 100, RegistrationPlate = "ZG-666-II", PricePerDayInEuro = 55.00m, Color = VehicleColor.White  },
-                new() { ManufacturerId = manufacturers["Kia"],           VehicleModel = "EV6",      AcrissCode = "PWMR", Category = AcrissVehicleCategory.P, Type = AcrissVehicleType.W, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 9000,  EnginePowerInKw = 228, RegistrationPlate = "ZG-777-JJ", PricePerDayInEuro = 80.00m, Color = VehicleColor.Gray   },
+                new() { ManufacturerId = manufacturers["Toyota"],        VehicleModel = "Corolla",  AcrissCode = "CDMR", Category = AcrissVehicleCategory.C, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 15000, EnginePowerInKw = 103, RegistrationPlate = "ZG-123-AA", PricePerDayInEuro = 45.00m, Color = VehicleColor.White,    ImageData= toyotaImage.ImageData, ImageContentType = toyotaImage.ImageContentType },
+                new() { ManufacturerId = manufacturers["Volkswagen"],    VehicleModel = "Golf",     AcrissCode = "CDMR", Category = AcrissVehicleCategory.C, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 8000,  EnginePowerInKw = 110, RegistrationPlate = "ZG-456-BB", PricePerDayInEuro = 50.00m, Color = VehicleColor.Black,    ImageData= volkswagenImage.ImageData, ImageContentType = volkswagenImage.ImageContentType },
+                new() { ManufacturerId = manufacturers["BMW"],           VehicleModel = "3 Series", AcrissCode = "SDMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 12000, EnginePowerInKw = 190, RegistrationPlate = "ZG-789-CC", PricePerDayInEuro = 95.00m, Color = VehicleColor.Blue,     ImageData= bmwImage.ImageData, ImageContentType = bmwImage.ImageContentType },
+                new() { ManufacturerId = manufacturers["Mercedes-Benz"], VehicleModel = "C-Class",  AcrissCode = "SDMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 20000, EnginePowerInKw = 170, RegistrationPlate = "ZG-111-DD", PricePerDayInEuro = 90.00m, Color = VehicleColor.Silver,   ImageData= mercedesImage.ImageData, ImageContentType = mercedesImage.ImageContentType },
+                new() { ManufacturerId = manufacturers["Ford"],          VehicleModel = "Kuga",     AcrissCode = "SFMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.F, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2021, KilometersDriven = 35000, EnginePowerInKw = 150, RegistrationPlate = "ZG-222-EE", PricePerDayInEuro = 65.00m, Color = VehicleColor.Red,      ImageData= fordImage.ImageData, ImageContentType = fordImage.ImageContentType },
+                new() { ManufacturerId = manufacturers["Hyundai"],       VehicleModel = "Tucson",   AcrissCode = "SFMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.F, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 18000, EnginePowerInKw = 132, RegistrationPlate = "ZG-333-FF", PricePerDayInEuro = 60.00m, Color = VehicleColor.White,    ImageData= hyundaiImage.ImageData, ImageContentType = hyundaiImage.ImageContentType },
+                new() { ManufacturerId = manufacturers["Škoda"],         VehicleModel = "Octavia",  AcrissCode = "CDMR", Category = AcrissVehicleCategory.C, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2021, KilometersDriven = 42000, EnginePowerInKw = 110, RegistrationPlate = "ZG-444-GG", PricePerDayInEuro = 48.00m, Color = VehicleColor.Gray,     ImageData= skodaImage.ImageData, ImageContentType = skodaImage.ImageContentType },
+                new() { ManufacturerId = manufacturers["Audi"],          VehicleModel = "A4",       AcrissCode = "SDMR", Category = AcrissVehicleCategory.S, Type = AcrissVehicleType.D, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 5000,  EnginePowerInKw = 150, RegistrationPlate = "ZG-555-HH", PricePerDayInEuro = 85.00m, Color = VehicleColor.Black,    ImageData= audiImage.ImageData, ImageContentType = audiImage.ImageContentType },
+                new() { ManufacturerId = manufacturers["Renault"],       VehicleModel = "Zoe",      AcrissCode = "ECMR", Category = AcrissVehicleCategory.E, Type = AcrissVehicleType.C, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2022, KilometersDriven = 22000, EnginePowerInKw = 100, RegistrationPlate = "ZG-666-II", PricePerDayInEuro = 55.00m, Color = VehicleColor.White,    ImageData= renaultImage.ImageData, ImageContentType = renaultImage.ImageContentType },
+                new() { ManufacturerId = manufacturers["Kia"],           VehicleModel = "EV6",      AcrissCode = "PWMR", Category = AcrissVehicleCategory.P, Type = AcrissVehicleType.W, Transmission = AcrissVehicleTransmission.M, Fuel = AcrissVehicleFuel.R, ManufacturingYear = 2023, KilometersDriven = 9000,  EnginePowerInKw = 228, RegistrationPlate = "ZG-777-JJ", PricePerDayInEuro = 80.00m, Color = VehicleColor.Gray,     ImageData= kiaImage.ImageData, ImageContentType = kiaImage.ImageContentType },
             };
 
             await db.Vehicles.AddRangeAsync(vehicles);
@@ -146,5 +162,35 @@ namespace CarRental.Infrastructure.DbContext
             await db.LocationWorkingHours.AddRangeAsync(allHours);
             await db.SaveChangesAsync();
         }
+
+
+
+        private static (byte[]? ImageData, string? ImageContentType) GetImage(string fileName)
+        {
+            var data = fileName switch
+            {
+                "toyotacorolla.png" => Images.toyotacorolla,
+                "volkswagengolf.png" => Images.volkswagengolf,
+                "bmw3series.png" => Images.bmw3series,
+                "mercedesbenzcclass.png" => Images.mercedesbenzcclass,
+                "fordkuga.png" => Images.fordkuga,
+                "hyundaitucson.png" => Images.hyundaituscon,
+                "skodaoctavia.png" => Images.skodaoctavia,
+                "audia4.png" => Images.audia4,
+                "renaultzoe.png" => Images.renaultzoe,
+                "kiaev6.png" => Images.kiaev6,
+                _ => null
+            };
+
+            if (data == null)
+            { 
+                Debug.WriteLine($"Image not found for file name: {fileName}");
+                return (null, null); 
+            }
+               
+
+            return (data, "image/png");
+        }
     }
 }
+
