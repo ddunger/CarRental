@@ -1,7 +1,31 @@
 ﻿<MudDialog>
     <DialogContent>
         <MudStack Spacing="3">
-            @if (IsStaff)
+            @if (IsAuthenticated)
+            {
+                <MudButtonGroup Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true">
+                    <MudButton Variant="@(!_asGuest ? Variant.Filled : Variant.Outlined)"
+                               OnClick="() => _asGuest = false">
+                        @AppStrings.Reservations_Mode_Account
+                    </MudButton>
+                    <MudButton Variant="@(_asGuest ? Variant.Filled : Variant.Outlined)"
+                               OnClick="() => _asGuest = true">
+                        @AppStrings.Reservations_Mode_Guest
+                    </MudButton>
+                </MudButtonGroup>
+            }
+
+            @if (_asGuest)
+            {
+                <MudTextField @bind-Value="_guestName" Label="@AppStrings.Reservations_Field_GuestName"
+                              Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="_guestEmail" Label="@AppStrings.Reservations_Field_GuestEmail"
+                              Variant="Variant.Outlined" InputType="InputType.Email" />
+                <MudTextField @bind-Value="_guestPhone" Label="@AppStrings.Reservations_Field_GuestPhone"
+                              Variant="Variant.Outlined" />
+            }
+
+            @if (IsStaff && !_asGuest)
             {
                 <MudTextField @bind-Value="_customerId" Label="@AppStrings.Reservations_Field_Customer"
                               Variant="Variant.Outlined" />
@@ -68,6 +92,13 @@
     [Parameter] public List<Dtos.Vehicles.VehicleResponse> Vehicles { get; set; } = [];
     [Parameter] public List<Dtos.Locations.LocationResponse> Locations { get; set; } = [];
     [Parameter] public bool IsStaff { get; set; }
+    [Parameter] public bool IsAuthenticated { get; set; }
+    [Parameter] public int? PreselectedVehicleId { get; set; }
+
+    private bool _asGuest;
+    private string? _guestEmail;
+    private string? _guestName;
+    private string? _guestPhone;
 
     private string? _customerId;
     private int? _vehicleId;
@@ -77,6 +108,13 @@
     private TimeSpan? _pickupTime = new(9, 0, 0);
     private DateTime? _returnDate = DateTime.Today.AddDays(2);
     private TimeSpan? _returnTime = new(9, 0, 0);
+
+    protected override void OnInitialized()
+    {
+        _asGuest = !IsAuthenticated;
+        if (PreselectedVehicleId.HasValue)
+            _vehicleId = PreselectedVehicleId;
+    }
 
     private DateTimeOffset? PickupUtc =>
         _pickupDate.HasValue && _pickupTime.HasValue
@@ -107,7 +145,8 @@
         _dropoffLocationId.HasValue &&
         PickupUtc.HasValue && ReturnUtc.HasValue &&
         PickupUtc < ReturnUtc &&
-        PickupUtc > DateTimeOffset.UtcNow;
+        PickupUtc > DateTimeOffset.UtcNow &&
+        (!_asGuest || (!string.IsNullOrWhiteSpace(_guestEmail) && !string.IsNullOrWhiteSpace(_guestName)));
 
     private string VehicleLabel(int id)
     {
@@ -117,7 +156,10 @@
 
     private void Submit() =>
         MudDialog.Close(DialogResult.Ok(new CreateReservationRequest(
-            string.IsNullOrWhiteSpace(_customerId) ? null : _customerId.Trim(),
+            _asGuest ? null : (string.IsNullOrWhiteSpace(_customerId) ? null : _customerId.Trim()),
+            _asGuest ? _guestEmail!.Trim() : null,
+            _asGuest ? _guestName!.Trim() : null,
+            _asGuest ? _guestPhone?.Trim() : null,
             _vehicleId!.Value,
             _pickupLocationId!.Value,
             _dropoffLocationId!.Value,

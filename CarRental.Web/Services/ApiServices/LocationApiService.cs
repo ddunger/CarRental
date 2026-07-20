@@ -1,10 +1,9 @@
 ﻿using CarRental.Web.Constants;
 using CarRental.Web.Dtos.Identity;
 using CarRental.Web.Dtos.Locations;
-using CarRental.Web.Services.Manufacturers;
 using System.Net.Http.Json;
 
-namespace CarRental.Web.Services.Locations
+namespace CarRental.Web.Services.ApiServices
 {
     public class LocationApiService(HttpClient http)
     {

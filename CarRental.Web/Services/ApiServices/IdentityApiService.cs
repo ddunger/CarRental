@@ -1,7 +1,7 @@
 ﻿using CarRental.Web.Dtos.Identity;
 using System.Net.Http.Json;
 
-namespace CarRental.Web.Services.Identity
+namespace CarRental.Web.Services.ApiServices
 {
     public class IdentityApiService(HttpClient http, Auth.TokenStorageService tokenStorage)
     {

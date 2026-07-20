@@ -2,8 +2,9 @@
 using CarRental.Application.Rentals.Responses;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
+using CarRental.Domain.Helpers;
 using CarRental.Domain.Interfaces.Repositories;
-using CarRental.Domain.Results;
+using CarRental.Domain.Results; 
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -60,6 +61,10 @@ namespace CarRental.Application.Rentals.Commands
             {
                 ReservationId = reservation.Id,
                 CustomerId = reservation.CustomerId,
+                GuestEmail = reservation.GuestEmail,
+                GuestFullName = reservation.GuestFullName,
+                GuestPhone = reservation.GuestPhone,
+                TrackingCode = TrackingCodeGenerator.Generate(),
                 VehicleId = reservation.VehicleId,
                 PickupLocationId = reservation.PickupLocationId,
                 DropoffLocationId = reservation.DropoffLocationId,
@@ -91,13 +96,24 @@ namespace CarRental.Application.Rentals.Commands
         private async Task<ApplicationResult<RentalResponse>> HandleWalkInAsync(
             CreateRentalRequest request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(request.CustomerId) ||
-                !request.VehicleId.HasValue ||
+            var hasGuestData = !string.IsNullOrWhiteSpace(request.GuestEmail);
+            var hasRegisteredCustomer = !string.IsNullOrWhiteSpace(request.CustomerId);
+
+            if (hasGuestData == hasRegisteredCustomer)   // both or neither
+                return ApplicationResult<RentalResponse>.Failure(
+                    "Provide either CustomerId or guest data (GuestEmail + GuestFullName), not both.",
+                    ResultError.Validation);
+
+            if (hasGuestData && string.IsNullOrWhiteSpace(request.GuestFullName))
+                return ApplicationResult<RentalResponse>.Failure(
+                    "Guest name is required for guest rentals.", ResultError.Validation);
+
+            if (!request.VehicleId.HasValue ||
                 !request.PickupLocationId.HasValue ||
                 !request.DropoffLocationId.HasValue ||
                 !request.ExpectedReturnTimeUtc.HasValue)
                 return ApplicationResult<RentalResponse>.Failure(
-                    "For a walk-in rental, CustomerId, VehicleId, PickupLocationId, DropoffLocationId and ExpectedReturnTimeUtc are required.",
+                    "For a walk-in rental, VehicleId, PickupLocationId, DropoffLocationId and ExpectedReturnTimeUtc are required.",
                     ResultError.Validation);
 
             var now = DateTimeOffset.UtcNow;
@@ -106,10 +122,14 @@ namespace CarRental.Application.Rentals.Commands
                 return ApplicationResult<RentalResponse>.Failure(
                     "Expected return time must be in the future.", ResultError.Validation);
 
-            var customer = await userManager.FindByIdAsync(request.CustomerId);
-            if (customer is null || !customer.IsActive)
-                return ApplicationResult<RentalResponse>.Failure(
-                    "Customer not found.", ResultError.Validation);
+            UserEntity? customer = null;
+            if (hasRegisteredCustomer)
+            {
+                customer = await userManager.FindByIdAsync(request.CustomerId!);
+                if (customer is null || !customer.IsActive)
+                    return ApplicationResult<RentalResponse>.Failure(
+                        "Customer not found.", ResultError.Validation);
+            }
 
             var vehicleResult = await vehiclesRepository.GetVehicleByIdAsync(request.VehicleId.Value, cancellationToken);
             if (!vehicleResult.IsSuccess)
@@ -160,7 +180,11 @@ namespace CarRental.Application.Rentals.Commands
             var rental = new RentalEntity
             {
                 ReservationId = null,
-                CustomerId = request.CustomerId,
+                CustomerId = hasRegisteredCustomer ? request.CustomerId : null,
+                GuestEmail = hasGuestData ? request.GuestEmail!.Trim() : null,
+                GuestFullName = hasGuestData ? request.GuestFullName!.Trim() : null,
+                GuestPhone = hasGuestData ? request.GuestPhone?.Trim() : null,
+                TrackingCode = TrackingCodeGenerator.Generate(),
                 VehicleId = request.VehicleId.Value,
                 PickupLocationId = request.PickupLocationId.Value,
                 DropoffLocationId = request.DropoffLocationId.Value,
@@ -175,8 +199,8 @@ namespace CarRental.Application.Rentals.Commands
                 return ApplicationResult<RentalResponse>.Failure(
                     "Failed to create rental.", ResultError.Internal);
 
-            logger.LogInformation("Walk-in rental {RentalId} created for vehicle {VehicleId}.",
-                createdResult.Value.Id, request.VehicleId.Value);
+            logger.LogInformation("Walk-in rental {RentalId} created for vehicle {VehicleId} ({CustomerKind}).",
+                createdResult.Value.Id, request.VehicleId.Value, hasGuestData ? "guest" : "registered");
 
             return await BuildResponseAsync(createdResult.Value, cancellationToken);
         }
@@ -206,8 +230,12 @@ namespace CarRental.Application.Rentals.Commands
                 rental.Id,
                 rental.ReservationId,
                 rental.CustomerId,
-                rental.Customer?.Email ?? string.Empty,
-                $"{rental.Customer?.FirstName} {rental.Customer?.LastName}".Trim(),
+                rental.CustomerId is not null ? rental.Customer?.Email ?? string.Empty : rental.GuestEmail ?? string.Empty,
+                rental.CustomerId is not null
+                    ? $"{rental.Customer?.FirstName} {rental.Customer?.LastName}".Trim()
+                    : rental.GuestFullName ?? string.Empty,
+                rental.CustomerId is null,
+                rental.TrackingCode,
                 rental.VehicleId,
                 $"{rental.Vehicle?.Manufacturer?.Name} {rental.Vehicle?.VehicleModel}".Trim(),
                 rental.Vehicle?.RegistrationPlate ?? string.Empty,

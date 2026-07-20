@@ -45,8 +45,14 @@ namespace CarRental.Application.Reservations.Queries
             return ApplicationResult<ReservationResponse>.Success(new ReservationResponse(
                 reservation.Id,
                 reservation.CustomerId,
-                reservation.Customer?.Email ?? string.Empty,
-                $"{reservation.Customer?.FirstName} {reservation.Customer?.LastName}".Trim(),
+                reservation.CustomerId is not null
+                    ? reservation.Customer?.Email ?? string.Empty
+                    : reservation.GuestEmail ?? string.Empty,
+                reservation.CustomerId is not null
+                    ? $"{reservation.Customer?.FirstName} {reservation.Customer?.LastName}".Trim()
+                    : reservation.GuestFullName ?? string.Empty,
+                reservation.CustomerId is null,
+                reservation.TrackingCode,
                 reservation.VehicleId,
                 $"{reservation.Vehicle?.Manufacturer?.Name} {reservation.Vehicle?.VehicleModel}".Trim(),
                 reservation.Vehicle?.RegistrationPlate ?? string.Empty,

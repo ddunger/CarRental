@@ -191,7 +191,6 @@ namespace CarRental.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CustomerId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("DropoffLocationId")
@@ -199,6 +198,18 @@ namespace CarRental.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset>("ExpectedReturnTimeUtc")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("GuestEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("GuestFullName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("GuestPhone")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<int>("PickupLocationId")
                         .HasColumnType("integer");
@@ -212,6 +223,11 @@ namespace CarRental.Infrastructure.Migrations
                     b.Property<decimal>("TotalCostEuro")
                         .HasPrecision(10, 2)
                         .HasColumnType("numeric(10,2)");
+
+                    b.Property<string>("TrackingCode")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<int>("VehicleId")
                         .HasColumnType("integer");
@@ -227,9 +243,15 @@ namespace CarRental.Infrastructure.Migrations
                     b.HasIndex("ReservationId")
                         .IsUnique();
 
+                    b.HasIndex("TrackingCode")
+                        .IsUnique();
+
                     b.HasIndex("VehicleId", "Status");
 
-                    b.ToTable("Rentals");
+                    b.ToTable("Rentals", t =>
+                        {
+                            t.HasCheckConstraint("CK_Rentals_CustomerOrGuest", "(\"CustomerId\" IS NOT NULL AND \"GuestEmail\" IS NULL) OR (\"CustomerId\" IS NULL AND \"GuestEmail\" IS NOT NULL)");
+                        });
                 });
 
             modelBuilder.Entity("CarRental.Domain.Entities.ReservationEntity", b =>
@@ -247,7 +269,6 @@ namespace CarRental.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CustomerId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("DropoffLocationId")
@@ -260,6 +281,18 @@ namespace CarRental.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("ExpectedReturnTimeUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("GuestEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("GuestFullName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("GuestPhone")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
                     b.Property<int>("PickupLocationId")
                         .HasColumnType("integer");
 
@@ -268,6 +301,11 @@ namespace CarRental.Infrastructure.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<string>("TrackingCode")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<int>("VehicleId")
                         .HasColumnType("integer");
@@ -280,9 +318,15 @@ namespace CarRental.Infrastructure.Migrations
 
                     b.HasIndex("PickupLocationId");
 
+                    b.HasIndex("TrackingCode")
+                        .IsUnique();
+
                     b.HasIndex("VehicleId", "Status");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservations", t =>
+                        {
+                            t.HasCheckConstraint("CK_Reservations_CustomerOrGuest", "(\"CustomerId\" IS NOT NULL AND \"GuestEmail\" IS NULL) OR (\"CustomerId\" IS NULL AND \"GuestEmail\" IS NOT NULL)");
+                        });
                 });
 
             modelBuilder.Entity("CarRental.Domain.Entities.UserEntity", b =>
@@ -603,8 +647,7 @@ namespace CarRental.Infrastructure.Migrations
                     b.HasOne("CarRental.Domain.Entities.UserEntity", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CarRental.Domain.Entities.PickupLocationEntity", "DropoffLocation")
                         .WithMany()
@@ -645,8 +688,7 @@ namespace CarRental.Infrastructure.Migrations
                     b.HasOne("CarRental.Domain.Entities.UserEntity", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CarRental.Domain.Entities.PickupLocationEntity", "DropoffLocation")
                         .WithMany()

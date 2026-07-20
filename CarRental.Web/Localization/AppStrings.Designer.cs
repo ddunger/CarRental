@@ -628,6 +628,60 @@ namespace CarRental.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Guest.
+        /// </summary>
+        public static string Guest_Badge {
+            get {
+                return ResourceManager.GetString("Guest_Badge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No vehicles match your filters..
+        /// </summary>
+        public static string Home_NoVehicles {
+            get {
+                return ResourceManager.GetString("Home_NoVehicles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to day.
+        /// </summary>
+        public static string Home_PerDay {
+            get {
+                return ResourceManager.GetString("Home_PerDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserve.
+        /// </summary>
+        public static string Home_Reserve {
+            get {
+                return ResourceManager.GetString("Home_Reserve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse and reserve — no account needed..
+        /// </summary>
+        public static string Home_Subtitle {
+            get {
+                return ResourceManager.GetString("Home_Subtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Find your car.
+        /// </summary>
+        public static string Home_Title {
+            get {
+                return ResourceManager.GetString("Home_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add location.
         /// </summary>
         public static string Locations_Add {
@@ -988,6 +1042,267 @@ namespace CarRental.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Return vehicle.
+        /// </summary>
+        public static string Rentals_Action_Return {
+            get {
+                return ResourceManager.GetString("Rentals_Action_Return", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New rental.
+        /// </summary>
+        public static string Rentals_Add {
+            get {
+                return ResourceManager.GetString("Rentals_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rental created..
+        /// </summary>
+        public static string Rentals_Created {
+            get {
+                return ResourceManager.GetString("Rentals_Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Customer ID.
+        /// </summary>
+        public static string Rentals_Field_Customer {
+            get {
+                return ResourceManager.GetString("Rentals_Field_Customer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dropoff location.
+        /// </summary>
+        public static string Rentals_Field_DropoffLocation {
+            get {
+                return ResourceManager.GetString("Rentals_Field_DropoffLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected return.
+        /// </summary>
+        public static string Rentals_Field_ExpectedReturn {
+            get {
+                return ResourceManager.GetString("Rentals_Field_ExpectedReturn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pickup location.
+        /// </summary>
+        public static string Rentals_Field_PickupLocation {
+            get {
+                return ResourceManager.GetString("Rentals_Field_PickupLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmed reservation ID.
+        /// </summary>
+        public static string Rentals_Field_Reservation {
+            get {
+                return ResourceManager.GetString("Rentals_Field_Reservation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vehicle.
+        /// </summary>
+        public static string Rentals_Field_Vehicle {
+            get {
+                return ResourceManager.GetString("Rentals_Field_Vehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string Rentals_Filter_Status {
+            get {
+                return ResourceManager.GetString("Rentals_Filter_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Returned.
+        /// </summary>
+        public static string Rentals_Header_ActualReturn {
+            get {
+                return ResourceManager.GetString("Rentals_Header_ActualReturn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cost (€).
+        /// </summary>
+        public static string Rentals_Header_Cost {
+            get {
+                return ResourceManager.GetString("Rentals_Header_Cost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Customer.
+        /// </summary>
+        public static string Rentals_Header_Customer {
+            get {
+                return ResourceManager.GetString("Rentals_Header_Customer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected return.
+        /// </summary>
+        public static string Rentals_Header_ExpectedReturn {
+            get {
+                return ResourceManager.GetString("Rentals_Header_ExpectedReturn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Picked up.
+        /// </summary>
+        public static string Rentals_Header_Pickup {
+            get {
+                return ResourceManager.GetString("Rentals_Header_Pickup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string Rentals_Header_Status {
+            get {
+                return ResourceManager.GetString("Rentals_Header_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vehicle.
+        /// </summary>
+        public static string Rentals_Header_Vehicle {
+            get {
+                return ResourceManager.GetString("Rentals_Header_Vehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From reservation.
+        /// </summary>
+        public static string Rentals_Mode_FromReservation {
+            get {
+                return ResourceManager.GetString("Rentals_Mode_FromReservation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registered customer.
+        /// </summary>
+        public static string Rentals_Mode_RegisteredCustomer {
+            get {
+                return ResourceManager.GetString("Rentals_Mode_RegisteredCustomer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Walk-in.
+        /// </summary>
+        public static string Rentals_Mode_WalkIn {
+            get {
+                return ResourceManager.GetString("Rentals_Mode_WalkIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No rentals found..
+        /// </summary>
+        public static string Rentals_NoData {
+            get {
+                return ResourceManager.GetString("Rentals_NoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complete return.
+        /// </summary>
+        public static string Rentals_Return_Confirm {
+            get {
+                return ResourceManager.GetString("Rentals_Return_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Different dropoff location (optional).
+        /// </summary>
+        public static string Rentals_Return_DifferentDropoff {
+            get {
+                return ResourceManager.GetString("Rentals_Return_DifferentDropoff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Return vehicle.
+        /// </summary>
+        public static string Rentals_Return_Title {
+            get {
+                return ResourceManager.GetString("Rentals_Return_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rental completed..
+        /// </summary>
+        public static string Rentals_Returned {
+            get {
+                return ResourceManager.GetString("Rentals_Returned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rentals.
+        /// </summary>
+        public static string Rentals_Title {
+            get {
+                return ResourceManager.GetString("Rentals_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        public static string RentalStatus_Active {
+            get {
+                return ResourceManager.GetString("RentalStatus_Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        public static string RentalStatus_Completed {
+            get {
+                return ResourceManager.GetString("RentalStatus_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overdue.
+        /// </summary>
+        public static string RentalStatus_Overdue {
+            get {
+                return ResourceManager.GetString("RentalStatus_Overdue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel reservation.
         /// </summary>
         public static string Reservations_Action_Cancel {
@@ -1074,6 +1389,33 @@ namespace CarRental.Web.Localization {
         public static string Reservations_Field_DropoffLocation {
             get {
                 return ResourceManager.GetString("Reservations_Field_DropoffLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string Reservations_Field_GuestEmail {
+            get {
+                return ResourceManager.GetString("Reservations_Field_GuestEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full name.
+        /// </summary>
+        public static string Reservations_Field_GuestName {
+            get {
+                return ResourceManager.GetString("Reservations_Field_GuestName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone (optional).
+        /// </summary>
+        public static string Reservations_Field_GuestPhone {
+            get {
+                return ResourceManager.GetString("Reservations_Field_GuestPhone", resourceCulture);
             }
         }
         
@@ -1204,6 +1546,24 @@ namespace CarRental.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to On my account.
+        /// </summary>
+        public static string Reservations_Mode_Account {
+            get {
+                return ResourceManager.GetString("Reservations_Mode_Account", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to As guest.
+        /// </summary>
+        public static string Reservations_Mode_Guest {
+            get {
+                return ResourceManager.GetString("Reservations_Mode_Guest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No reservations found..
         /// </summary>
         public static string Reservations_NoData {
@@ -1272,6 +1632,78 @@ namespace CarRental.Web.Localization {
         public static string Status_Pending {
             get {
                 return ResourceManager.GetString("Status_Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel reservation.
+        /// </summary>
+        public static string Track_Cancel {
+            get {
+                return ResourceManager.GetString("Track_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reservation cancelled..
+        /// </summary>
+        public static string Track_Cancelled {
+            get {
+                return ResourceManager.GetString("Track_Cancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save this link — it is the only way to access your reservation..
+        /// </summary>
+        public static string Track_CodeHint {
+            get {
+                return ResourceManager.GetString("Track_CodeHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing found for this tracking code..
+        /// </summary>
+        public static string Track_NotFound {
+            get {
+                return ResourceManager.GetString("Track_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rental.
+        /// </summary>
+        public static string Track_Rental {
+            get {
+                return ResourceManager.GetString("Track_Rental", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reservation.
+        /// </summary>
+        public static string Track_Reservation {
+            get {
+                return ResourceManager.GetString("Track_Reservation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Track your reservation.
+        /// </summary>
+        public static string Track_Title {
+            get {
+                return ResourceManager.GetString("Track_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your tracking link.
+        /// </summary>
+        public static string Track_YourCode {
+            get {
+                return ResourceManager.GetString("Track_YourCode", resourceCulture);
             }
         }
         

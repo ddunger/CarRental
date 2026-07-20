@@ -47,6 +47,13 @@ namespace CarRental.Infrastructure.DbContext.Configurations
             // One rental per reservation (allows multiple NULLs for walk-ins)
             builder.HasIndex(r => r.ReservationId)
                    .IsUnique();
+
+            builder.HasIndex(r => r.TrackingCode)
+                .IsUnique();
+
+            builder.ToTable(t => t.HasCheckConstraint(
+                "CK_Rentals_CustomerOrGuest",
+                "(\"CustomerId\" IS NOT NULL AND \"GuestEmail\" IS NULL) OR (\"CustomerId\" IS NULL AND \"GuestEmail\" IS NOT NULL)"));
         }
     }
 }

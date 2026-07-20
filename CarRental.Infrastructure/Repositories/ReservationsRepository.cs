@@ -142,5 +142,27 @@ namespace CarRental.Infrastructure.Repositories
                 return RepositoryResult<bool>.Failure("Failed to check availability.", ex);
             }
         }
+
+        public async Task<RepositoryResult<ReservationEntity?>> GetReservationByTrackingCodeAsync(
+            string trackingCode, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var reservation = await context.Reservations
+                    .Include(r => r.Customer)
+                    .Include(r => r.Vehicle)
+                        .ThenInclude(v => v.Manufacturer)
+                    .Include(r => r.PickupLocation)
+                    .Include(r => r.DropoffLocation)
+                    .FirstOrDefaultAsync(r => r.TrackingCode == trackingCode, cancellationToken);
+
+                return RepositoryResult<ReservationEntity?>.Success(reservation);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error fetching reservation by tracking code.");
+                return RepositoryResult<ReservationEntity?>.Failure("Failed to fetch reservation.", ex);
+            }
+        }
     }
 }

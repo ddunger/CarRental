@@ -82,8 +82,12 @@ namespace CarRental.Application.Rentals.Commands
                 updated.Id,
                 updated.ReservationId,
                 updated.CustomerId,
-                updated.Customer?.Email ?? string.Empty,
-                $"{updated.Customer?.FirstName} {updated.Customer?.LastName}".Trim(),
+                updated.CustomerId is not null ? updated.Customer?.Email ?? string.Empty : updated.GuestEmail ?? string.Empty,
+                updated.CustomerId is not null
+                    ? $"{updated.Customer?.FirstName} {updated.Customer?.LastName}".Trim()
+                    : updated.GuestFullName ?? string.Empty,
+                updated.CustomerId is null,
+                updated.TrackingCode,
                 updated.VehicleId,
                 $"{updated.Vehicle?.Manufacturer?.Name} {updated.Vehicle?.VehicleModel}".Trim(),
                 updated.Vehicle?.RegistrationPlate ?? string.Empty,

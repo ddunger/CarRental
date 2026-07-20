@@ -4,9 +4,11 @@
 
     public record ReservationResponse(
         int Id,
-        string CustomerId,
+        string? CustomerId,
         string CustomerEmail,
         string CustomerFullName,
+        bool IsGuest,
+        string TrackingCode,
         int VehicleId,
         string VehicleName,
         string RegistrationPlate,
@@ -31,6 +33,9 @@
 
     public record CreateReservationRequest(
         string? CustomerId,
+        string? GuestEmail,
+        string? GuestFullName,
+        string? GuestPhone,
         int VehicleId,
         int PickupLocationId,
         int DropoffLocationId,

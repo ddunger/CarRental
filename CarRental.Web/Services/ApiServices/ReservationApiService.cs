@@ -1,10 +1,9 @@
 ﻿using CarRental.Web.Constants;
 using CarRental.Web.Dtos.Identity;
 using CarRental.Web.Dtos.Reservations;
-using CarRental.Web.Services.Manufacturers;
 using System.Net.Http.Json;
 
-namespace CarRental.Web.Services.Reservations
+namespace CarRental.Web.Services.ApiServices
 {
     public class ReservationApiService(HttpClient http)
     {
@@ -79,6 +78,30 @@ namespace CarRental.Web.Services.Reservations
             {
                 return (false, $"Request failed ({(int)response.StatusCode}).");
             }
+        }
+
+        public async Task<(bool Success, string? Error, ReservationResponse? Created)> CreateWithResponseAsync(
+            CreateReservationRequest request)
+        {
+            var response = await http.PostAsJsonAsync(
+                ApiEndpoints.Reservations.Create, request, JsonDefaults.Options);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    var error = await response.Content.ReadFromJsonAsync<ApiErrorResponse>();
+                    return (false, error?.Message ?? $"Request failed ({(int)response.StatusCode}).", null);
+                }
+                catch
+                {
+                    return (false, $"Request failed ({(int)response.StatusCode}).", null);
+                }
+            }
+
+            var wrapper = await response.Content
+                .ReadFromJsonAsync<ApiResponse<ReservationResponse>>(JsonDefaults.Options);
+            return (true, null, wrapper?.Data);
         }
     }
 }

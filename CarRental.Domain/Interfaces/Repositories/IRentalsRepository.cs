@@ -31,5 +31,10 @@ namespace CarRental.Domain.Interfaces.Repositories
 
         Task<RepositoryResult<IEnumerable<RentalEntity>>> GetOverdueRentalsAsync(
             DateTimeOffset asOfUtc, CancellationToken cancellationToken);
+        Task<RepositoryResult<RentalEntity?>> GetRentalByTrackingCodeAsync(
+            string trackingCode, CancellationToken cancellationToken);
+
+        Task<RepositoryResult<RentalEntity?>> GetRentalByReservationIdAsync(
+            int reservationId, CancellationToken cancellationToken);
     }
 }

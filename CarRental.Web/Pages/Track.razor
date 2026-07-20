@@ -1,0 +1,116 @@
+﻿@page "/track/{TrackingCode}"
+@inject TrackingApiService TrackingApi
+@inject ISnackbar Snackbar
+
+<PageTitle>@AppStrings.Track_Title — CarRental</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-8">
+    <MudText Typo="Typo.h4" Class="mb-4">@AppStrings.Track_Title</MudText>
+
+    @if (_loading)
+    {
+        <MudProgressLinear Indeterminate="true" />
+    }
+    else if (_info is null)
+    {
+        <MudAlert Severity="Severity.Warning">@AppStrings.Track_NotFound</MudAlert>
+    }
+    else
+    {
+        @if (_info.Reservation is not null)
+        {
+            var r = _info.Reservation;
+            <MudPaper Class="pa-4 mb-4" Elevation="2">
+                <div class="d-flex align-center mb-2">
+                    <MudText Typo="Typo.h6">@AppStrings.Track_Reservation #@r.Id</MudText>
+                    <MudSpacer />
+                    <MudChip T="string" Size="Size.Small" Color="@ReservationStatusColor(r.Status)">
+                        @r.Status.Display()
+                    </MudChip>
+                </div>
+                <MudText Typo="Typo.body2">@r.VehicleName (@r.RegistrationPlate)</MudText>
+                <MudText Typo="Typo.body2">
+                    @r.PickupLocationName, @r.PickupTimeUtc.LocalDateTime.ToString("g")
+                    → @r.DropoffLocationName, @r.ExpectedReturnTimeUtc.LocalDateTime.ToString("g")
+                </MudText>
+                <MudText Typo="Typo.body2" Class="mt-1">≈ @r.ExpectedCostEuro.ToString("F2") €</MudText>
+
+                @if (r.Status is ReservationStatus.Pending or ReservationStatus.Confirmed)
+                {
+                    <MudButton Class="mt-3" Variant="Variant.Outlined" Color="Color.Error"
+                               Size="Size.Small" OnClick="CancelAsync">
+                        @AppStrings.Track_Cancel
+                    </MudButton>
+                }
+            </MudPaper>
+        }
+
+        @if (_info.Rental is not null)
+        {
+            var rental = _info.Rental;
+            <MudPaper Class="pa-4" Elevation="2">
+                <div class="d-flex align-center mb-2">
+                    <MudText Typo="Typo.h6">@AppStrings.Track_Rental #@rental.Id</MudText>
+                    <MudSpacer />
+                    <MudChip T="string" Size="Size.Small" Color="@RentalStatusColor(rental.Status)">
+                        @rental.Status.Display()
+                    </MudChip>
+                </div>
+                <MudText Typo="Typo.body2">@rental.VehicleName (@rental.RegistrationPlate)</MudText>
+                <MudText Typo="Typo.body2">
+                    @rental.ActualPickupTimeUtc.LocalDateTime.ToString("g")
+                    → @(rental.ActualReturnTimeUtc?.LocalDateTime.ToString("g")
+                                            ?? rental.ExpectedReturnTimeUtc.LocalDateTime.ToString("g"))
+                </MudText>
+                <MudText Typo="Typo.body2" Class="mt-1">@rental.TotalCostEuro.ToString("F2") €</MudText>
+            </MudPaper>
+        }
+    }
+</MudContainer>
+
+@code {
+    [Parameter] public string TrackingCode { get; set; } = string.Empty;
+
+    private Dtos.Tracking.TrackingResponse? _info;
+    private bool _loading = true;
+
+    protected override async Task OnParametersSetAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        _loading = true;
+        _info = await TrackingApi.GetAsync(TrackingCode);
+        _loading = false;
+    }
+
+    private async Task CancelAsync()
+    {
+        var (success, error) = await TrackingApi.CancelAsync(TrackingCode);
+        if (success)
+        {
+            Snackbar.Add(AppStrings.Track_Cancelled, Severity.Success);
+            await LoadAsync();
+        }
+        else
+        {
+            Snackbar.Add(error ?? AppStrings.Common_OperationFailed, Severity.Error);
+        }
+    }
+
+    private static Color ReservationStatusColor(ReservationStatus s) => s switch
+    {
+        ReservationStatus.Pending => Color.Warning,
+        ReservationStatus.Confirmed => Color.Info,
+        ReservationStatus.Converted => Color.Success,
+        ReservationStatus.NoShow => Color.Error,
+        _ => Color.Default
+    };
+
+    private static Color RentalStatusColor(RentalStatus s) => s switch
+    {
+        RentalStatus.Active => Color.Info,
+        RentalStatus.Completed => Color.Success,
+        RentalStatus.Overdue => Color.Error,
+        _ => Color.Default
+    };
+}

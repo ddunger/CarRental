@@ -89,6 +89,12 @@
             public const string Return = "api/rentals/{0}/return";
         }
 
+        public static class Tracking
+        {
+            public const string Get = "api/tracking/{0}";
+            public const string Cancel = "api/tracking/{0}/cancel";
+        }
+
         public const string NotificationsHub = "/notifications";
     }
 }

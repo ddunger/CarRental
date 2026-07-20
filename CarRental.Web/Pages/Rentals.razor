@@ -1,0 +1,241 @@
+﻿@page "/rentals"
+@attribute [Authorize]
+@inject RentalApiService RentalApi
+@inject VehicleApiService VehicleApi
+@inject LocationApiService LocationApi
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+
+<PageTitle>@AppStrings.Rentals_Title — CarRental</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-6">
+    <div class="d-flex align-center mb-4">
+        <MudText Typo="Typo.h4">@AppStrings.Rentals_Title</MudText>
+        <MudSpacer />
+        <AuthorizeView Roles="Admin,Manager">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="OpenCreateDialogAsync">
+                @AppStrings.Rentals_Add
+            </MudButton>
+        </AuthorizeView>
+    </div>
+
+    @* --- Staff filter row --- *@
+    <AuthorizeView Roles="Admin,Manager">
+        <MudPaper Class="pa-4 mb-4" Elevation="1">
+            <MudGrid Spacing="2">
+                <MudItem xs="12" sm="4">
+                    <MudSelect T="RentalStatus?" @bind-Value="_filterStatus"
+                               Label="@AppStrings.Rentals_Filter_Status" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(s => s?.Display() ?? "")">
+                        @foreach (var s in Enum.GetValues<RentalStatus>())
+                        {
+                            <MudSelectItem T="RentalStatus?" Value="@((RentalStatus?)s)">@s.Display()</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" sm="4" Class="d-flex align-center" Style="gap:0.5rem;">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadAsync">@AppStrings.Common_Apply</MudButton>
+                    <MudButton Variant="Variant.Text" OnClick="ClearFiltersAsync">@AppStrings.Common_Clear</MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </AuthorizeView>
+
+    @if (_loading)
+    {
+        <MudProgressLinear Indeterminate="true" />
+    }
+    else if (_rentals.Count == 0)
+    {
+        <MudText Typo="Typo.body1" Color="Color.Secondary" Class="mt-4">@AppStrings.Rentals_NoData</MudText>
+    }
+    else
+    {
+        <MudTable Items="_rentals" Hover="true" Dense="true" Elevation="2" HorizontalScrollbar="true">
+            <HeaderContent>
+                <MudTh>#</MudTh>
+                <AuthorizeView Roles="Admin,Manager" Context="auth">
+                    <MudTh>@AppStrings.Rentals_Header_Customer</MudTh>
+                </AuthorizeView>
+                <MudTh>@AppStrings.Rentals_Header_Vehicle</MudTh>
+                <MudTh>@AppStrings.Rentals_Header_Pickup</MudTh>
+                <MudTh>@AppStrings.Rentals_Header_ExpectedReturn</MudTh>
+                <MudTh>@AppStrings.Rentals_Header_ActualReturn</MudTh>
+                <MudTh>@AppStrings.Rentals_Header_Cost</MudTh>
+                <MudTh>@AppStrings.Rentals_Header_Status</MudTh>
+                <MudTh Style="width:100px; text-align:right;">@AppStrings.Common_Header_Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="#">@context.Id</MudTd>
+                <AuthorizeView Roles="Admin,Manager" Context="auth">
+                    <MudTd DataLabel="@AppStrings.Rentals_Header_Customer" Style="white-space:nowrap;">
+                        @context.CustomerFullName
+                        @if (context.IsGuest)
+                        {
+                            <MudChip T="string" Size="Size.Small" Color="Color.Default" Class="ml-1">@AppStrings.Guest_Badge</MudChip>
+                        }
+                        <br />
+                        <small style="color:var(--mud-palette-text-secondary);">@context.CustomerEmail</small>
+                    </MudTd>
+                </AuthorizeView>
+                <MudTd DataLabel="@AppStrings.Rentals_Header_Vehicle" Style="white-space:nowrap;">
+                    @context.VehicleName (@context.RegistrationPlate)
+                </MudTd>
+                <MudTd DataLabel="@AppStrings.Rentals_Header_Pickup" Style="white-space:nowrap;">
+                    @context.ActualPickupTimeUtc.LocalDateTime.ToString("g")
+                </MudTd>
+                <MudTd DataLabel="@AppStrings.Rentals_Header_ExpectedReturn" Style="white-space:nowrap;">
+                    @context.ExpectedReturnTimeUtc.LocalDateTime.ToString("g")
+                </MudTd>
+                <MudTd DataLabel="@AppStrings.Rentals_Header_ActualReturn" Style="white-space:nowrap;">
+                    @(context.ActualReturnTimeUtc?.LocalDateTime.ToString("g") ?? "—")
+                </MudTd>
+                <MudTd DataLabel="@AppStrings.Rentals_Header_Cost">@context.TotalCostEuro.ToString("F2")</MudTd>
+                <MudTd DataLabel="@AppStrings.Rentals_Header_Status">
+                    <MudChip T="string" Size="Size.Small" Color="@StatusColor(context.Status)">
+                        @context.Status.Display()
+                    </MudChip>
+                </MudTd>
+                <MudTd Style="text-align:right;">
+                    <AuthorizeView Roles="Admin,Manager" Context="auth">
+                        @if (context.Status is RentalStatus.Active or RentalStatus.Overdue)
+                        {
+                            <MudTooltip Text="@AppStrings.Rentals_Action_Return">
+                                <MudIconButton Icon="@Icons.Material.Filled.AssignmentReturn" Size="Size.Small"
+                                               Color="Color.Success"
+                                               OnClick="() => OpenReturnDialogAsync(context)" />
+                            </MudTooltip>
+                        }
+                    </AuthorizeView>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</MudContainer>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
+    private List<RentalResponse> _rentals = [];
+    private List<Dtos.Vehicles.VehicleResponse> _vehicles = [];
+    private List<Dtos.Locations.LocationResponse> _locations = [];
+    private bool _loading = true;
+    private bool _isStaff;
+
+    private RentalStatus? _filterStatus;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthState is not null)
+        {
+            var state = await AuthState;
+            var role = state.User.GetRole();
+            _isStaff = role is "Admin" or "Manager";
+        }
+
+        if (_isStaff)
+        {
+            _vehicles = await VehicleApi.SearchAsync(new Dtos.Vehicles.GetVehiclesRequest(
+                null, null, null, null, null, null, null, null, null, null, null));
+            _locations = await LocationApi.GetAllAsync();
+        }
+
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _loading = true;
+
+        _rentals = _isStaff
+            ? await RentalApi.GetAllAsync(_filterStatus)
+            : await RentalApi.GetMyAsync();
+
+        _loading = false;
+    }
+
+    private async Task ClearFiltersAsync()
+    {
+        _filterStatus = null;
+        await LoadAsync();
+    }
+
+    private static Color StatusColor(RentalStatus status) => status switch
+    {
+        RentalStatus.Active => Color.Info,
+        RentalStatus.Completed => Color.Success,
+        RentalStatus.Overdue => Color.Error,
+        _ => Color.Default
+    };
+
+    private async Task OpenCreateDialogAsync()
+    {
+        var parameters = new DialogParameters<RentalDialog>
+        {
+            { d => d.Vehicles, _vehicles },
+            { d => d.Locations, _locations.Where(l => l.IsActive).ToList() }
+        };
+
+        var dialog = await DialogService.ShowAsync<RentalDialog>(AppStrings.Rentals_Add, parameters,
+            new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true });
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: CreateRentalRequest request })
+        {
+            var (success, error, created) = await RentalApi.CreateWithResponseAsync(request);
+            if (success && created is not null)
+            {
+                Snackbar.Add(AppStrings.Rentals_Created, Severity.Success);
+
+                if (created.IsGuest)
+                {
+                    await DialogService.ShowMessageBoxAsync(
+                        AppStrings.Track_YourCode,
+                        $"{Navigation.BaseUri}track/{created.TrackingCode}\n\n{AppStrings.Track_CodeHint}",
+                        yesText: "OK");
+                }
+
+                await LoadAsync();
+            }
+            else
+            {
+                Snackbar.Add(error ?? AppStrings.Common_OperationFailed, Severity.Error);
+            }
+        }
+    }
+
+    private async Task OpenReturnDialogAsync(RentalResponse rental)
+    {
+        var parameters = new DialogParameters<ReturnRentalDialog>
+        {
+            { d => d.Rental, rental },
+            { d => d.Locations, _locations.Where(l => l.IsActive).ToList() }
+        };
+
+        var dialog = await DialogService.ShowAsync<ReturnRentalDialog>(AppStrings.Rentals_Return_Title, parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: ReturnRentalRequest request })
+        {
+            var (success, error) = await RentalApi.ReturnAsync(rental.Id, request);
+            await HandleResultAsync(success, error, AppStrings.Rentals_Returned);
+        }
+    }
+
+    private async Task HandleResultAsync(bool success, string? error, string successMessage)
+    {
+        if (success)
+        {
+            Snackbar.Add(successMessage, Severity.Success);
+            await LoadAsync();
+        }
+        else
+        {
+            Snackbar.Add(error ?? AppStrings.Common_OperationFailed, Severity.Error);
+        }
+    }
+}

@@ -62,8 +62,12 @@ namespace CarRental.Application.Rentals.Queries
                     r.Id,
                     r.ReservationId,
                     r.CustomerId,
-                    r.Customer?.Email ?? string.Empty,
-                    $"{r.Customer?.FirstName} {r.Customer?.LastName}".Trim(),
+                    r.CustomerId is not null ? r.Customer?.Email ?? string.Empty : r.GuestEmail ?? string.Empty,
+                    r.CustomerId is not null
+                        ? $"{r.Customer?.FirstName} {r.Customer?.LastName}".Trim()
+                        : r.GuestFullName ?? string.Empty,
+                    r.CustomerId is null,
+                    r.TrackingCode,
                     r.VehicleId,
                     $"{r.Vehicle?.Manufacturer?.Name} {r.Vehicle?.VehicleModel}".Trim(),
                     r.Vehicle?.RegistrationPlate ?? string.Empty,

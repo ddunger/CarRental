@@ -158,5 +158,48 @@ namespace CarRental.Infrastructure.Repositories
                 return RepositoryResult<IEnumerable<RentalEntity>>.Failure("Failed to fetch overdue rentals.", ex);
             }
         }
+
+        public async Task<RepositoryResult<RentalEntity?>> GetRentalByTrackingCodeAsync(
+    string trackingCode, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var rental = await context.Rentals
+                    .Include(r => r.Customer)
+                    .Include(r => r.Vehicle)
+                        .ThenInclude(v => v.Manufacturer)
+                    .Include(r => r.PickupLocation)
+                    .Include(r => r.DropoffLocation)
+                    .FirstOrDefaultAsync(r => r.TrackingCode == trackingCode, cancellationToken);
+
+                return RepositoryResult<RentalEntity?>.Success(rental);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error fetching rental by tracking code.");
+                return RepositoryResult<RentalEntity?>.Failure("Failed to fetch rental.", ex);
+            }
+        }
+
+        public async Task<RepositoryResult<RentalEntity?>> GetRentalByReservationIdAsync(
+            int reservationId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var rental = await context.Rentals
+                    .Include(r => r.Vehicle)
+                        .ThenInclude(v => v.Manufacturer)
+                    .Include(r => r.PickupLocation)
+                    .Include(r => r.DropoffLocation)
+                    .FirstOrDefaultAsync(r => r.ReservationId == reservationId, cancellationToken);
+
+                return RepositoryResult<RentalEntity?>.Success(rental);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error fetching rental for reservation {ReservationId}.", reservationId);
+                return RepositoryResult<RentalEntity?>.Failure("Failed to fetch rental.", ex);
+            }
+        }
     }
 }

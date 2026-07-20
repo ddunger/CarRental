@@ -1,12 +1,8 @@
 using CarRental.Web;
+using CarRental.Web.Services.ApiServices;
 using CarRental.Web.Services.Auth;
 using CarRental.Web.Services.Http;
-using CarRental.Web.Services.Identity;
-using CarRental.Web.Services.Locations; 
-using CarRental.Web.Services.Manufacturers;
 using CarRental.Web.Services.Notifications;
-using CarRental.Web.Services.Reservations;
-using CarRental.Web.Services.Vehicles;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -39,6 +35,8 @@ builder.Services.AddScoped<ManufacturerApiService>();
 builder.Services.AddScoped<VehicleApiService>();
 builder.Services.AddScoped<LocationApiService>();
 builder.Services.AddScoped<ReservationApiService>();
+builder.Services.AddScoped<RentalApiService>(); 
+builder.Services.AddScoped<TrackingApiService>();
 
 
 builder.Services.AddScoped(sp =>

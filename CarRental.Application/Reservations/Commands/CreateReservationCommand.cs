@@ -3,6 +3,7 @@ using CarRental.Application.Reservations.Responses;
 using CarRental.Domain.Constants;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Enums;
+using CarRental.Domain.Helpers;
 using CarRental.Domain.Interfaces.Application;
 using CarRental.Domain.Interfaces.Repositories;
 using CarRental.Domain.Results;
@@ -29,21 +30,40 @@ namespace CarRental.Application.Reservations.Commands
             CreateReservationCommand command, CancellationToken cancellationToken)
         {
             var request = command.Request;
-
             var currentUser = userContext.GetCurrentUser();
-            if (currentUser is null)
-                return ApplicationResult<ReservationResponse>.Failure("Unauthorized", ResultError.Unauthorized);
 
-            // --- Resolve the customer ---
-            var isStaff = currentUser.IsInRole(Roles.Admin) || currentUser.IsInRole(Roles.Manager);
-            var customerId = isStaff && !string.IsNullOrWhiteSpace(request.CustomerId)
-                ? request.CustomerId
-                : currentUser.Id;
+            // --- Resolve the customer: registered account XOR guest data ---
+            var isStaff = currentUser is not null &&
+                (currentUser.IsInRole(Roles.Admin) || currentUser.IsInRole(Roles.Manager));
 
-            var customer = await userManager.FindByIdAsync(customerId);
-            if (customer is null || !customer.IsActive)
-                return ApplicationResult<ReservationResponse>.Failure(
-                    "Customer not found.", ResultError.Validation);
+            string? customerId = null;
+            UserEntity? customer = null;
+
+            var hasGuestData = !string.IsNullOrWhiteSpace(request.GuestEmail);
+
+            if (hasGuestData)
+            {
+                if (string.IsNullOrWhiteSpace(request.GuestFullName))
+                    return ApplicationResult<ReservationResponse>.Failure(
+                        "Guest name is required for guest reservations.", ResultError.Validation);
+                // Guest path: no account involved, even if the caller is authenticated.
+            }
+            else
+            {
+                // Registered path — requires an authenticated caller
+                if (currentUser is null)
+                    return ApplicationResult<ReservationResponse>.Failure(
+                        "Unauthorized", ResultError.Unauthorized);
+
+                customerId = isStaff && !string.IsNullOrWhiteSpace(request.CustomerId)
+                    ? request.CustomerId
+                    : currentUser.Id;
+
+                customer = await userManager.FindByIdAsync(customerId);
+                if (customer is null || !customer.IsActive)
+                    return ApplicationResult<ReservationResponse>.Failure(
+                        "Customer not found.", ResultError.Validation);
+            }
 
             // --- Validate times ---
             if (request.PickupTimeUtc >= request.ExpectedReturnTimeUtc)
@@ -128,6 +148,10 @@ namespace CarRental.Application.Reservations.Commands
             var reservation = new ReservationEntity
             {
                 CustomerId = customerId,
+                GuestEmail = hasGuestData ? request.GuestEmail!.Trim() : null,
+                GuestFullName = hasGuestData ? request.GuestFullName!.Trim() : null,
+                GuestPhone = hasGuestData ? request.GuestPhone?.Trim() : null,
+                TrackingCode = TrackingCodeGenerator.Generate(),
                 VehicleId = request.VehicleId,
                 PickupLocationId = request.PickupLocationId,
                 DropoffLocationId = request.DropoffLocationId,
@@ -144,14 +168,16 @@ namespace CarRental.Application.Reservations.Commands
                     "Failed to create reservation.", ResultError.Internal);
 
             var created = createdResult.Value;
-            logger.LogInformation("Reservation {ReservationId} created for vehicle {VehicleId} by user {UserId}.",
-                created.Id, created.VehicleId, currentUser.Id);
+            logger.LogInformation("Reservation {ReservationId} created for vehicle {VehicleId} by {Actor}.",
+                created.Id, created.VehicleId, currentUser?.Id ?? "guest");
 
             return ApplicationResult<ReservationResponse>.Success(new ReservationResponse(
                 created.Id,
                 created.CustomerId,
-                customer.Email ?? string.Empty,
-                $"{customer.FirstName} {customer.LastName}".Trim(),
+                hasGuestData ? created.GuestEmail! : customer!.Email ?? string.Empty,
+                hasGuestData ? created.GuestFullName! : $"{customer!.FirstName} {customer.LastName}".Trim(),
+                hasGuestData,
+                created.TrackingCode,
                 created.VehicleId,
                 $"{vehicle.Manufacturer?.Name} {vehicle.VehicleModel}".Trim(),
                 vehicle.RegistrationPlate,

@@ -306,6 +306,24 @@
   <data name="Fuel_Z" xml:space="preserve">
     <value>Petrol, no A/C</value>
   </data>
+  <data name="Guest_Badge" xml:space="preserve">
+    <value>Guest</value>
+  </data>
+  <data name="Home_NoVehicles" xml:space="preserve">
+    <value>No vehicles match your filters.</value>
+  </data>
+  <data name="Home_PerDay" xml:space="preserve">
+    <value>day</value>
+  </data>
+  <data name="Home_Reserve" xml:space="preserve">
+    <value>Reserve</value>
+  </data>
+  <data name="Home_Subtitle" xml:space="preserve">
+    <value>Browse and reserve — no account needed.</value>
+  </data>
+  <data name="Home_Title" xml:space="preserve">
+    <value>Find your car</value>
+  </data>
   <data name="Locations_Add" xml:space="preserve">
     <value>Add location</value>
   </data>
@@ -426,6 +444,93 @@
   <data name="Nav_Vehicles" xml:space="preserve">
     <value>Vehicles</value>
   </data>
+  <data name="RentalStatus_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="RentalStatus_Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="RentalStatus_Overdue" xml:space="preserve">
+    <value>Overdue</value>
+  </data>
+  <data name="Rentals_Action_Return" xml:space="preserve">
+    <value>Return vehicle</value>
+  </data>
+  <data name="Rentals_Add" xml:space="preserve">
+    <value>New rental</value>
+  </data>
+  <data name="Rentals_Created" xml:space="preserve">
+    <value>Rental created.</value>
+  </data>
+  <data name="Rentals_Field_Customer" xml:space="preserve">
+    <value>Customer ID</value>
+  </data>
+  <data name="Rentals_Field_DropoffLocation" xml:space="preserve">
+    <value>Dropoff location</value>
+  </data>
+  <data name="Rentals_Field_ExpectedReturn" xml:space="preserve">
+    <value>Expected return</value>
+  </data>
+  <data name="Rentals_Field_PickupLocation" xml:space="preserve">
+    <value>Pickup location</value>
+  </data>
+  <data name="Rentals_Field_Reservation" xml:space="preserve">
+    <value>Confirmed reservation ID</value>
+  </data>
+  <data name="Rentals_Field_Vehicle" xml:space="preserve">
+    <value>Vehicle</value>
+  </data>
+  <data name="Rentals_Filter_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Rentals_Header_ActualReturn" xml:space="preserve">
+    <value>Returned</value>
+  </data>
+  <data name="Rentals_Header_Cost" xml:space="preserve">
+    <value>Cost (€)</value>
+  </data>
+  <data name="Rentals_Header_Customer" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="Rentals_Header_ExpectedReturn" xml:space="preserve">
+    <value>Expected return</value>
+  </data>
+  <data name="Rentals_Header_Pickup" xml:space="preserve">
+    <value>Picked up</value>
+  </data>
+  <data name="Rentals_Header_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Rentals_Header_Vehicle" xml:space="preserve">
+    <value>Vehicle</value>
+  </data>
+  <data name="Rentals_Mode_FromReservation" xml:space="preserve">
+    <value>From reservation</value>
+  </data>
+  <data name="Rentals_Mode_RegisteredCustomer" xml:space="preserve">
+    <value>Registered customer</value>
+  </data>
+  <data name="Rentals_Mode_WalkIn" xml:space="preserve">
+    <value>Walk-in</value>
+  </data>
+  <data name="Rentals_NoData" xml:space="preserve">
+    <value>No rentals found.</value>
+  </data>
+  <data name="Rentals_Returned" xml:space="preserve">
+    <value>Rental completed.</value>
+  </data>
+  <data name="Rentals_Return_Confirm" xml:space="preserve">
+    <value>Complete return</value>
+  </data>
+  <data name="Rentals_Return_DifferentDropoff" xml:space="preserve">
+    <value>Different dropoff location (optional)</value>
+  </data>
+  <data name="Rentals_Return_Title" xml:space="preserve">
+    <value>Return vehicle</value>
+  </data>
+  <data name="Rentals_Title" xml:space="preserve">
+    <value>Rentals</value>
+  </data>
   <data name="Reservations_Action_Cancel" xml:space="preserve">
     <value>Cancel reservation</value>
   </data>
@@ -455,6 +560,15 @@
   </data>
   <data name="Reservations_Field_DropoffLocation" xml:space="preserve">
     <value>Dropoff location</value>
+  </data>
+  <data name="Reservations_Field_GuestEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Reservations_Field_GuestName" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+  <data name="Reservations_Field_GuestPhone" xml:space="preserve">
+    <value>Phone (optional)</value>
   </data>
   <data name="Reservations_Field_PickupLocation" xml:space="preserve">
     <value>Pickup location</value>
@@ -498,6 +612,12 @@
   <data name="Reservations_MarkedNoShow" xml:space="preserve">
     <value>Reservation marked as no-show.</value>
   </data>
+  <data name="Reservations_Mode_Account" xml:space="preserve">
+    <value>On my account</value>
+  </data>
+  <data name="Reservations_Mode_Guest" xml:space="preserve">
+    <value>As guest</value>
+  </data>
   <data name="Reservations_NoData" xml:space="preserve">
     <value>No reservations found.</value>
   </data>
@@ -521,6 +641,30 @@
   </data>
   <data name="Status_Pending" xml:space="preserve">
     <value>Pending</value>
+  </data>
+  <data name="Track_Cancel" xml:space="preserve">
+    <value>Cancel reservation</value>
+  </data>
+  <data name="Track_Cancelled" xml:space="preserve">
+    <value>Reservation cancelled.</value>
+  </data>
+  <data name="Track_CodeHint" xml:space="preserve">
+    <value>Save this link — it is the only way to access your reservation.</value>
+  </data>
+  <data name="Track_NotFound" xml:space="preserve">
+    <value>Nothing found for this tracking code.</value>
+  </data>
+  <data name="Track_Rental" xml:space="preserve">
+    <value>Rental</value>
+  </data>
+  <data name="Track_Reservation" xml:space="preserve">
+    <value>Reservation</value>
+  </data>
+  <data name="Track_Title" xml:space="preserve">
+    <value>Track your reservation</value>
+  </data>
+  <data name="Track_YourCode" xml:space="preserve">
+    <value>Your tracking link</value>
   </data>
   <data name="Transmission_A" xml:space="preserve">
     <value>Automatic</value>

@@ -64,7 +64,7 @@ namespace CarRental.API.Controllers
         /// Expected cost is calculated server-side from the vehicle's daily price.
         /// </remarks>
         [HttpPost]
-        [Authorize(Roles = "Admin, Manager, Customer")]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateReservationAsync([FromBody] CreateReservationRequest request)
         {
             var result = await sender.Send(new CreateReservationCommand(request));

@@ -26,6 +26,7 @@ namespace CarRental.Web.Extensions
         public static string Display(this DayOfWeek value) =>
             Resolve($"Day_{value}", value.ToString());
         public static string Display(this Dtos.Reservations.ReservationStatus value) =>
-            Resolve($"Status_{value}", value.ToString());
+            Resolve($"Status_{value}", value.ToString()); public static string Display(this Dtos.Rentals.RentalStatus value) =>
+            Resolve($"RentalStatus_{value}", value.ToString());
     }
 }

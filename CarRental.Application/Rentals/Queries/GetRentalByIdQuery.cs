@@ -39,23 +39,27 @@ namespace CarRental.Application.Rentals.Queries
             }
 
             return ApplicationResult<RentalResponse>.Success(new RentalResponse(
-                rental.Id,
-                rental.ReservationId,
-                rental.CustomerId,
-                rental.Customer?.Email ?? string.Empty,
-                $"{rental.Customer?.FirstName} {rental.Customer?.LastName}".Trim(),
-                rental.VehicleId,
-                $"{rental.Vehicle?.Manufacturer?.Name} {rental.Vehicle?.VehicleModel}".Trim(),
-                rental.Vehicle?.RegistrationPlate ?? string.Empty,
-                rental.PickupLocationId,
-                rental.PickupLocation?.Name ?? string.Empty,
-                rental.DropoffLocationId,
-                rental.DropoffLocation?.Name ?? string.Empty,
-                rental.ActualPickupTimeUtc,
-                rental.ExpectedReturnTimeUtc,
-                rental.ActualReturnTimeUtc,
-                rental.TotalCostEuro,
-                rental.Status));
+               rental.Id,
+               rental.ReservationId,
+               rental.CustomerId,
+               rental.CustomerId is not null ? rental.Customer?.Email ?? string.Empty : rental.GuestEmail ?? string.Empty,
+               rental.CustomerId is not null
+                   ? $"{rental.Customer?.FirstName} {rental.Customer?.LastName}".Trim()
+                   : rental.GuestFullName ?? string.Empty,
+               rental.CustomerId is null,
+               rental.TrackingCode,
+               rental.VehicleId,
+               $"{rental.Vehicle?.Manufacturer?.Name} {rental.Vehicle?.VehicleModel}".Trim(),
+               rental.Vehicle?.RegistrationPlate ?? string.Empty,
+               rental.PickupLocationId,
+               rental.PickupLocation?.Name ?? string.Empty,
+               rental.DropoffLocationId,
+               rental.DropoffLocation?.Name ?? string.Empty,
+               rental.ActualPickupTimeUtc,
+               rental.ExpectedReturnTimeUtc,
+               rental.ActualReturnTimeUtc,
+               rental.TotalCostEuro,
+               rental.Status));
         }
     }
 }

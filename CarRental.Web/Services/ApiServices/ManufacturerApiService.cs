@@ -3,7 +3,7 @@ using CarRental.Web.Dtos.Identity;
 using CarRental.Web.Dtos.Manufacturers;
 using System.Net.Http.Json;
 
-namespace CarRental.Web.Services.Manufacturers
+namespace CarRental.Web.Services.ApiServices
 {
     public class ManufacturerApiService(HttpClient http)
     {

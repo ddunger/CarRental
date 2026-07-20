@@ -11,7 +11,8 @@ namespace CarRental.Infrastructure.DbContext.Configurations
             builder.HasOne(r => r.Customer)
                    .WithMany()
                    .HasForeignKey(r => r.CustomerId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.Restrict)
+                   .IsRequired(false);
 
             builder.HasOne(r => r.Vehicle)
                    .WithMany()
@@ -36,6 +37,15 @@ namespace CarRental.Infrastructure.DbContext.Configurations
 
             // Customer-scoped listing ("my reservations")
             builder.HasIndex(r => r.CustomerId);
+
+            // Anonymous tracking: lookup is by code, must be unique
+            builder.HasIndex(r => r.TrackingCode)
+                   .IsUnique();
+
+            // Exactly one customer identity: registered XOR guest
+            builder.ToTable(t => t.HasCheckConstraint(
+                "CK_Reservations_CustomerOrGuest",
+                "(\"CustomerId\" IS NOT NULL AND \"GuestEmail\" IS NULL) OR (\"CustomerId\" IS NULL AND \"GuestEmail\" IS NOT NULL)"));
         }
     }
 }

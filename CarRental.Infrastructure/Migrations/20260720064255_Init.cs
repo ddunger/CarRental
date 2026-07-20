@@ -300,7 +300,7 @@ namespace CarRental.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CustomerId = table.Column<string>(type: "text", nullable: false),
+                    CustomerId = table.Column<string>(type: "text", nullable: true),
                     VehicleId = table.Column<int>(type: "integer", nullable: false),
                     PickupLocationId = table.Column<int>(type: "integer", nullable: false),
                     DropoffLocationId = table.Column<int>(type: "integer", nullable: false),
@@ -309,11 +309,16 @@ namespace CarRental.Infrastructure.Migrations
                     ExpectedCostEuro = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     CreatedAtUtc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    CancelledAtUtc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                    CancelledAtUtc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    GuestEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    GuestFullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    GuestPhone = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
+                    TrackingCode = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.CheckConstraint("CK_Reservations_CustomerOrGuest", "(\"CustomerId\" IS NOT NULL AND \"GuestEmail\" IS NULL) OR (\"CustomerId\" IS NULL AND \"GuestEmail\" IS NOT NULL)");
                     table.ForeignKey(
                         name: "FK_Reservations_AspNetUsers_CustomerId",
                         column: x => x.CustomerId,
@@ -347,7 +352,7 @@ namespace CarRental.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ReservationId = table.Column<int>(type: "integer", nullable: true),
-                    CustomerId = table.Column<string>(type: "text", nullable: false),
+                    CustomerId = table.Column<string>(type: "text", nullable: true),
                     VehicleId = table.Column<int>(type: "integer", nullable: false),
                     PickupLocationId = table.Column<int>(type: "integer", nullable: false),
                     DropoffLocationId = table.Column<int>(type: "integer", nullable: false),
@@ -355,11 +360,16 @@ namespace CarRental.Infrastructure.Migrations
                     ExpectedReturnTimeUtc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ActualReturnTimeUtc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     TotalCostEuro = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false)
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    GuestEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    GuestFullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    GuestPhone = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
+                    TrackingCode = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Rentals", x => x.Id);
+                    table.CheckConstraint("CK_Rentals_CustomerOrGuest", "(\"CustomerId\" IS NOT NULL AND \"GuestEmail\" IS NULL) OR (\"CustomerId\" IS NULL AND \"GuestEmail\" IS NOT NULL)");
                     table.ForeignKey(
                         name: "FK_Rentals_AspNetUsers_CustomerId",
                         column: x => x.CustomerId,
@@ -474,6 +484,12 @@ namespace CarRental.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Rentals_TrackingCode",
+                table: "Rentals",
+                column: "TrackingCode",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Rentals_VehicleId_Status",
                 table: "Rentals",
                 columns: new[] { "VehicleId", "Status" });
@@ -492,6 +508,12 @@ namespace CarRental.Infrastructure.Migrations
                 name: "IX_Reservations_PickupLocationId",
                 table: "Reservations",
                 column: "PickupLocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_TrackingCode",
+                table: "Reservations",
+                column: "TrackingCode",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_VehicleId_Status",

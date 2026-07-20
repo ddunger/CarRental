@@ -32,5 +32,8 @@ namespace CarRental.Domain.Interfaces.Repositories
             DateTimeOffset expectedReturnTimeUtc,
             int? excludeReservationId,
             CancellationToken cancellationToken);
+
+        Task<RepositoryResult<ReservationEntity?>> GetReservationByTrackingCodeAsync(
+            string trackingCode, CancellationToken cancellationToken);
     }
 }

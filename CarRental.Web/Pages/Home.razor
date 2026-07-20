@@ -1,7 +1,220 @@
 ﻿@page "/"
-@attribute [Authorize]
+@inject VehicleApiService VehicleApi
+@inject ReservationApiService ReservationApi
+@inject ManufacturerApiService ManufacturerApi
+@inject LocationApiService LocationApi
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
 
-<PageTitle>Home</PageTitle>
+<PageTitle>CarRental</PageTitle>
 
-<h1>Home page</h1>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-6">
+    <MudText Typo="Typo.h4" Class="mb-1">@AppStrings.Home_Title</MudText>
+    <MudText Typo="Typo.body1" Color="Color.Secondary" Class="mb-4">@AppStrings.Home_Subtitle</MudText>
 
+    <MudGrid Spacing="3">
+
+        @* ---- Filter sidebar (subset: the customer-relevant filters) ---- *@
+        <MudItem xs="12" md="3" lg="2">
+            <MudPaper Class="pa-4" Elevation="1">
+                <div class="d-flex align-center mb-3">
+                    <MudText Typo="Typo.subtitle1">@AppStrings.Vehicles_Filters</MudText>
+                    <MudSpacer />
+                    <MudIconButton Icon="@Icons.Material.Filled.FilterAltOff" Size="Size.Small"
+                                   OnClick="ClearFiltersAsync" />
+                </div>
+
+                <MudStack Spacing="3">
+                    <MudSelect T="int" MultiSelection="true" @bind-SelectedValues="_filterManufacturerIds"
+                               Label="@AppStrings.Vehicles_Filter_Manufacturers" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(id => _manufacturers.FirstOrDefault(m => m.Id == id)?.Name ?? id.ToString())">
+                        @foreach (var m in _manufacturers)
+                        {
+                            <MudSelectItem T="int" Value="@m.Id">@m.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="AcrissVehicleCategory" MultiSelection="true" @bind-SelectedValues="_filterCategories"
+                               Label="@AppStrings.Vehicles_Field_Category" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(v => v.Display())">
+                        @foreach (var v in Enum.GetValues<AcrissVehicleCategory>())
+                        {
+                            <MudSelectItem T="AcrissVehicleCategory" Value="@v">@v.Display()</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="AcrissVehicleTransmission" MultiSelection="true" @bind-SelectedValues="_filterTransmissions"
+                               Label="@AppStrings.Vehicles_Field_Transmission" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(v => v.Display())">
+                        @foreach (var v in Enum.GetValues<AcrissVehicleTransmission>())
+                        {
+                            <MudSelectItem T="AcrissVehicleTransmission" Value="@v">@v.Display()</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="AcrissVehicleFuel" MultiSelection="true" @bind-SelectedValues="_filterFuels"
+                               Label="@AppStrings.Vehicles_Field_Fuel" Dense="true" Variant="Variant.Outlined" Clearable="true"
+                               ToStringFunc="@(v => v.Display())">
+                        @foreach (var v in Enum.GetValues<AcrissVehicleFuel>())
+                        {
+                            <MudSelectItem T="AcrissVehicleFuel" Value="@v">@v.Display()</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudNumericField T="decimal?" @bind-Value="_filterPriceTo" Label="@AppStrings.Vehicles_Filter_PriceTo"
+                                     Dense="true" Variant="Variant.Outlined" Min="0" />
+
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadAsync" FullWidth="true">
+                        @AppStrings.Common_Apply
+                    </MudButton>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+
+        @* ---- Vehicle cards ---- *@
+        <MudItem xs="12" md="9" lg="10">
+            @if (_loading)
+            {
+                <MudProgressLinear Indeterminate="true" />
+            }
+            else if (_vehicles.Count == 0)
+            {
+                <MudText Typo="Typo.body1" Color="Color.Secondary">@AppStrings.Home_NoVehicles</MudText>
+            }
+            else
+            {
+                <MudGrid Spacing="3">
+                    @foreach (var v in _vehicles)
+                    {
+                        <MudItem xs="12" sm="6" lg="4">
+                            <MudCard Elevation="2">
+                                <MudCardContent>
+                                    <MudText Typo="Typo.h6">@v.ManufacturerName @v.VehicleModel</MudText>
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-2">
+                                        @v.Category.Display() · @v.Type.Display()
+                                    </MudText>
+                                    <MudStack Row="true" Spacing="1" Class="mb-2" Wrap="Wrap.Wrap">
+                                        <MudChip T="string" Size="Size.Small">@v.Transmission.Display()</MudChip>
+                                        <MudChip T="string" Size="Size.Small">@v.Fuel.Display()</MudChip>
+                                        <MudChip T="string" Size="Size.Small">@v.ManufacturingYear</MudChip>
+                                        <MudChip T="string" Size="Size.Small">@v.EnginePowerInKw kW</MudChip>
+                                    </MudStack>
+                                    <MudText Typo="Typo.h6" Color="Color.Primary">
+                                        @v.PricePerDayInEuro.ToString("F2") € <small>/ @AppStrings.Home_PerDay</small>
+                                    </MudText>
+                                </MudCardContent>
+                                <MudCardActions>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+                                               StartIcon="@Icons.Material.Filled.EventAvailable"
+                                               OnClick="() => OpenReserveDialogAsync(v)">
+                                        @AppStrings.Home_Reserve
+                                    </MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        </MudItem>
+                    }
+                </MudGrid>
+            }
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
+    private List<VehicleResponse> _vehicles = [];
+    private List<Dtos.Manufacturers.ManufacturerResponse> _manufacturers = [];
+    private List<Dtos.Locations.LocationResponse> _locations = [];
+    private bool _loading = true;
+    private bool _isAuthenticated;
+    private bool _isStaff;
+
+    private IReadOnlyCollection<int> _filterManufacturerIds = [];
+    private IReadOnlyCollection<AcrissVehicleCategory> _filterCategories = [];
+    private IReadOnlyCollection<AcrissVehicleTransmission> _filterTransmissions = [];
+    private IReadOnlyCollection<AcrissVehicleFuel> _filterFuels = [];
+    private decimal? _filterPriceTo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthState is not null)
+        {
+            var state = await AuthState;
+            _isAuthenticated = state.User.Identity?.IsAuthenticated == true;
+            var role = state.User.GetRole();
+            _isStaff = role is "Admin" or "Manager";
+        }
+
+        _manufacturers = await ManufacturerApi.GetAllAsync();
+        _locations = await LocationApi.GetAllAsync();
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _loading = true;
+
+        var filter = new GetVehiclesRequest(
+            ManufacturerIds: _filterManufacturerIds.Any() ? _filterManufacturerIds.ToList() : null,
+            YearFrom: null, YearTo: null,
+            PriceFrom: null, PriceTo: _filterPriceTo,
+            MaxKilometers: null,
+            Colors: null,
+            Categories: _filterCategories.Any() ? _filterCategories.ToList() : null,
+            Types: null,
+            Transmissions: _filterTransmissions.Any() ? _filterTransmissions.ToList() : null,
+            Fuels: _filterFuels.Any() ? _filterFuels.ToList() : null);
+
+        _vehicles = await VehicleApi.SearchAsync(filter);
+        _loading = false;
+    }
+
+    private async Task ClearFiltersAsync()
+    {
+        _filterManufacturerIds = [];
+        _filterCategories = [];
+        _filterTransmissions = [];
+        _filterFuels = [];
+        _filterPriceTo = null;
+        await LoadAsync();
+    }
+
+    private async Task OpenReserveDialogAsync(VehicleResponse vehicle)
+    {
+        var parameters = new DialogParameters<ReservationDialog>
+        {
+            { d => d.Vehicles, _vehicles },
+            { d => d.Locations, _locations.Where(l => l.IsActive).ToList() },
+            { d => d.IsStaff, _isStaff },
+            { d => d.IsAuthenticated, _isAuthenticated },
+            { d => d.PreselectedVehicleId, vehicle.Id }
+        };
+
+        var dialog = await DialogService.ShowAsync<ReservationDialog>(AppStrings.Reservations_Add, parameters,
+            new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true });
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: CreateReservationRequest request })
+        {
+            var (success, error, created) = await ReservationApi.CreateWithResponseAsync(request);
+            if (success && created is not null)
+            {
+                Snackbar.Add(AppStrings.Reservations_Created, Severity.Success);
+
+                if (created.IsGuest)
+                {
+                    await DialogService.ShowMessageBoxAsync(
+                        AppStrings.Track_YourCode,
+                        $"{Navigation.BaseUri}track/{created.TrackingCode}\n\n{AppStrings.Track_CodeHint}",
+                        yesText: "OK");
+                }
+            }
+            else
+            {
+                Snackbar.Add(error ?? AppStrings.Common_OperationFailed, Severity.Error);
+            }
+        }
+    }
+}

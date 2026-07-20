@@ -1,0 +1,166 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudButtonGroup Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true">
+                <MudButton Variant="@(_fromReservation ? Variant.Filled : Variant.Outlined)"
+                           OnClick="() => _fromReservation = true">
+                    @AppStrings.Rentals_Mode_FromReservation
+                </MudButton>
+                <MudButton Variant="@(!_fromReservation ? Variant.Filled : Variant.Outlined)"
+                           OnClick="() => _fromReservation = false">
+                    @AppStrings.Rentals_Mode_WalkIn
+                </MudButton>
+            </MudButtonGroup>
+
+            @if (_fromReservation)
+            {
+                <MudNumericField T="int?" @bind-Value="_reservationId" Label="@AppStrings.Rentals_Field_Reservation"
+                                 Variant="Variant.Outlined" Min="1" />
+            }
+            else
+            {
+                <MudButtonGroup Variant="Variant.Outlined" Color="Color.Secondary" FullWidth="true">
+                    <MudButton Variant="@(_asGuest ? Variant.Filled : Variant.Outlined)"
+                               OnClick="() => _asGuest = true">
+                        @AppStrings.Reservations_Mode_Guest
+                    </MudButton>
+                    <MudButton Variant="@(!_asGuest ? Variant.Filled : Variant.Outlined)"
+                               OnClick="() => _asGuest = false">
+                        @AppStrings.Rentals_Mode_RegisteredCustomer
+                    </MudButton>
+                </MudButtonGroup>
+
+                @if (_asGuest)
+                {
+                    <MudTextField @bind-Value="_guestName" Label="@AppStrings.Reservations_Field_GuestName"
+                                  Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="_guestEmail" Label="@AppStrings.Reservations_Field_GuestEmail"
+                                  Variant="Variant.Outlined" InputType="InputType.Email" />
+                    <MudTextField @bind-Value="_guestPhone" Label="@AppStrings.Reservations_Field_GuestPhone"
+                                  Variant="Variant.Outlined" />
+                }
+                else
+                {
+                    <MudTextField @bind-Value="_customerId" Label="@AppStrings.Rentals_Field_Customer"
+                                  Variant="Variant.Outlined" />
+                }
+
+                <MudSelect T="int?" @bind-Value="_vehicleId" Label="@AppStrings.Rentals_Field_Vehicle"
+                           Variant="Variant.Outlined" Dense="true"
+                           ToStringFunc="@(id => id.HasValue ? VehicleLabel(id.Value) : "")">
+                    @foreach (var v in Vehicles)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)v.Id)">@VehicleLabel(v.Id)</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="int?" @bind-Value="_pickupLocationId" Label="@AppStrings.Rentals_Field_PickupLocation"
+                           Variant="Variant.Outlined" Dense="true"
+                           ToStringFunc="@(id => LocationName(id))">
+                    @foreach (var l in Locations)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)l.Id)">@l.Name</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="int?" @bind-Value="_dropoffLocationId" Label="@AppStrings.Rentals_Field_DropoffLocation"
+                           Variant="Variant.Outlined" Dense="true"
+                           ToStringFunc="@(id => LocationName(id))">
+                    @foreach (var l in Locations)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)l.Id)">@l.Name</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudGrid Spacing="2">
+                    <MudItem xs="6">
+                        <MudDatePicker @bind-Date="_returnDate" Label="@AppStrings.Rentals_Field_ExpectedReturn"
+                                       Variant="Variant.Outlined" MinDate="DateTime.Today" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTimePicker @bind-Time="_returnTime" Variant="Variant.Outlined" />
+                    </MudItem>
+                </MudGrid>
+            }
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@AppStrings.Common_Cancel</MudButton>
+        <MudButton Color="Color.Primary" Disabled="@(!IsValid)" OnClick="Submit">@AppStrings.Common_Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public List<Dtos.Vehicles.VehicleResponse> Vehicles { get; set; } = [];
+    [Parameter] public List<Dtos.Locations.LocationResponse> Locations { get; set; } = [];
+
+    private bool _fromReservation = true;
+    private int? _reservationId;
+
+    private bool _asGuest = true;   // guest is the default desk flow
+    private string? _guestEmail;
+    private string? _guestName;
+    private string? _guestPhone;
+    private string? _customerId;
+
+    private int? _vehicleId;
+    private int? _pickupLocationId;
+    private int? _dropoffLocationId;
+    private DateTime? _returnDate = DateTime.Today.AddDays(1);
+    private TimeSpan? _returnTime = new(9, 0, 0);
+
+    private DateTimeOffset? ReturnUtc =>
+        _returnDate.HasValue && _returnTime.HasValue
+            ? new DateTimeOffset(_returnDate.Value.Date + _returnTime.Value, TimeZoneInfo.Local.GetUtcOffset(_returnDate.Value)).ToUniversalTime()
+            : null;
+
+    private bool IsValid => _fromReservation
+        ? _reservationId is > 0
+        : (_asGuest
+              ? !string.IsNullOrWhiteSpace(_guestEmail) && !string.IsNullOrWhiteSpace(_guestName)
+              : !string.IsNullOrWhiteSpace(_customerId))
+          && _vehicleId.HasValue
+          && _pickupLocationId.HasValue
+          && _dropoffLocationId.HasValue
+          && ReturnUtc > DateTimeOffset.UtcNow;
+
+    private string VehicleLabel(int id)
+    {
+        var v = Vehicles.FirstOrDefault(x => x.Id == id);
+        return v is null ? "" : $"{v.ManufacturerName} {v.VehicleModel} ({v.RegistrationPlate})";
+    }
+
+    private string LocationName(int? id) =>
+        id.HasValue ? Locations.FirstOrDefault(l => l.Id == id.Value)?.Name ?? "" : "";
+
+    private void Submit()
+    {
+        CreateRentalRequest request;
+
+        if (_fromReservation)
+        {
+            request = new CreateRentalRequest(_reservationId, null, null, null, null, null, null, null, null);
+        }
+        else if (_asGuest)
+        {
+            request = new CreateRentalRequest(
+                null, null,
+                _guestEmail!.Trim(), _guestName!.Trim(), _guestPhone?.Trim(),
+                _vehicleId, _pickupLocationId, _dropoffLocationId, ReturnUtc);
+        }
+        else
+        {
+            request = new CreateRentalRequest(
+                null, _customerId!.Trim(),
+                null, null, null,
+                _vehicleId, _pickupLocationId, _dropoffLocationId, ReturnUtc);
+        }
+
+        MudDialog.Close(DialogResult.Ok(request));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

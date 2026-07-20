@@ -1,0 +1,38 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudText Typo="Typo.body2">
+                #@Rental.Id — @Rental.VehicleName (@Rental.RegistrationPlate), @Rental.CustomerFullName
+            </MudText>
+
+            <MudSelect T="int?" @bind-Value="_dropoffLocationId" Label="@AppStrings.Rentals_Return_DifferentDropoff"
+                       Variant="Variant.Outlined" Dense="true" Clearable="true"
+                       ToStringFunc="@(id => id.HasValue ? Locations.FirstOrDefault(l => l.Id == id.Value)?.Name ?? "" : "")">
+                @foreach (var l in Locations)
+                {
+                    <MudSelectItem T="int?" Value="@((int?)l.Id)">@l.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@AppStrings.Common_Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="Submit">@AppStrings.Rentals_Return_Confirm</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public RentalResponse Rental { get; set; } = default!;
+    [Parameter] public List<Dtos.Locations.LocationResponse> Locations { get; set; } = [];
+
+    private int? _dropoffLocationId;
+
+    private void Submit() =>
+        // null return time = "now" server-side; null dropoff = as agreed
+        MudDialog.Close(DialogResult.Ok(new ReturnRentalRequest(_dropoffLocationId, null)));
+
+    private void Cancel() => MudDialog.Cancel();
+}

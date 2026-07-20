@@ -306,6 +306,24 @@
   <data name="Fuel_Z" xml:space="preserve">
     <value>Benzin, bez klime</value>
   </data>
+  <data name="Guest_Badge" xml:space="preserve">
+    <value>Gost</value>
+  </data>
+  <data name="Home_NoVehicles" xml:space="preserve">
+    <value>Nijedno vozilo ne odgovara filtrima.</value>
+  </data>
+  <data name="Home_PerDay" xml:space="preserve">
+    <value>dan</value>
+  </data>
+  <data name="Home_Reserve" xml:space="preserve">
+    <value>Rezerviraj</value>
+  </data>
+  <data name="Home_Subtitle" xml:space="preserve">
+    <value>Pregledajte i rezervirajte — bez potrebe za računom.</value>
+  </data>
+  <data name="Home_Title" xml:space="preserve">
+    <value>Pronađite svoje vozilo</value>
+  </data>
   <data name="Locations_Add" xml:space="preserve">
     <value>Dodaj lokaciju</value>
   </data>
@@ -426,6 +444,93 @@
   <data name="Nav_Vehicles" xml:space="preserve">
     <value>Vozila</value>
   </data>
+  <data name="RentalStatus_Active" xml:space="preserve">
+    <value>Aktivan</value>
+  </data>
+  <data name="RentalStatus_Completed" xml:space="preserve">
+    <value>Završen</value>
+  </data>
+  <data name="RentalStatus_Overdue" xml:space="preserve">
+    <value>Prekoračen</value>
+  </data>
+  <data name="Rentals_Action_Return" xml:space="preserve">
+    <value>Vrati vozilo</value>
+  </data>
+  <data name="Rentals_Add" xml:space="preserve">
+    <value>Novi najam</value>
+  </data>
+  <data name="Rentals_Created" xml:space="preserve">
+    <value>Najam je stvoren.</value>
+  </data>
+  <data name="Rentals_Field_Customer" xml:space="preserve">
+    <value>ID korisnika</value>
+  </data>
+  <data name="Rentals_Field_DropoffLocation" xml:space="preserve">
+    <value>Lokacija povrata</value>
+  </data>
+  <data name="Rentals_Field_ExpectedReturn" xml:space="preserve">
+    <value>Očekivani povrat</value>
+  </data>
+  <data name="Rentals_Field_PickupLocation" xml:space="preserve">
+    <value>Lokacija preuzimanja</value>
+  </data>
+  <data name="Rentals_Field_Reservation" xml:space="preserve">
+    <value>ID potvrđene rezervacije</value>
+  </data>
+  <data name="Rentals_Field_Vehicle" xml:space="preserve">
+    <value>Vozilo</value>
+  </data>
+  <data name="Rentals_Filter_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Rentals_Header_ActualReturn" xml:space="preserve">
+    <value>Vraćeno</value>
+  </data>
+  <data name="Rentals_Header_Cost" xml:space="preserve">
+    <value>Cijena (€)</value>
+  </data>
+  <data name="Rentals_Header_Customer" xml:space="preserve">
+    <value>Korisnik</value>
+  </data>
+  <data name="Rentals_Header_ExpectedReturn" xml:space="preserve">
+    <value>Očekivani povrat</value>
+  </data>
+  <data name="Rentals_Header_Pickup" xml:space="preserve">
+    <value>Preuzeto</value>
+  </data>
+  <data name="Rentals_Header_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Rentals_Header_Vehicle" xml:space="preserve">
+    <value>Vozilo</value>
+  </data>
+  <data name="Rentals_Mode_FromReservation" xml:space="preserve">
+    <value>Iz rezervacije</value>
+  </data>
+  <data name="Rentals_Mode_RegisteredCustomer" xml:space="preserve">
+    <value>Registrirani korisnik</value>
+  </data>
+  <data name="Rentals_Mode_WalkIn" xml:space="preserve">
+    <value>Bez rezervacije</value>
+  </data>
+  <data name="Rentals_NoData" xml:space="preserve">
+    <value>Nema pronađenih najmova.</value>
+  </data>
+  <data name="Rentals_Returned" xml:space="preserve">
+    <value>Najam je završen.</value>
+  </data>
+  <data name="Rentals_Return_Confirm" xml:space="preserve">
+    <value>Završi povrat</value>
+  </data>
+  <data name="Rentals_Return_DifferentDropoff" xml:space="preserve">
+    <value>Druga lokacija povrata (neobavezno)</value>
+  </data>
+  <data name="Rentals_Return_Title" xml:space="preserve">
+    <value>Povrat vozila</value>
+  </data>
+  <data name="Rentals_Title" xml:space="preserve">
+    <value>Najmovi</value>
+  </data>
   <data name="Reservations_Action_Cancel" xml:space="preserve">
     <value>Otkaži rezervaciju</value>
   </data>
@@ -455,6 +560,15 @@
   </data>
   <data name="Reservations_Field_DropoffLocation" xml:space="preserve">
     <value>Lokacija povrata</value>
+  </data>
+  <data name="Reservations_Field_GuestEmail" xml:space="preserve">
+    <value>E-pošta</value>
+  </data>
+  <data name="Reservations_Field_GuestName" xml:space="preserve">
+    <value>Ime i prezime</value>
+  </data>
+  <data name="Reservations_Field_GuestPhone" xml:space="preserve">
+    <value>Telefon (neobavezno)</value>
   </data>
   <data name="Reservations_Field_PickupLocation" xml:space="preserve">
     <value>Lokacija preuzimanja</value>
@@ -498,6 +612,12 @@
   <data name="Reservations_MarkedNoShow" xml:space="preserve">
     <value>Rezervacija je označena kao nedolazak.</value>
   </data>
+  <data name="Reservations_Mode_Account" xml:space="preserve">
+    <value>Na moj račun</value>
+  </data>
+  <data name="Reservations_Mode_Guest" xml:space="preserve">
+    <value>Kao gost</value>
+  </data>
   <data name="Reservations_NoData" xml:space="preserve">
     <value>Nema pronađenih rezervacija.</value>
   </data>
@@ -521,6 +641,30 @@
   </data>
   <data name="Status_Pending" xml:space="preserve">
     <value>Na čekanju</value>
+  </data>
+  <data name="Track_Cancel" xml:space="preserve">
+    <value>Otkaži rezervaciju</value>
+  </data>
+  <data name="Track_Cancelled" xml:space="preserve">
+    <value>Rezervacija je otkazana.</value>
+  </data>
+  <data name="Track_CodeHint" xml:space="preserve">
+    <value>Spremite ovu poveznicu — jedini je način pristupa vašoj rezervaciji.</value>
+  </data>
+  <data name="Track_NotFound" xml:space="preserve">
+    <value>Ništa nije pronađeno za ovaj kod za praćenje.</value>
+  </data>
+  <data name="Track_Rental" xml:space="preserve">
+    <value>Najam</value>
+  </data>
+  <data name="Track_Reservation" xml:space="preserve">
+    <value>Rezervacija</value>
+  </data>
+  <data name="Track_Title" xml:space="preserve">
+    <value>Prati svoju rezervaciju</value>
+  </data>
+  <data name="Track_YourCode" xml:space="preserve">
+    <value>Vaša poveznica za praćenje</value>
   </data>
   <data name="Transmission_A" xml:space="preserve">
     <value>Automatski</value>

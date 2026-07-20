@@ -5,9 +5,11 @@ namespace CarRental.Application.Rentals.Responses
     public record RentalResponse(
         int Id,
         int? ReservationId,
-        string CustomerId,
-        string CustomerEmail,
-        string CustomerFullName,
+        string? CustomerId,
+        string CustomerEmail,        // account OR guest email
+        string CustomerFullName,     // account OR guest name
+        bool IsGuest,
+        string TrackingCode,
         int VehicleId,
         string VehicleName,
         string RegistrationPlate,

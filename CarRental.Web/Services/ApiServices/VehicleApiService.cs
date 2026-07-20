@@ -1,10 +1,9 @@
 ﻿using CarRental.Web.Constants;
 using CarRental.Web.Dtos.Identity;
 using CarRental.Web.Dtos.Vehicles;
-using CarRental.Web.Services.Manufacturers;
 using System.Net.Http.Json;
 
-namespace CarRental.Web.Services.Vehicles
+namespace CarRental.Web.Services.ApiServices
 {
     public class VehicleApiService(HttpClient http)
     {

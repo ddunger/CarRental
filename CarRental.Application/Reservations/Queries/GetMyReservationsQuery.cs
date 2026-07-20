@@ -56,17 +56,19 @@ namespace CarRental.Application.Reservations.Queries
                 reservations.Select(r => new ReservationResponse(
                     r.Id,
                     r.CustomerId,
-                    r.Customer?.Email ?? string.Empty,
-                    $"{r.Customer?.FirstName} {r.Customer?.LastName}".Trim(),
+                    r.CustomerId is not null ? r.Customer?.Email ?? string.Empty : r.GuestEmail ?? string.Empty,
+                    r.CustomerId is not null
+                        ? $"{r.Customer?.FirstName} {r.Customer?.LastName}".Trim()
+                        : r.GuestFullName ?? string.Empty,
+                    r.CustomerId is null,
+                    r.TrackingCode,
                     r.VehicleId,
                     $"{r.Vehicle?.Manufacturer?.Name} {r.Vehicle?.VehicleModel}".Trim(),
                     r.Vehicle?.RegistrationPlate ?? string.Empty,
                     r.PickupLocationId,
                     r.PickupLocation?.Name ?? string.Empty,
                     r.DropoffLocationId,
-                    r.DropoffLocationId == r.PickupLocationId
-                        ? r.PickupLocation?.Name ?? string.Empty
-                        : r.DropoffLocation?.Name ?? string.Empty,
+                    r.DropoffLocation?.Name ?? string.Empty,
                     r.PickupTimeUtc,
                     r.ExpectedReturnTimeUtc,
                     r.ExpectedCostEuro,
