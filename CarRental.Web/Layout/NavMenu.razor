@@ -6,44 +6,71 @@
 @inject IJSRuntime JS
 @implements IDisposable
 
-<nav style="padding:0.75rem 1rem; background:#0077b6; display:flex; align-items:center;">
-    <a href="/" style="color:white; margin-right:1rem;">Home</a>
+<nav class="cr-nav">
 
-    <AuthorizeView>
+    @* ---- Brand ---- *@
+    <a href="/" class="cr-brand">
+        <MudIcon Icon="@Icons.Material.Filled.DirectionsCar" Class="cr-brand-icon" />
+        <span>Car<span class="cr-brand-accent">Rental</span></span>
+    </a>
+
+    <AuthorizeView Context="auth">
         <Authorized>
-            <a href="/vehicles" style="color:white; margin-right:1rem;">@AppStrings.Nav_Vehicles</a>
-            <a href="/manufacturers" style="color:white; margin-right:1rem;">Manufacturers</a>
-            <a href="/locations" style="color:white; margin-right:1rem;">Locations</a>
-            <a href="/reservations" style="color:white; margin-right:1rem;">Reservations</a>
-            <a href="/rentals" style="color:white; margin-right:1rem;">Rentals</a>
 
-            <div style="margin-left:auto; display:flex; align-items:center; gap:1rem;">
+            @* ---- Links (desktop) ---- *@
+            <div class="cr-links">
+                <NavLink href="/" Match="NavLinkMatch.All" class="cr-link" ActiveClass="cr-link-active">Home</NavLink>
+                <NavLink href="/vehicles" class="cr-link" ActiveClass="cr-link-active">@AppStrings.Nav_Vehicles</NavLink>
+                <NavLink href="/manufacturers" class="cr-link" ActiveClass="cr-link-active">Manufacturers</NavLink>
+                <NavLink href="/locations" class="cr-link" ActiveClass="cr-link-active">Locations</NavLink>
+                <NavLink href="/reservations" class="cr-link" ActiveClass="cr-link-active">Reservations</NavLink>
+                <NavLink href="/rentals" class="cr-link" ActiveClass="cr-link-active">Rentals</NavLink>
+            </div>
 
-                @* --- Language switcher --- *@
-                <MudMenu Icon="@Icons.Material.Filled.Language" Class="white-menu-icon" Dense="true">
+            <div class="cr-nav-right">
+
+                @* ---- Links (mobile) ---- *@
+                <div class="cr-mobile-menu">
+                    <MudMenu Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Dense="true"
+                             AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+                        <MudMenuItem Href="/">Home</MudMenuItem>
+                        <MudMenuItem Href="/vehicles">@AppStrings.Nav_Vehicles</MudMenuItem>
+                        <MudMenuItem Href="/manufacturers">Manufacturers</MudMenuItem>
+                        <MudMenuItem Href="/locations">Locations</MudMenuItem>
+                        <MudMenuItem Href="/reservations">Reservations</MudMenuItem>
+                        <MudMenuItem Href="/rentals">Rentals</MudMenuItem>
+                    </MudMenu>
+                </div>
+
+                @* ---- Language switcher ---- *@
+                <MudMenu Icon="@Icons.Material.Filled.Language" Color="Color.Inherit" Dense="true"
+                         AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
                     <MudMenuItem OnClick="@(() => SetCultureAsync("en"))">English</MudMenuItem>
                     <MudMenuItem OnClick="@(() => SetCultureAsync("hr"))">Hrvatski</MudMenuItem>
                 </MudMenu>
 
-                 @* --- Notifications bell --- *@
-                <MudBadge Content="@NotificationState.UnreadCount" Color="Color.Error"
+                @* ---- Notifications bell ---- *@
+                <MudBadge Content="@NotificationState.UnreadCount" Color="Color.Secondary"
                           Overlap="true" Visible="@(NotificationState.UnreadCount > 0)">
                     <MudMenu Icon="@Icons.Material.Filled.Notifications"
-                             Class="white-menu-icon"
+                             Color="Color.Inherit"
                              Dense="true"
                              AnchorOrigin="Origin.BottomRight"
                              TransformOrigin="Origin.TopRight"
                              OnOpenChanged="OnNotificationsOpenChanged">
-                        <div style="width:320px; max-height:400px; overflow-y:auto;">
+                        <div class="cr-notif-panel">
                             @if (NotificationState.Notifications.Count == 0)
                             {
-                                <MudText Typo="Typo.body2" Class="pa-3" Color="Color.Secondary">No notifications.</MudText>
+                                <div class="cr-notif-empty">
+                                    <MudIcon Icon="@Icons.Material.Outlined.NotificationsNone" Size="Size.Large" />
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary">No notifications.</MudText>
+                                </div>
                             }
                             else
                             {
                                 @foreach (var n in NotificationState.Notifications)
                                 {
-                                    <div class="px-3 py-2" style="border-bottom:1px solid var(--mud-palette-lines-default);">
+                                    <div class="cr-notif-item">
                                         <MudText Typo="Typo.body2"><b>Rental #@n.RentalId overdue</b></MudText>
                                         <MudText Typo="Typo.caption">
                                             @n.VehicleName (@n.RegistrationPlate) — @n.CustomerFullName,
@@ -60,29 +87,40 @@
                     </MudMenu>
                 </MudBadge>
 
-                @* --- Profile / logout --- *@
-                <span style="color:#ffffff; font-size:0.9rem;">@context.User.GetEmail()</span>
-                <button @onclick="HandleLogoutAsync"
-                        style="background:#03045e; border:none; color:white; padding:0.35rem 0.8rem;
-                    border-radius:4px; cursor:pointer;">
-                    Logout
-                </button>
+                @* ---- User menu (avatar → email + logout) ---- *@
+                <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Dense="true">
+                    <ActivatorContent>
+                        <MudAvatar Size="Size.Small" Class="cr-avatar">
+                            @GetInitial(auth.User.GetEmail())
+                        </MudAvatar>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <div class="cr-user-header">
+                            <MudText Typo="Typo.body2"><b>@auth.User.GetEmail()</b></MudText>
+                        </div>
+                        <MudDivider />
+                        <MudMenuItem Icon="@Icons.Material.Filled.Logout" OnClick="HandleLogoutAsync">
+                            Logout
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
             </div>
         </Authorized>
+
         <NotAuthorized>
-            <div style="margin-left:auto; display:flex; align-items:center; gap:1rem;">
+            <div class="cr-nav-right">
                 <MudMenu Icon="@Icons.Material.Filled.Language" Color="Color.Inherit" Dense="true">
                     <MudMenuItem OnClick="@(() => SetCultureAsync("en"))">English</MudMenuItem>
                     <MudMenuItem OnClick="@(() => SetCultureAsync("hr"))">Hrvatski</MudMenuItem>
                 </MudMenu>
-                <a href="/login" style="color:white;">Login</a>
+                <NavLink href="/login" class="cr-link cr-link-login">Login</NavLink>
             </div>
         </NotAuthorized>
     </AuthorizeView>
 </nav>
 
 @code {
- 
+
     protected override void OnInitialized() =>
         NotificationState.Changed += OnNotificationsChanged;
 
@@ -94,6 +132,9 @@
         if (open)
             NotificationState.MarkAllRead();
     }
+
+    private static string GetInitial(string? email) =>
+        string.IsNullOrWhiteSpace(email) ? "?" : email[..1].ToUpperInvariant();
 
     private async Task SetCultureAsync(string culture)
     {

@@ -9,20 +9,28 @@
 
 <PageTitle>CarRental</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-6">
-    <MudText Typo="Typo.h4" Class="mb-1">@AppStrings.Home_Title</MudText>
-    <MudText Typo="Typo.body1" Color="Color.Secondary" Class="mb-4">@AppStrings.Home_Subtitle</MudText>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-6 mb-8">
 
-    <MudGrid Spacing="3">
+    @* ---- Hero ---- *@
+    <div class="cr-hero mb-6">
+        <div class="cr-hero-accent"></div>
+        <MudText Typo="Typo.h4" Class="cr-hero-title">@AppStrings.Home_Title</MudText>
+        <MudText Typo="Typo.body1" Class="cr-hero-subtitle">@AppStrings.Home_Subtitle</MudText>
+    </div>
+
+    <MudGrid Spacing="4">
 
         @* ---- Filter sidebar (subset: the customer-relevant filters) ---- *@
         <MudItem xs="12" md="3" lg="2">
-            <MudPaper Class="pa-4" Elevation="1">
-                <div class="d-flex align-center mb-3">
+            <MudPaper Class="pa-4 cr-filter-panel" Elevation="0" Outlined="true">
+                <div class="d-flex align-center mb-4">
+                    <MudIcon Icon="@Icons.Material.Outlined.Tune" Size="Size.Small" Class="mr-2" Color="Color.Primary" />
                     <MudText Typo="Typo.subtitle1">@AppStrings.Vehicles_Filters</MudText>
                     <MudSpacer />
-                    <MudIconButton Icon="@Icons.Material.Filled.FilterAltOff" Size="Size.Small"
-                                   OnClick="ClearFiltersAsync" />
+                    <MudTooltip Text="@AppStrings.Common_Clear">
+                        <MudIconButton Icon="@Icons.Material.Filled.FilterAltOff" Size="Size.Small"
+                                       OnClick="ClearFiltersAsync" />
+                    </MudTooltip>
                 </div>
 
                 <MudStack Spacing="3">
@@ -63,7 +71,8 @@
                     </MudSelect>
 
                     <MudNumericField T="decimal?" @bind-Value="_filterPriceTo" Label="@AppStrings.Vehicles_Filter_PriceTo"
-                                     Dense="true" Variant="Variant.Outlined" Min="0" />
+                                     Dense="true" Variant="Variant.Outlined" Min="0"
+                                     Adornment="Adornment.End" AdornmentText="€" />
 
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadAsync" FullWidth="true">
                         @AppStrings.Common_Apply
@@ -76,40 +85,69 @@
         <MudItem xs="12" md="9" lg="10">
             @if (_loading)
             {
-                <MudProgressLinear Indeterminate="true" />
+                <MudGrid Spacing="4">
+                    @for (var i = 0; i < 6; i++)
+                    {
+                        <MudItem xs="12" sm="6" lg="4">
+                            <MudPaper Elevation="0" Outlined="true" Class="cr-card">
+                                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" />
+                                <div class="pa-4">
+                                    <MudSkeleton Width="70%" Height="28px" />
+                                    <MudSkeleton Width="45%" />
+                                    <MudSkeleton Width="90%" Height="42px" Class="mt-3" />
+                                </div>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                </MudGrid>
             }
             else if (_vehicles.Count == 0)
             {
-                <MudText Typo="Typo.body1" Color="Color.Secondary">@AppStrings.Home_NoVehicles</MudText>
+                <div class="cr-empty">
+                    <MudIcon Icon="@Icons.Material.Outlined.NoCrash" Class="cr-empty-icon" />
+                    <MudText Typo="Typo.h6">@AppStrings.Home_NoVehicles</MudText>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="mt-3"
+                               StartIcon="@Icons.Material.Filled.FilterAltOff"
+                               OnClick="ClearFiltersAsync">
+                        @AppStrings.Common_Clear
+                    </MudButton>
+                </div>
             }
             else
             {
-                <MudGrid Spacing="3">
+                <MudGrid Spacing="4">
                     @foreach (var v in _vehicles)
                     {
                         <MudItem xs="12" sm="6" lg="4">
-                            <MudCard Elevation="2">
+                            <MudCard Elevation="0" Outlined="true" Class="cr-card">
                                 @if (v.ImageData is not null && v.ImageContentType is not null)
                                 {
                                     <MudCardMedia Image="@GetImageUrl(v)" Height="200" />
                                 }
-                                <MudCardContent>
-                                    <MudText Typo="Typo.h6">@v.ManufacturerName @v.VehicleModel</MudText>
-                                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-2">
+                                else
+                                {
+                                    <div class="cr-card-placeholder">
+                                        <MudIcon Icon="@Icons.Material.Filled.DirectionsCar" />
+                                    </div>
+                                }
+                                <MudCardContent Class="pb-2">
+                                    <MudText Typo="Typo.h6" Class="cr-card-title">@v.ManufacturerName @v.VehicleModel</MudText>
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-3">
                                         @v.Category.Display() · @v.Type.Display()
                                     </MudText>
-                                    <MudStack Row="true" Spacing="1" Class="mb-2" Wrap="Wrap.Wrap">
-                                        <MudChip T="string" Size="Size.Small">@v.Transmission.Display()</MudChip>
-                                        <MudChip T="string" Size="Size.Small">@v.Fuel.Display()</MudChip>
-                                        <MudChip T="string" Size="Size.Small">@v.ManufacturingYear</MudChip>
-                                        <MudChip T="string" Size="Size.Small">@v.EnginePowerInKw kW</MudChip>
+                                    <MudStack Row="true" Spacing="1" Class="mb-3" Wrap="Wrap.Wrap">
+                                        <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Class="cr-chip">@v.Transmission.Display()</MudChip>
+                                        <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Class="cr-chip">@v.Fuel.Display()</MudChip>
+                                        <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Class="cr-chip">@v.ManufacturingYear</MudChip>
+                                        <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Class="cr-chip">@v.EnginePowerInKw kW</MudChip>
                                     </MudStack>
-                                    <MudText Typo="Typo.h6" Color="Color.Primary">
-                                        @v.PricePerDayInEuro.ToString("F2") € <small>/ @AppStrings.Home_PerDay</small>
-                                    </MudText>
+                                    <div class="cr-price">
+                                        <span class="cr-price-value">@v.PricePerDayInEuro.ToString("F2") €</span>
+                                        <span class="cr-price-unit">/ @AppStrings.Home_PerDay</span>
+                                    </div>
                                 </MudCardContent>
-                                <MudCardActions>
-                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+                                <MudCardActions Class="px-4 pb-4 pt-0">
+                                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" FullWidth="true"
                                                StartIcon="@Icons.Material.Filled.EventAvailable"
                                                OnClick="() => OpenReserveDialogAsync(v)">
                                         @AppStrings.Home_Reserve

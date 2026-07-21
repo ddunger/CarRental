@@ -4,14 +4,14 @@
 @inject NotificationStateService NotificationState
 @implements IDisposable
 
-<MudThemeProvider />
+<MudThemeProvider Theme="@CarRentalTheme.Theme" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <NavMenu />
 
-<main>
+<main class="cr-main">
     <article class="content px-4">
         @Body
     </article>
@@ -25,14 +25,16 @@
 
 @if (_overdueToasts.Count > 0)
 {
-    <div style="position:fixed; bottom:1rem; right:1rem; z-index:1000;">
+    <div class="cr-toast-stack">
         @foreach (var n in _overdueToasts)
         {
-            <div style="background:#b91c1c; color:white; padding:0.75rem 1rem; margin-top:0.5rem; border-radius:6px;">
-                <strong>Rental #@n.RentalId overdue</strong><br />
-                @n.VehicleName (@n.RegistrationPlate) — @n.CustomerFullName,
-                @n.HoursOverdue h late
-                <button style="margin-left:1rem" @onclick="() => Dismiss(n)">✕</button>
+            <div class="cr-toast">
+                <MudIcon Icon="@Icons.Material.Filled.WarningAmber" Size="Size.Small" Class="cr-toast-icon" />
+                <div class="cr-toast-body">
+                    <strong>Rental #@n.RentalId overdue</strong>
+                    <span>@n.VehicleName (@n.RegistrationPlate) — @n.CustomerFullName, @n.HoursOverdue h late</span>
+                </div>
+                <button class="cr-toast-dismiss" @onclick="() => Dismiss(n)" aria-label="Dismiss">✕</button>
             </div>
         }
     </div>
